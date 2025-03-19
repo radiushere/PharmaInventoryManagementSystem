@@ -13,13 +13,13 @@ namespace SimpleLoginWPF
     {
         private static readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
         private DispatcherTimer refreshTimer;
-        private DataTable medicineDataTable = new DataTable(); // Ensuring it's initialized
+        private DataTable medicineDataTable = new DataTable();
 
         public MainWindow()
         {
             InitializeComponent();
-            LoadMedicinesData(); // Initial data load
-            SetupAutoRefresh(); // Start automatic refresh
+            LoadMedicinesData();
+            SetupAutoRefresh();
         }
 
         private void LoadMedicinesData()
@@ -42,12 +42,8 @@ namespace SimpleLoginWPF
                         FROM medicines";
 
                     MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
-
-                    // Ensure we clear and refill DataTable to prevent errors
                     medicineDataTable.Clear();
                     adapter.Fill(medicineDataTable);
-
-                    // Ensure UI updates properly
                     MedicinesDataGrid.ItemsSource = medicineDataTable.DefaultView;
                 }
             }
@@ -59,50 +55,99 @@ namespace SimpleLoginWPF
 
         private void SetupAutoRefresh()
         {
-            refreshTimer = new DispatcherTimer
-            {
-                Interval = TimeSpan.FromSeconds(30) // Refresh every 30 seconds
-            };
+            refreshTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(30) };
             refreshTimer.Tick += (s, e) => LoadMedicinesData();
             refreshTimer.Start();
         }
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (medicineDataTable == null || medicineDataTable.DefaultView == null)
-                return;
-
-            string filter = SearchBox.Text.Trim().ToLower();
-            if (string.IsNullOrWhiteSpace(filter))
+            if (medicineDataTable == null || medicineDataTable.Columns.Count == 0)
             {
-                medicineDataTable.DefaultView.RowFilter = ""; // Reset filter
+                Console.WriteLine("medicineDataTable is null or has no columns.");
                 return;
             }
 
-            // Ensure the column names match exactly!
-            if (medicineDataTable.Columns.Contains("Name") && medicineDataTable.Columns.Contains("BatchNumber"))
+            // Debugging: Print column names
+            Console.WriteLine("Available Columns:");
+            foreach (DataColumn col in medicineDataTable.Columns)
             {
+                Console.WriteLine(col.ColumnName);
+            }
+
+            string filter = SearchBox.Text.Trim();
+
+            try
+            {
+                // Use the correct column names from the database
                 medicineDataTable.DefaultView.RowFilter =
-                    $"Name LIKE '%{filter}%' OR BatchNumber LIKE '%{filter}%'";
+                    $"name LIKE '%{filter}%' OR BatchNumber LIKE '%{filter}%'";
+            }
+            catch (EvaluateException ex)
+            {
+                Console.WriteLine("Error in RowFilter: " + ex.Message);
+                MessageBox.Show("Error in search filter: " + ex.Message);
             }
         }
+
 
         private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
         {
             if (SearchBox.Text == "Search Medicine...")
-            {
                 SearchBox.Text = "";
-                SearchBox.Foreground = Brushes.Black;
-            }
         }
 
         private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(SearchBox.Text))
-            {
                 SearchBox.Text = "Search Medicine...";
-                SearchBox.Foreground = Brushes.Gray;
-            }
+        }
+
+        private void Dashboard_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Inventory_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Reports_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Suppliers_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Orders_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ManageStore_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            Login login = new Login();
+            login.Show();
+            this.Hide();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SearchBox_TextChanged_1(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }
