@@ -1,0 +1,176 @@
+﻿<Window x:Class="SimpleLoginWPF.OrderDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Order Details"
+        Height="720"
+        Width="1000"
+        Background="#F8FAFC"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <!-- Color Resources -->
+        <SolidColorBrush x:Key="PrimaryRedBrush" Color="#B30000"/>
+        <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="#8A0000"/>
+        <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="#FFD9D9"/>
+
+        <!-- Button Styles -->
+        <Style x:Key="PrimaryButton" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedDarkBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Padding" Value="20,12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" 
+                        Content="← Back to Orders"
+                        Style="{StaticResource SecondaryButton}"
+                        Background="White"
+                        Click="BackButton_Click"/>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Order.png" Width="32" Height="32" Margin="0,0,15,0"/>
+                    <TextBlock Text="Order Details" 
+                               FontSize="24"
+                               FontWeight="SemiBold"
+                               Foreground="White"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" Padding="25">
+            <StackPanel>
+                <!-- Order Summary -->
+                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,15">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="ORDER ID" FontWeight="Bold" Foreground="#666"/>
+                            <TextBlock Text="ORD-12345" FontSize="16"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="TOTAL" FontWeight="Bold" Foreground="#666"/>
+                            <TextBlock Text="$12,345.00" FontSize="16" Foreground="{StaticResource PrimaryRedBrush}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="2">
+                            <TextBlock Text="STATUS" FontWeight="Bold" Foreground="#666"/>
+                            <TextBlock Text="Delivered" Foreground="#4CAF50" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Order Items -->
+                <DataGrid x:Name="OrderItemsGrid" 
+                         AutoGenerateColumns="False"
+                         IsReadOnly="True"
+                         HeadersVisibility="Column"
+                         Margin="0,0,0,15">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Product" Binding="{Binding Name}" Width="*"/>
+                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="100"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="100"/>
+                        <DataGridTextColumn Header="Total" Binding="{Binding Total}" Width="100"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="White" Padding="25">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Generate Invoice" 
+                        Style="{StaticResource PrimaryButton}"
+                        Click="GenerateInvoice_Click"/>
+                <Button Content="Close" 
+                        Style="{StaticResource SecondaryButton}"
+                        Margin="15,0,0,0"
+                        Click="CloseButton_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Invoice Popup -->
+        <Border x:Name="InvoicePopup" Visibility="Collapsed"
+        Background="#80000000" Panel.ZIndex="999">
+            <Border Background="White" CornerRadius="8" Padding="20"
+            Width="400" Height="300">
+                <StackPanel>
+                    <TextBlock Text="Download Invoice" FontSize="18" FontWeight="Bold"
+                       Foreground="{StaticResource PrimaryRedBrush}"/>
+                    <Button Content="Download PDF" 
+                    Style="{StaticResource PrimaryButton}"
+                    Margin="0,20" Click="DownloadInvoice_Click"/>
+                    <Button Content="Cancel" 
+                    Style="{StaticResource SecondaryButton}"
+                    Click="CloseInvoicePopup_Click"/>
+                </StackPanel>
+            </Border>
+        </Border>
+    </Grid>
+</Window>

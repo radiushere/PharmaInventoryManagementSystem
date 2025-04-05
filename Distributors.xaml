@@ -1,0 +1,571 @@
+﻿<Window x:Class="SimpleLoginWPF.Distributors"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleLoginWPF"
+        mc:Ignorable="d"
+        Title="Distributors Management"
+        Height="720"
+        Width="1280"
+        Background="#F8FAFC"
+        FontFamily="Segoe UI"
+        Closing="Window_Closing"
+        WindowState="Maximized">
+    
+    <Window.Resources>
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Color x:Key="PrimaryRed">#B30000</Color>
+        <Color x:Key="PrimaryRedDark">#8A0000</Color>
+        <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
+        <Color x:Key="AccentGold">#FFD700</Color>
+
+        <!-- Convert Colors to Brushes -->
+        <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
+        <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
+        <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Storyboard x:Key="ButtonHoverEnter">
+            <DoubleAnimation Duration="0:0:0.15"
+                 Storyboard.TargetProperty="RenderTransform.ScaleX"
+                 To="1.03"/>
+            <DoubleAnimation Duration="0:0:0.15"
+                 Storyboard.TargetProperty="RenderTransform.ScaleY"
+                 To="1.03"/>
+            <ColorAnimation Duration="0:0:0.15"
+                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                To="{StaticResource PrimaryRedLight}"/>
+        </Storyboard>
+
+        <Storyboard x:Key="ButtonHoverExit">
+            <DoubleAnimation Duration="0:0:0.15"
+                 Storyboard.TargetProperty="RenderTransform.ScaleX"
+                 To="1"/>
+            <DoubleAnimation Duration="0:0:0.15"
+                 Storyboard.TargetProperty="RenderTransform.ScaleY"
+                 To="1"/>
+            <!-- Return background to Transparent -->
+            <ColorAnimation Duration="0:0:0.15"
+                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                To="Transparent"/>
+        </Storyboard>
+
+        <Storyboard x:Key="RippleClick">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.4"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="150"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Height">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="150"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ SIDEBAR STYLES ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- Normal Sidebar Button Style -->
+        <!-- Default Sidebar Button Style -->
+        <!-- Default Sidebar Button Style -->
+        <!-- Default Sidebar Button Style -->
+        <!-- Default Sidebar Button Style -->
+        <!-- Default Sidebar Button Style -->
+        <!-- Default Sidebar Button Style -->
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,4,0,4"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="MinHeight" Value="45"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="CardBorder"
+            Background="{TemplateBinding Background}"
+            CornerRadius="0,8,8,0"
+            Padding="8,0"
+            SnapsToDevicePixels="True">
+                            <DockPanel VerticalAlignment="Center">
+                                <!-- Fix: Properly display image -->
+                                <Image Source="{TemplateBinding Tag}"
+                   Width="24" Height="24"
+                   Margin="10,0,5,0"
+                   VerticalAlignment="Center"
+                   Visibility="Visible"/>
+                                <!-- Fix: Use ContentPresenter to ensure text shows up -->
+                                <ContentPresenter VerticalAlignment="Center"
+                              Margin="5,0,0,0"/>
+                            </DockPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover state -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="#F0F0F0"/>
+                            </Trigger>
+                            <!-- Pressed state -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="CardBorder" Property="Background" Value="#E0E0E0"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <!-- Subtle drop shadow -->
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="4" ShadowDepth="1" Color="#000000" Opacity="0.1"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SelectedSidebarButtonStyle" TargetType="Button" BasedOn="{StaticResource SidebarButtonStyle}">
+            <Setter Property="Background" Value="#FFD9D9"/>
+            <Setter Property="Foreground" Value="#B30000"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="6" ShadowDepth="2" Color="#B30000" Opacity="0.15"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~~ DATA GRID ~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="DataGridMain" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FFF5F5"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="RowHeight" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15"
+                          Opacity="0.1"
+                          ShadowDepth="3"
+                          Direction="270"/>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="12,8"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Height" Value="42"/>
+                        <Setter Property="SeparatorVisibility" Value="Collapsed"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Margin" Value="0,2"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="12"
+                                              Color="{StaticResource PrimaryRed}"
+                                              Opacity="0.1"
+                                              ShadowDepth="2"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+                                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Padding" Value="12"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- Make these 40x40 by default so they match the search box height -->
+        <Style x:Key="AddMoreButton" TargetType="Button">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="16"
+                          Opacity="0.3"
+                          Color="{StaticResource PrimaryRed}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                    CornerRadius="20">
+                            <Grid>
+                                <Ellipse x:Name="HoverOverlay"
+                             Fill="White"
+                             Opacity="0"/>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="HoverOverlay"
+                            Property="Opacity"
+                            Value="0.1"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- We’ll reuse the same style for the Profile button, 
+ but if you want to differentiate it, define another style. -->
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ FILTER DROPDOWN ~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="FilterComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FAFAFA"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="5" Opacity="0.2" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="MainBorder"
+                Background="{TemplateBinding Background}"
+                CornerRadius="4"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}">
+                                <Grid>
+                                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                                  VerticalAlignment="Center"
+                                  HorizontalAlignment="Left"
+                                  RecognizesAccessKey="True"/>
+                                    <ToggleButton x:Name="ToggleButton"
+                              Focusable="false"
+                              IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                              ClickMode="Press"
+                              Background="Transparent"
+                              BorderThickness="0"
+                              HorizontalAlignment="Right"
+                              Width="20"
+                              Margin="0,0,4,0">
+                                        <Path x:Name="Arrow"
+                          Data="M 0 0 L 4 4 L 8 0 Z"
+                          Fill="{TemplateBinding Foreground}"
+                          HorizontalAlignment="Center"
+                          VerticalAlignment="Center"/>
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+                            <Popup x:Name="PART_Popup"
+               Placement="Bottom"
+               AllowsTransparency="True"
+               Focusable="False"
+               IsOpen="{TemplateBinding IsDropDownOpen}"
+               PopupAnimation="Slide">
+                                <Border x:Name="PopupBorder"
+                    Background="White"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="4">
+                                    <ScrollViewer Margin="0" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
+                                KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="MainBorder" Property="Background" Value="#EEE"/>
+                                <Setter TargetName="Arrow" Property="Fill" Value="#888"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ SEARCH & STATS ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="12"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Width" Value="300"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10"
+                          Opacity="0.1"
+                          ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="StatsBoxStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="16"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15"
+                          Opacity="0.1"
+                          ShadowDepth="3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="240"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar (Updated with Distributors button) -->
+        <Border Grid.Column="0" Background="White">
+            <StackPanel>
+                <!-- Logo -->
+                <Image Source="/Assets/aliflogo-removebg-preview.png"
+                       Width="140" Height="100" Margin="20,30"/>
+
+                <!-- Navigation Buttons -->
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Dashboard_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Home.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Inventory_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Inventory.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Inventory" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Reports_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Report.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Reports" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Partners_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Suppliers.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Partners" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Style="{StaticResource SidebarButtonStyle}" Click="Orders_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Order.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Orders" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- New Distributors Button -->
+                <Button Style="{StaticResource SelectedSidebarButtonStyle}" Click="Distributors_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Manage Store.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Distributors" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Logout Button -->
+                <Button Style="{StaticResource SidebarButtonStyle}" 
+                        Click="Logout_Click"
+                        Margin="0,40,0,0"
+                        Foreground="{StaticResource PrimaryRedBrush}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Logout.png" Width="22" Height="22" Margin="5,0,15,0"/>
+                        <TextBlock Text="Logout" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <Grid Grid.Column="1" Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Search and Actions -->
+            <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,20">
+                <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+                    <Grid>
+                        <TextBox x:Name="SearchBox"
+                            Style="{StaticResource SearchBoxStyle}"
+                            TextChanged="SearchBox_TextChanged"
+                            GotFocus="SearchBox_GotFocus"
+                            LostFocus="SearchBox_LostFocus"/>
+
+                        <TextBlock IsHitTestVisible="False"
+                            Text="Search Distributors..."
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            Margin="12,0,0,0"
+                            Foreground="Gray">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Text, ElementName=SearchBox}" Value=""/>
+                                                <Condition Binding="{Binding IsFocused, ElementName=SearchBox}" Value="False"/>
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger>
+                                        <DataTrigger Binding="{Binding IsFocused, ElementName=SearchBox}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchBox}" Value="{x:Null}">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <ComboBox x:Name="FilterComboBox" Style="{StaticResource FilterComboBoxStyle}"
+                              Margin="10,0" SelectionChanged="FilterComboBox_SelectionChanged">
+                        <ComboBoxItem Content="All Distributors"/>
+                        <ComboBoxItem Content="Wholesale"/>
+                        <ComboBoxItem Content="Retail"/>
+                        <ComboBoxItem Content="Hospital/Clinic"/>
+                    </ComboBox>
+
+                    <Button Style="{StaticResource AddMoreButton}" Content="+" 
+                            Margin="10,0" Click="AddDistributor_Click" ToolTip="Add New Distributor"/>
+
+                    <Button Style="{StaticResource AddMoreButton}" Content="👤" 
+                            Margin="10,0" Click="Profile_Click" ToolTip="User Profile"/>
+                </StackPanel>
+            </DockPanel>
+
+            <!-- Stats Cards -->
+            <Grid Grid.Row="1" Margin="0,0,0,30">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource StatsBoxStyle}" Grid.Column="0">
+                    <StackPanel>
+                        <TextBlock Text="Total Distributors" FontWeight="Bold" Foreground="#0088CC"/>
+                        <TextBlock x:Name="TotalDistributorsCount" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource StatsBoxStyle}" Grid.Column="1">
+                    <StackPanel>
+                        <TextBlock Text="Wholesale Partners" FontWeight="Bold" Foreground="#007BFF"/>
+                        <TextBlock x:Name="WholesaleCount" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+
+                <Border Style="{StaticResource StatsBoxStyle}" Grid.Column="2">
+                    <StackPanel>
+                        <TextBlock Text="Active Regions" FontWeight="Bold" Foreground="#CC5500"/>
+                        <TextBlock x:Name="ActiveRegionsCount" FontSize="20" FontWeight="Bold"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!-- DataGrid -->
+            <DataGrid x:Name="DistributorsDataGrid" Grid.Row="2"
+                      Style="{StaticResource DataGridMain}"
+                      AutoGenerateColumns="False"
+                      SelectionChanged="DistributorsDataGrid_SelectionChanged">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="ID" Binding="{Binding DistributorID}" Width="0.8*"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*"/>
+                    <DataGridTextColumn Header="Region" Binding="{Binding Region}" Width="1.5*"/>
+                    <DataGridTextColumn Header="Type" Binding="{Binding DistributionType}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="2*"/>
+                    <DataGridTextColumn Header="Service Area" Binding="{Binding ServiceArea}" Width="3*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</Window>

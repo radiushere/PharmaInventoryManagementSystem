@@ -1,0 +1,13 @@
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\SimpleLoginWPF.pdb
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\SimpleLoginWPF.dll.config
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\D3DCompiler_47_cor3.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\PenImc_cor3.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\PresentationNative_cor3.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\vcruntime140_cor3.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\wpfgfx_cor3.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\comerr64.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\gssapi64.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\k5sprt64.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\krb5_64.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\krbcc64.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\bin\Release\net8.0-windows\win-x64\publish\SimpleLoginWPF.exe

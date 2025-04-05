@@ -1,0 +1,333 @@
+﻿<Window x:Class="SimpleLoginWPF.ProductInfo"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleLoginWPF"
+        mc:Ignorable="d"
+        Title="Product Information"
+        Height="720"
+        Width="1000"
+        Background="#F8FAFC"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Color x:Key="PrimaryRed">#B30000</Color>
+        <Color x:Key="PrimaryRedDark">#8A0000</Color>
+        <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
+        <Color x:Key="AccentGold">#FFD700</Color>
+
+        <!-- Convert Colors to Brushes -->
+        <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
+        <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
+        <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="12" Opacity="0.2" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedDarkBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ SECTION STYLES ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <Style x:Key="ProductPropertyName" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#444444"/>
+            <Setter Property="Margin" Value="0,10,10,5"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+
+        <Style x:Key="ProductPropertyValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="ContentCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15" Opacity="0.1" ShadowDepth="3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~ DATA GRID STYLES ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="CompactDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FFF5F5"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Height" Value="35"/>
+                        <Setter Property="SeparatorVisibility" Value="Collapsed"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="←  Back to Products" Click="BackButton_Click" 
+                        Style="{StaticResource SecondaryButton}" Background="White"/>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Inventory.png" Width="32" Height="32" Margin="0,0,15,0"/>
+                    <TextBlock Text="Product Information" FontSize="24" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,15">
+            <StackPanel>
+                <!-- Product Information -->
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Product Image -->
+                        <Border Grid.Column="0" Width="180" Height="180" Margin="0,0,20,0" 
+                                VerticalAlignment="Top" CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
+                            </Border.Effect>
+                            <Image x:Name="ProductImage" Source="/Assets/MedicineSample.png" Stretch="Uniform"/>
+                        </Border>
+
+                        <!-- Basic Info -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock x:Name="ProductName" Text="CardioSafe 100mg Tablets" FontSize="24" FontWeight="Bold" 
+                                       Foreground="{StaticResource PrimaryRedBrush}"/>
+                            <Border Background="#E3F2FD" CornerRadius="4" Padding="8,2" Width="Auto" HorizontalAlignment="Left" Margin="0,5,0,15">
+                                <TextBlock x:Name="ProductCategory" Text="Cardiovascular Drugs" Foreground="#0277BD" FontWeight="SemiBold"/>
+                            </Border>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="NDC Code:" Style="{StaticResource ProductPropertyName}" Width="120"/>
+                                <TextBlock x:Name="ProductId" Text="12345-678-90" Style="{StaticResource ProductPropertyValue}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Regulatory Status:" Style="{StaticResource ProductPropertyName}" Width="120"/>
+                                <Border Background="#4CAF50" CornerRadius="4" Padding="8,2" Width="Auto">
+                                    <TextBlock x:Name="StockStatus" Text="DRAP Approved" Foreground="White" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Product Details -->
+                <TextBlock Text="Product Details" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0">
+                            <TextBlock Text="Active Ingredient:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="UnitPrice" Text="Lisinopril" Style="{StaticResource ProductPropertyValue}" FontWeight="SemiBold"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="1">
+                            <TextBlock Text="Dosage Form:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="BatchNumber" Text="Oral Tablet" Style="{StaticResource ProductPropertyValue}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="2">
+                            <TextBlock Text="Strength:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="ManufactureDate" Text="100mg" Style="{StaticResource ProductPropertyValue}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="3">
+                            <TextBlock Text="Schedule:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="ExpiryDate" Text="Prescription Only (Rx)" Style="{StaticResource ProductPropertyValue}"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0">
+                            <TextBlock Text="Package Size:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="StockQuantity" Text="90 Tablets/Bottle" Style="{StaticResource ProductPropertyValue}" FontWeight="SemiBold"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="1">
+                            <TextBlock Text="Storage Conditions:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="MinStockLevel" Text="15-30°C, protect from light" Style="{StaticResource ProductPropertyValue}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="2">
+                            <TextBlock Text="Manufacturer:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="SupplierName" Text="PharmaCare Global Ltd." Style="{StaticResource ProductPropertyValue}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="3">
+                            <TextBlock Text="Batch Expiry:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="StorageLocation" Text="March 2025" Style="{StaticResource ProductPropertyValue}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Product Specifications -->
+                <TextBlock Text="Clinical Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Indications:" Style="{StaticResource ProductPropertyName}"/>
+                        <TextBlock x:Name="ProductDescription" TextWrapping="Wrap" Margin="0,5,0,15" 
+                                   Text="Treatment of hypertension in adults and pediatric patients 6 years and older. Heart failure treatment. Adjuvant therapy post myocardial infarction."/>
+
+                        <TextBlock Text="Pharmacological Data:" Style="{StaticResource ProductPropertyName}"/>
+                        <StackPanel Margin="10,5,0,0">
+                            <TextBlock Text="• Half-life: 12 hours" Margin="0,3,0,3"/>
+                            <TextBlock Text="• Bioavailability: 25%" Margin="0,3,0,3"/>
+                            <TextBlock Text="• Protein binding: 0%" Margin="0,3,0,3"/>
+                            <TextBlock Text="• Excretion: Renal (100%)" Margin="0,3,0,3"/>
+                            <TextBlock Text="• Pregnancy Category: D" Margin="0,3,0,3"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- Distribution History -->
+                <TextBlock Text="Distribution History" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <DataGrid x:Name="SalesDataGrid" Style="{StaticResource CompactDataGrid}" Height="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Lot Number" Binding="{Binding OrderID}" Width="1*"/>
+                            <DataGridTextColumn Header="Distributor" Binding="{Binding Partner}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Ship Date" Binding="{Binding OrderDate, StringFormat=MM/dd/yyyy}" Width="1*"/>
+                            <DataGridTextColumn Header="Units Shipped" Binding="{Binding Quantity}" Width="0.8*"/>
+                            <DataGridTextColumn Header="Batch Value" Binding="{Binding Total, StringFormat=C}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer with Action Buttons -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Update Batch" Style="{StaticResource SecondaryButton}" Click="EditProduct_Click"/>
+                <Button Content="New Distribution" Style="{StaticResource ActionButton}" Click="PlaceOrder_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

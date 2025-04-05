@@ -1,0 +1,51 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\aliflogo-removebg-preview.png" />
+    <None Remove="Assets\Home.png" />
+    <None Remove="Assets\Inventory.png" />
+    <None Remove="Assets\Inventory_Selected.png" />
+    <None Remove="Assets\Logout.png" />
+    <None Remove="Assets\MAINLogo.png" />
+    <None Remove="Assets\Manage Store.png" />
+    <None Remove="Assets\MedicineSample.png" />
+    <None Remove="Assets\Order.png" />
+    <None Remove="Assets\Report.png" />
+    <None Remove="Assets\Suppliers.png" />
+    <None Remove="Images\LOGIN_front.png" />
+    <None Remove="Images\Passsword.png" />
+    <None Remove="Images\Usernamee.png" />
+    <None Remove="MAINLogo.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="9.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\aliflogo-removebg-preview.png" />
+    <Resource Include="Assets\Home.png" />
+    <Resource Include="Assets\Inventory.png" />
+    <Resource Include="Assets\Inventory_Selected.png" />
+    <Resource Include="Assets\Logout.png" />
+    <Resource Include="Assets\MAINLogo.png" />
+    <Resource Include="Assets\Manage Store.png" />
+    <Resource Include="Assets\MedicineSample.png" />
+    <Resource Include="Assets\Order.png" />
+    <Resource Include="Assets\Report.png" />
+    <Resource Include="Assets\Suppliers.png" />
+    <Resource Include="Images\LOGIN_front.png" />
+    <Resource Include="Images\Passsword.png" />
+    <Resource Include="Images\Usernamee.png" />
+    <Resource Include="MAINLogo.png" />
+  </ItemGroup>
+
+</Project>
