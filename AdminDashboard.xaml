@@ -444,7 +444,19 @@ Click="ManageStore_Click">
            VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
-                
+
+                <Button Style="{StaticResource SidebarButtonStyle}"
+                    Click="Purchases_Click">
+                    <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Inventory.png"
+                        Width="22"
+                        Height="22"
+                        Margin="5,0,15,0"/>
+                    <TextBlock Text="Purchases"
+                        VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
                 <Button Style="{StaticResource SelectedSidebarButtonStyle}"
 Click="ManageStore_Click">
                     <StackPanel Orientation="Horizontal">

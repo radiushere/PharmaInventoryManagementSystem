@@ -173,5 +173,12 @@ namespace SimpleLoginWPF
             mainWindow.Show();
             this.Close();
         }
+
+        private void Purchases_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new Purchases();
+            page.Show();
+            this.Close();
+        }
     }
 }

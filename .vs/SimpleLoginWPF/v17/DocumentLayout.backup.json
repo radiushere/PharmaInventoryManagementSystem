@@ -1,0 +1,73 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{F5DD0389-EB35-42DB-80A0-689DE08B6C66}|SimpleLoginWPF.csproj|c:\\users\\dell\\source\\repos\\simpleloginwpf\\dashboard.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{F5DD0389-EB35-42DB-80A0-689DE08B6C66}|SimpleLoginWPF.csproj|solutionrelative:dashboard.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5DD0389-EB35-42DB-80A0-689DE08B6C66}|SimpleLoginWPF.csproj|c:\\users\\dell\\source\\repos\\simpleloginwpf\\dashboard.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{F5DD0389-EB35-42DB-80A0-689DE08B6C66}|SimpleLoginWPF.csproj|solutionrelative:dashboard.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F5DD0389-EB35-42DB-80A0-689DE08B6C66}|SimpleLoginWPF.csproj|c:\\users\\dell\\source\\repos\\simpleloginwpf\\distributors.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{F5DD0389-EB35-42DB-80A0-689DE08B6C66}|SimpleLoginWPF.csproj|solutionrelative:distributors.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 296,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Dashboard.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Dashboard.xaml.cs",
+              "RelativeDocumentMoniker": "Dashboard.xaml.cs",
+              "ToolTip": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Dashboard.xaml.cs*",
+              "RelativeToolTip": "Dashboard.xaml.cs*",
+              "ViewState": "AgIAALgAAAAAAAAAAAAcwNQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-07T18:32:41.435Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Distributors.xaml",
+              "DocumentMoniker": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Distributors.xaml",
+              "RelativeDocumentMoniker": "Distributors.xaml",
+              "ToolTip": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Distributors.xaml",
+              "RelativeToolTip": "Distributors.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-04-07T17:59:16.068Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Dashboard.xaml",
+              "DocumentMoniker": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Dashboard.xaml",
+              "RelativeDocumentMoniker": "Dashboard.xaml",
+              "ToolTip": "C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Dashboard.xaml",
+              "RelativeToolTip": "Dashboard.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2025-04-07T17:25:12.686Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

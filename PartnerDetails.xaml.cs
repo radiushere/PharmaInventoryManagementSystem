@@ -111,9 +111,13 @@ namespace SimpleLoginWPF
 
         private void EditPartner_Click(object sender, RoutedEventArgs e)
         {
-            // In a real application, you would open a form to edit partner details
-            MessageBox.Show("Edit Partner functionality would open here.", "Edit Partner",
-                MessageBoxButton.OK, MessageBoxImage.Information);
+            var editPopup = new EditPartnerPopup(1001); // Example partner ID
+            editPopup.Owner = this;
+            if (editPopup.ShowDialog() == true)
+            {
+                // Refresh the partner details after editing
+                LoadPartnerDetails(1001);
+            }
         }
 
         private void ContactPartner_Click(object sender, RoutedEventArgs e)
@@ -121,6 +125,11 @@ namespace SimpleLoginWPF
             // In a real application, this might open an email client or messaging system
             MessageBox.Show("Contact functionality would open here.", "Contact Partner",
                 MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void Exit_Buttton(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

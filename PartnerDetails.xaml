@@ -403,8 +403,8 @@
         <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Edit Partner" Style="{StaticResource SecondaryButton}" Click="EditPartner_Click"/>
-                <Button Content="Contact Partner" Style="{StaticResource ActionButton}" Click="ContactPartner_Click"/>
+                <Button Content="Exit" Style="{StaticResource SecondaryButton}" Click="Exit_Buttton"/>
+                <Button Content="Edit" Style="{StaticResource ActionButton}" Click="EditPartner_Click"/>
             </StackPanel>
         </Border>
     </Grid>

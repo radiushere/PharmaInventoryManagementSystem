@@ -325,8 +325,8 @@
         <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Update Batch" Style="{StaticResource SecondaryButton}" Click="EditProduct_Click"/>
-                <Button Content="New Distribution" Style="{StaticResource ActionButton}" Click="PlaceOrder_Click"/>
+                <Button Content="Exit" Style="{StaticResource SecondaryButton}" Click="Exit"/>
+                <Button Content="Edit Product" Style="{StaticResource ActionButton}" Click="EditProduct_Click"/>
             </StackPanel>
         </Border>
     </Grid>

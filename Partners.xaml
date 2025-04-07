@@ -443,6 +443,18 @@ but if you want to differentiate it, define another style. -->
                     </StackPanel>
                 </Button>
 
+                <Button Style="{StaticResource SidebarButtonStyle}"
+    Click="Purchases_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Inventory.png"
+        Width="22"
+        Height="22"
+        Margin="5,0,15,0"/>
+                        <TextBlock Text="Purchases"
+        VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
                 <!-- Logout Button -->
                 <Button Style="{StaticResource SidebarButtonStyle}" 
         Click="Logout_Click"
@@ -569,6 +581,23 @@ but if you want to differentiate it, define another style. -->
                                      Binding="{Binding ContractEnd, StringFormat=yyyy-MM-dd}" Width="1.2*"/>
                     <DataGridTextColumn Header="Credit Limit" 
                                      Binding="{Binding CreditLimit, StringFormat=C}" Width="1*"/>
+                    <DataGridTemplateColumn Header="Actions" Width="1.5*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Details" 
+                        Style="{StaticResource AddMoreButton}" 
+                        Margin="2" Padding="8,4"
+                        Click="Details_Click"/>
+                                    <Button Content="Delete" 
+                        Style="{StaticResource AddMoreButton}" 
+                        Margin="2" Padding="8,4"
+                        Background="#FFD700"
+                        Click="Delete_Click"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

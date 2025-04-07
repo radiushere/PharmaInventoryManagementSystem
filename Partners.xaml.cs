@@ -174,5 +174,24 @@ namespace SimpleLoginWPF
             var page = new UserProfile();
             page.ShowDialog();
         }
+
+        private void Details_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new PartnerDetails(1);
+            page.ShowDialog();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+        private void Purchases_Click(object sender, RoutedEventArgs e)
+        {
+            var pages = new Purchases();
+            pages.Show();
+            this.Close();
+        }
     }
 }

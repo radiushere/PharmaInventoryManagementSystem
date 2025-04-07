@@ -415,8 +415,8 @@
         <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Edit Distributor" Style="{StaticResource SecondaryButton}" Click="EditDistributor_Click"/>
-                <Button Content="Request Delivery" Style="{StaticResource ActionButton}" Click="RequestDelivery_Click"/>
+                <Button Content="Exit" Style="{StaticResource SecondaryButton}" Click="ExitPopup_Click"/>
+                <Button Content="Edit Distributor" Style="{StaticResource ActionButton}" Click="EditDistributor_Click"/>
             </StackPanel>
         </Border>
     </Grid>

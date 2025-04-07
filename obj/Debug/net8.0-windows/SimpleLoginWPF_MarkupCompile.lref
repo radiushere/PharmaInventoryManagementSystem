@@ -1,10 +1,15 @@
 ﻿
 
 FC:\Users\DELL\source\repos\SimpleLoginWPF\AddItemDialog.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\AddPurchaseWindow.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\AdminDashboard.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\Dashboard.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\DistributorDetails.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\Distributors.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\EditDistributorPopup.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\EditPartnerPopup.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\EditProductPopup.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\EditPurchaseDialog.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\EditUserWindow.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\Login.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\NewDistributorWindow.xaml;;
@@ -16,6 +21,8 @@ FC:\Users\DELL\source\repos\SimpleLoginWPF\Orders.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\PartnerDetails.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\Partners.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\ProductInfo.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\PurchaseDetails.xaml;;
+FC:\Users\DELL\source\repos\SimpleLoginWPF\Purchases.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\Reports.xaml;;
 FC:\Users\DELL\source\repos\SimpleLoginWPF\UserProfile.xaml;;
 

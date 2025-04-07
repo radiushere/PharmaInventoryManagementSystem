@@ -1,0 +1,411 @@
+﻿<Window x:Class="SimpleLoginWPF.PurchaseDetails"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleLoginWPF"
+        mc:Ignorable="d"
+        Title="Purchase Details"
+        Height="720"
+        Width="1000"
+        Background="#F8FAFC"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Color x:Key="PrimaryRed">#B30000</Color>
+        <Color x:Key="PrimaryRedDark">#8A0000</Color>
+        <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
+        <Color x:Key="AccentGold">#FFD700</Color>
+
+        <!-- Convert Colors to Brushes -->
+        <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
+        <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
+        <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="12" Opacity="0.2" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        CornerRadius="4"
+                        Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedDarkBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="4"
+                        Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                         VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~~~ SECTION STYLES ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="18"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <Style x:Key="PartnerPropertyName" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#444444"/>
+            <Setter Property="Margin" Value="0,10,10,5"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+        </Style>
+
+        <Style x:Key="PartnerPropertyValue" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="Margin" Value="0,10,0,5"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+
+        <Style x:Key="ContentCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15" Opacity="0.1" ShadowDepth="3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <!-- ~~~~~ DATA GRID STYLES ~~~~~~~~ -->
+        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        <Style x:Key="CompactDataGrid" TargetType="DataGrid">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="RowBackground" Value="White"/>
+            <Setter Property="AlternatingRowBackground" Value="#FFF5F5"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="RowHeight" Value="35"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="None"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="ColumnHeaderStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridColumnHeader">
+                        <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+                        <Setter Property="Foreground" Value="White"/>
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Height" Value="35"/>
+                        <Setter Property="SeparatorVisibility" Value="Collapsed"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RowStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridRow">
+                        <Setter Property="Background" Value="Transparent"/>
+                        <Setter Property="BorderBrush" Value="Transparent"/>
+                        <Setter Property="Margin" Value="0,2"/>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CellStyle">
+                <Setter.Value>
+                    <Style TargetType="DataGridCell">
+                        <Setter Property="Padding" Value="8"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="DataGridCell">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter VerticalAlignment="Center"/>
+                                    </Grid>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BatchInfoStyle" TargetType="Border">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
+            <DockPanel LastChildFill="True">
+                <Button DockPanel.Dock="Right" Content="←  Back to Purchases" Click="BackButton_Click" 
+                        Style="{StaticResource SecondaryButton}" Background="White"/>
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Purchase.png" Width="32" Height="32" Margin="0,0,15,0"/>
+                    <TextBlock Text="Purchase Details" FontSize="24" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+            </DockPanel>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,15">
+            <StackPanel>
+                <!-- Purchase Summary -->
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0">
+                            <TextBlock x:Name="PurchaseTitle" Text="Raw Materials Purchase #PM-2023-0456" 
+                                      FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryRedBrush}" Margin="0,0,0,10"/>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Purchase ID:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <TextBlock x:Name="PurchaseId" Text="PM-2023-0456" Style="{StaticResource PartnerPropertyValue}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Supplier:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <TextBlock x:Name="SupplierName" Text="MediChem Supplies Ltd." Style="{StaticResource PartnerPropertyValue}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Purchase Date:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <TextBlock x:Name="PurchaseDate" Text="2023-11-15" Style="{StaticResource PartnerPropertyValue}"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1">
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Status:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <Border Background="#4CAF50" CornerRadius="4" Padding="8,2" Width="Auto">
+                                    <TextBlock x:Name="PurchaseStatus" Text="Completed" Foreground="White" FontWeight="SemiBold"/>
+                                </Border>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Total Amount:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <TextBlock x:Name="TotalAmount" Text="$24,850.75" Style="{StaticResource PartnerPropertyValue}" FontWeight="SemiBold"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Payment Method:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <TextBlock x:Name="PaymentMethod" Text="Bank Transfer" Style="{StaticResource PartnerPropertyValue}"/>
+                            </StackPanel>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
+                                <TextBlock Text="Delivery Date:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <TextBlock x:Name="DeliveryDate" Text="2023-11-22" Style="{StaticResource PartnerPropertyValue}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Materials Purchased -->
+                <TextBlock Text="Materials Purchased" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <DataGrid x:Name="MaterialsDataGrid" Style="{StaticResource CompactDataGrid}" AutoGenerateColumns="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Material" Binding="{Binding MaterialName}" Width="2*"/>
+                            <DataGridTextColumn Header="Batch No." Binding="{Binding BatchNumber}" Width="1*"/>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="0.8*"/>
+                            <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="0.7*"/>
+                            <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice, StringFormat=C}" Width="1*"/>
+                            <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C}" Width="1*"/>
+                            <DataGridTextColumn Header="Expiry" Binding="{Binding ExpiryDate, StringFormat=yyyy-MM-dd}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <!-- Batch Details -->
+                <TextBlock Text="Batch Details" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <StackPanel>
+                        <!-- Sample batch 1 -->
+                        <Border Style="{StaticResource BatchInfoStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Paracetamol API (Batch: PC-API-1123)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Quantity:" Grid.Column="0" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="500 kg" Grid.Column="1" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
+
+                                    <TextBlock Text="Expiry:" Grid.Column="2" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="2025-06-30" Grid.Column="3" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
+
+                                    <TextBlock Text="COA:" Grid.Column="0" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="COA-1123-PC-API" Grid.Column="1" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
+
+                                    <TextBlock Text="Storage:" Grid.Column="2" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="Room Temperature" Grid.Column="3" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Sample batch 2 -->
+                        <Border Style="{StaticResource BatchInfoStyle}" Margin="0,10,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Ibuprofen API (Batch: IB-API-0923)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Text="Quantity:" Grid.Column="0" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="300 kg" Grid.Column="1" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
+
+                                    <TextBlock Text="Expiry:" Grid.Column="2" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="2025-03-15" Grid.Column="3" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
+
+                                    <TextBlock Text="COA:" Grid.Column="0" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="COA-0923-IB-API" Grid.Column="1" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
+
+                                    <TextBlock Text="Storage:" Grid.Column="2" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
+                                    <TextBlock Text="Cool, Dry Place" Grid.Column="3" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Documents and Notes -->
+                <TextBlock Text="Documents" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Documents -->
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Attached Documents:" Style="{StaticResource PartnerPropertyName}"/>
+                            <StackPanel Margin="0,5,0,0">
+                                <Button Content="Invoice #INV-45678.pdf" Style="{StaticResource SecondaryButton}" 
+                                        HorizontalAlignment="Left" Margin="0,5,0,5" Padding="10,5"/>
+                                <Button Content="Certificate of Analysis.pdf" Style="{StaticResource SecondaryButton}" 
+                                        HorizontalAlignment="Left" Margin="0,5,0,5" Padding="10,5"/>
+                                <Button Content="Delivery Note.pdf" Style="{StaticResource SecondaryButton}" 
+                                        HorizontalAlignment="Left" Margin="0,5,0,5" Padding="10,5"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Notes -->
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Purchase Notes:" Style="{StaticResource PartnerPropertyName}"/>
+                            <TextBlock x:Name="PurchaseNotes" Style="{StaticResource PartnerPropertyValue}" TextWrapping="Wrap" 
+                                       Text="This purchase includes active pharmaceutical ingredients (APIs) for our Q1 2024 production. 
+                                      
+The Paracetamol API meets USP standards and has been pre-approved by our QA team. 
+                                      
+The Ibuprofen API requires additional testing before release to production. 
+                                      
+Special storage instructions: Ibuprofen API must be kept below 25°C."/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer with Action Buttons -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Print Details" Style="{StaticResource SecondaryButton}" Click="PrintDetails_Click"/>
+                <Button Content="Edit" Style="{StaticResource ActionButton}" Click="EditProduct_Click" Margin="10,0,0,0"/>
+                <Button Content="Receive Materials" Style="{StaticResource ActionButton}" Click="ReceiveMaterials_Click" Margin="10,0,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

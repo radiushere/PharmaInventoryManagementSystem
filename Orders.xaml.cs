@@ -168,6 +168,25 @@ namespace SimpleLoginWPF
             this.Close();
         }
 
+        private void Purchases_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new Purchases();
+            page.Show();
+            this.Hide();
+        }
+        
+        private void Details_Click(object sender, RoutedEventArgs e)
+        {
+            var detailPopup = new OrderDetails();
+            detailPopup.Owner = this;
+            detailPopup.ShowDialog();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
         // Other event handlers same as Suppliers
     }
 }

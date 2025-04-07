@@ -5,6 +5,9 @@
     <Compile Update="AddItemDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="AddPurchaseWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="AdminDashboard.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -15,6 +18,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Distributors.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditDistributorPopup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditPartnerPopup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditProductPopup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="EditPurchaseDialog.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="EditUserWindow.xaml.cs">
@@ -51,6 +66,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="ProductInfo.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="PurchaseDetails.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="Purchases.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="Registration.xaml.cs">

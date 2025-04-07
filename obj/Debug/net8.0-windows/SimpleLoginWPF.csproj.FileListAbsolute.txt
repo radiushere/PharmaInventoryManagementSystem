@@ -78,3 +78,17 @@ C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\refint\Simple
 C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\SimpleLoginWPF.pdb
 C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\SimpleLoginWPF.genruntimeconfig.cache
 C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\ref\SimpleLoginWPF.dll
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\AddPurchaseWindow.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\Purchases.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\AddPurchaseWindow.baml
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\Purchases.baml
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\PurchaseDetails.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\PurchaseDetails.baml
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditPurchaseDialog.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditPurchaseDialog.baml
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditProductPopup.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditProductPopup.baml
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditPartnerPopup.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditPartnerPopup.baml
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditDistributorPopup.g.cs
+C:\Users\DELL\source\repos\SimpleLoginWPF\obj\Debug\net8.0-windows\EditDistributorPopup.baml

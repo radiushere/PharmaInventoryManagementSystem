@@ -12,12 +12,10 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <!-- Color Resources -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="#B30000"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="#8A0000"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="#FFD9D9"/>
 
-        <!-- Button Styles -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -70,6 +68,27 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="EditTextBox" TargetType="TextBox">
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="BorderBrush" Value="#DDD"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Margin" Value="0,5,0,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="White"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Padding="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Grid>
@@ -79,7 +98,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
             <DockPanel>
                 <Button DockPanel.Dock="Right" 
@@ -97,10 +115,8 @@
             </DockPanel>
         </Border>
 
-        <!-- Content -->
         <ScrollViewer Grid.Row="1" Padding="25">
             <StackPanel>
-                <!-- Order Summary -->
                 <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,15">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -126,7 +142,6 @@
                     </Grid>
                 </Border>
 
-                <!-- Order Items -->
                 <DataGrid x:Name="OrderItemsGrid" 
                          AutoGenerateColumns="False"
                          IsReadOnly="True"
@@ -142,12 +157,14 @@
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Footer -->
         <Border Grid.Row="2" Background="White" Padding="25">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Generate Invoice" 
                         Style="{StaticResource PrimaryButton}"
                         Click="GenerateInvoice_Click"/>
+                <Button Content="Edit Order" 
+                        Style="{StaticResource PrimaryButton}"
+                        Click="EditOrder_Click" Margin="10,0,0,0"/>
                 <Button Content="Close" 
                         Style="{StaticResource SecondaryButton}"
                         Margin="15,0,0,0"
@@ -155,9 +172,8 @@
             </StackPanel>
         </Border>
 
-        <!-- Invoice Popup -->
         <Border x:Name="InvoicePopup" Visibility="Collapsed"
-        Background="#80000000" Panel.ZIndex="999">
+        Background="#80000000" Panel.ZIndex="999" Grid.RowSpan="3">
             <Border Background="White" CornerRadius="8" Padding="20"
             Width="400" Height="300">
                 <StackPanel>
@@ -170,6 +186,70 @@
                     Style="{StaticResource SecondaryButton}"
                     Click="CloseInvoicePopup_Click"/>
                 </StackPanel>
+            </Border>
+        </Border>
+
+        <!-- Edit Order Popup -->
+        <Border x:Name="EditOrderPopup" Visibility="Collapsed"
+                Background="#80000000" Panel.ZIndex="999" Grid.RowSpan="3">
+            <Border Background="White" CornerRadius="8" Padding="25"
+                    Width="500" MaxHeight="600" VerticalAlignment="Center">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Header -->
+                    <TextBlock Grid.Row="0" Text="Edit Order" FontSize="20" FontWeight="Bold"
+                               Foreground="{StaticResource PrimaryRedBrush}" Margin="0,0,0,15"/>
+
+                    <!-- Content -->
+                    <ScrollViewer Grid.Row="1" MaxHeight="400" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="EditItemsControl">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,0,0,15" BorderBrush="#EEE" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="100"/>
+                                                <ColumnDefinition Width="120"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="Product" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                                <TextBox Text="{Binding Name}" Style="{StaticResource EditTextBox}"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Quantity" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                                <TextBox Text="{Binding Quantity}" Style="{StaticResource EditTextBox}"/>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2" Margin="10,0,0,0">
+                                                <TextBlock Text="Price ($)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                                <TextBox Text="{Binding Price}" Style="{StaticResource EditTextBox}"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+
+                    <!-- Footer Buttons -->
+                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                        <Button Content="Save Changes" 
+                                Style="{StaticResource PrimaryButton}"
+                                Click="SaveOrderChanges_Click"/>
+                        <Button Content="Cancel" 
+                                Style="{StaticResource SecondaryButton}"
+                                Margin="10,0,0,0"
+                                Click="CloseEditPopup_Click"/>
+                    </StackPanel>
+                </Grid>
             </Border>
         </Border>
     </Grid>

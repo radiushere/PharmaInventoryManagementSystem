@@ -276,6 +276,13 @@ namespace SimpleLoginWPF
             adminDashboard.Show();
             this.Hide();
         }
+
+        private void Purchase_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new Purchases();
+            page.Show();
+            this.Hide();
+        }
     }
 
     // Simple data model for inventory items

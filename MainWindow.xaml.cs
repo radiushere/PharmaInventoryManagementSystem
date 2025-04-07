@@ -200,5 +200,28 @@ namespace SimpleLoginWPF
             partners.Show();
             this.Hide();
         }
+
+        private void Purchases_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new Purchases();
+            page.Show();
+            this.Hide();
+        }
+
+        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
+
+        private void ViewDetail_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new ProductInfo(1);
+            page.Show();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

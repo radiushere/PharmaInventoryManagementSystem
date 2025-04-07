@@ -1,0 +1,367 @@
+﻿<Window x:Class="SimpleLoginWPF.EditDistributorPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SimpleLoginWPF"
+        mc:Ignorable="d"
+        Title="Edit Distributor" 
+        Height="620" 
+        Width="800"
+        Background="#F8FAFC"
+        FontFamily="Segoe UI"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize">
+
+    <Window.Resources>
+        <Color x:Key="PrimaryRed">#B30000</Color>
+        <Color x:Key="PrimaryRedDark">#8A0000</Color>
+        <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
+        <Color x:Key="AccentGold">#FFD700</Color>
+
+        <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
+        <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
+        <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+
+        <Style x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="MinWidth" Value="120"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="Margin" Value="8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="12" Opacity="0.2" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedDarkBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource ActionButton}">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                            <Grid>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Margin" Value="0,15,0,10"/>
+        </Style>
+
+        <Style x:Key="InputLabelStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#444444"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="InputBoxStyle" TargetType="TextBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#D1D1D1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="InputComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Height" Value="36"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="BorderBrush" Value="#D1D1D1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ContentCardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15" Opacity="0.1" ShadowDepth="3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
+            <TextBlock Text="Edit Distributor" FontSize="20" FontWeight="SemiBold" Foreground="White"/>
+        </Border>
+
+        <!-- Content -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,15">
+            <StackPanel>
+                <!-- Basic Information Section -->
+                <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
+                            <TextBlock Text="Distributor Name:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtDistributorName" Text="PharmaMed Distributors" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,10">
+                            <TextBlock Text="Distributor ID:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtDistributorId" Text="D2001" Style="{StaticResource InputBoxStyle}" IsReadOnly="True" 
+                                     Background="#F5F5F5"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="Distributor Type:" Style="{StaticResource InputLabelStyle}"/>
+                            <ComboBox x:Name="cmbDistributorType" Style="{StaticResource InputComboBoxStyle}" 
+                                      SelectedIndex="0">
+                                <ComboBoxItem Content="Regional Wholesaler"/>
+                                <ComboBoxItem Content="National Distributor"/>
+                                <ComboBoxItem Content="International Supplier"/>
+                                <ComboBoxItem Content="Local Distributor"/>
+                            </ComboBox>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,0,10">
+                            <TextBlock Text="Status:" Style="{StaticResource InputLabelStyle}"/>
+                            <ComboBox x:Name="cmbStatus" Style="{StaticResource InputComboBoxStyle}"
+                                      SelectedIndex="0">
+                                <ComboBoxItem Content="Active"/>
+                                <ComboBoxItem Content="Inactive"/>
+                                <ComboBoxItem Content="Pending"/>
+                                <ComboBoxItem Content="Suspended"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Geographical Information Section -->
+                <TextBlock Text="Geographical Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
+                            <TextBlock Text="Primary Region:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtPrimaryRegion" Text="Northeast" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,10">
+                            <TextBlock Text="Service Areas:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtServiceAreas" Text="NY, PA, NJ, CT, MA" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="Warehouse Locations:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtWarehouseLocations" Text="Albany, NY; Philadelphia, PA" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,0,10">
+                            <TextBlock Text="Delivery Radius:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtDeliveryRadius" Text="300 miles" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Contact Information Section -->
+                <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
+                            <TextBlock Text="Phone:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtContactPhone" Text="+1 (800) 555-1234" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,10">
+                            <TextBlock Text="Emergency Phone:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtEmergencyPhone" Text="+1 (800) 555-5678" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,0,10,10">
+                            <TextBlock Text="Email:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtContactEmail" Text="support@pharmamed.com" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="Address:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtAddress" Text="456 Distribution Parkway, Albany, NY 12205" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,0,10">
+                            <TextBlock Text="Operations Manager:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtOperationsManager" Text="Michael Chen" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="2" Margin="0,0,0,10">
+                            <TextBlock Text="Support Hours:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtSupportHours" Text="24/7" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Capacity Information Section -->
+                <TextBlock Text="Capacity Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
+                            <TextBlock Text="Daily Delivery Capacity:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtDailyCapacity" Text="1500 packages" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,10">
+                            <TextBlock Text="Vehicle Fleet:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtVehicleFleet" Text="45 refrigerated trucks" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,10">
+                            <TextBlock Text="Cold Chain Storage:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtColdStorage" Text="Yes (GMP Certified)" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="0,0,0,10">
+                            <TextBlock Text="Certifications:" Style="{StaticResource InputLabelStyle}"/>
+                            <TextBox x:Name="txtCertifications" Text="ISO 9001, GDP Compliant" Style="{StaticResource InputBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- Notes Section -->
+                <TextBlock Text="Notes" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <StackPanel>
+                        <TextBlock Text="Notes:" Style="{StaticResource InputLabelStyle}"/>
+                        <TextBox x:Name="txtNotes" Style="{StaticResource InputBoxStyle}" Height="80" 
+                                 TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top" 
+                                 Text="Primary distributor for northeast region. Requires 48-hour notice for large orders. Maintains excellent cold chain compliance. Preferred partner for vaccine distribution."/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <!-- Footer with Action Buttons -->
+        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,12">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
+                <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

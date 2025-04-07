@@ -7,6 +7,8 @@ namespace SimpleLoginWPF
 {
     public partial class ProductInfo : Window
     {
+        private int _productId;
+
         public class SalesData
         {
             public string OrderID { get; set; }
@@ -19,6 +21,7 @@ namespace SimpleLoginWPF
         public ProductInfo(int productId)
         {
             InitializeComponent();
+            _productId = productId;
             LoadProductDetails(productId);
             LoadDistributionHistory(productId);
         }
@@ -29,18 +32,15 @@ namespace SimpleLoginWPF
             ProductName.Text = "CardioSafe 100mg Tablets";
             ProductCategory.Text = "Antihypertensives";
             StockStatus.Text = "Active Batch";
-
             // Product Details
             UnitPrice.Text = "Lisinopril";
             BatchNumber.Text = "BT-LIS2024-01";
             ManufactureDate.Text = "January 15, 2024";
             ExpiryDate.Text = "January 2026";
-
             StockQuantity.Text = "5,000 Bottles";
             MinStockLevel.Text = "2-8°C Refrigeration";
             SupplierName.Text = "PharmaCare Global Ltd.";
             StorageLocation.Text = "Warehouse 3, Cold Storage A";
-
             ProductDescription.Text = "ACE inhibitor for hypertension management. White, oval-shaped film-coated tablets.";
 
             try
@@ -87,9 +87,35 @@ namespace SimpleLoginWPF
             SalesDataGrid.ItemsSource = distributions;
         }
 
-        // Existing event handlers remain the same
-        private void BackButton_Click(object sender, RoutedEventArgs e) => Close();
-        private void EditProduct_Click(object sender, RoutedEventArgs e) => MessageBox.Show("Batch update functionality");
-        private void PlaceOrder_Click(object sender, RoutedEventArgs e) => MessageBox.Show("New distribution workflow");
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void EditProduct_Click(object sender, RoutedEventArgs e)
+        {
+            // Create and show the edit product popup
+            EditProductPopup editPopup = new EditProductPopup(_productId);
+            editPopup.Owner = this; // Set the owner to center the popup relative to the main window
+
+            // Show dialog and handle the result
+            bool? result = editPopup.ShowDialog();
+
+            if (result == true)
+            {
+                // Refresh product data if changes were saved
+                LoadProductDetails(_productId);
+            }
+        }
+
+        private void PlaceOrder_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show("New distribution workflow");
+        }
+
+        private void Exit(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

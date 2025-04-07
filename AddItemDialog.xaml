@@ -342,7 +342,7 @@
             </Grid.RowDefinitions>
 
             <!-- Header -->
-            <TextBlock Text="Add New Medicine Item" 
+            <TextBlock Text="Add New Item" 
                        Grid.Row="0"
                        FontSize="16"
                        FontWeight="Bold"

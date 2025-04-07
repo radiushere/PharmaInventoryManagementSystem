@@ -389,6 +389,17 @@ Margin="5,0,15,0"/>
                 </StackPanel>
             </Button>
 
+            <Button Style="{StaticResource SidebarButtonStyle}"
+    Click="Purchases_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Inventory.png"
+        Width="22"
+        Height="22"
+        Margin="5,0,15,0"/>
+                    <TextBlock Text="Purchases"
+        VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
             <Button Style="{StaticResource SidebarButtonStyle}" Margin="0,40,0,0" Tag="/Assets/Logout.png" Click="Logout_Click" Foreground="Red">
                 <StackPanel Orientation="Horizontal" >
                     <Image Source="/Assets/Logout.png"

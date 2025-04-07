@@ -18,6 +18,7 @@
     <None Remove="Assets\Manage Store.png" />
     <None Remove="Assets\MedicineSample.png" />
     <None Remove="Assets\Order.png" />
+    <None Remove="Assets\Purchase.png" />
     <None Remove="Assets\Report.png" />
     <None Remove="Assets\Suppliers.png" />
     <None Remove="Images\LOGIN_front.png" />
@@ -40,6 +41,7 @@
     <Resource Include="Assets\Manage Store.png" />
     <Resource Include="Assets\MedicineSample.png" />
     <Resource Include="Assets\Order.png" />
+    <Resource Include="Assets\Purchase.png" />
     <Resource Include="Assets\Report.png" />
     <Resource Include="Assets\Suppliers.png" />
     <Resource Include="Images\LOGIN_front.png" />

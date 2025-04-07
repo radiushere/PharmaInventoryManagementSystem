@@ -442,6 +442,18 @@
                         <TextBlock Text="Distributors" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
+                
+                <Button Style="{StaticResource SidebarButtonStyle}"
+    Click="Purchases_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Inventory.png"
+        Width="22"
+        Height="22"
+        Margin="5,0,15,0"/>
+                        <TextBlock Text="Purchases"
+        VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
 
                 <!-- Logout Button -->
                 <Button Style="{StaticResource SidebarButtonStyle}" 
@@ -564,7 +576,25 @@
                     <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.2*"/>
                     <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="2*"/>
                     <DataGridTextColumn Header="Service Area" Binding="{Binding ServiceArea}" Width="3*"/>
+                    <DataGridTemplateColumn Header="Actions" Width="1.5*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button Content="Details" 
+Style="{StaticResource AddMoreButton}" 
+Margin="2" Padding="8,4"
+Click="Details_Click"/>
+                                    <Button Content="Delete" 
+Style="{StaticResource AddMoreButton}" 
+Margin="2" Padding="8,4"
+Background="#FFD700"
+Click="Delete_Click"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
+                
             </DataGrid>
         </Grid>
     </Grid>
