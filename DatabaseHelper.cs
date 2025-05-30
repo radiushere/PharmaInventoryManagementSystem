@@ -5,7 +5,6 @@ using System.Windows;
 
 public class DatabaseHelper
 {
-    // Fetch connection string from App.config
     private static readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
 
     public static bool RegisterUser(string username, string password, string role)
@@ -30,7 +29,7 @@ public class DatabaseHelper
         }
         catch (Exception ex)
         {
-            MessageBox.Show("Error: " + ex.Message);
+            MessageBox.Show("Registration error: " + ex.Message);
             return false;
         }
     }
@@ -42,22 +41,31 @@ public class DatabaseHelper
             using (MySqlConnection conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "SELECT role FROM users WHERE username = @username AND password = @password";
+                string query = "SELECT id, role FROM users WHERE username = @username AND password = @password";
 
                 using (MySqlCommand cmd = new MySqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@username", username);
                     cmd.Parameters.AddWithValue("@password", password);
 
-                    object result = cmd.ExecuteScalar();
-                    return result?.ToString(); // Return role if found
+                    using (MySqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            UserSession.UserID = reader.GetInt32("id");
+                            UserSession.Username = username;
+                            UserSession.Role = reader.GetString("role");
+                            return UserSession.Role;
+                        }
+                    }
                 }
             }
         }
         catch (Exception ex)
         {
             MessageBox.Show("Database error: " + ex.Message);
-            return null;
         }
+
+        return null;
     }
 }

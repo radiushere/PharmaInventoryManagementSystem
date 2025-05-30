@@ -1,101 +1,214 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Configuration;
+using System.Data;
+using System.Globalization;
+using System.Text.RegularExpressions; // Required for PreviewTextInput
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input; // Required for PreviewTextInputEventArgs
 
 namespace SimpleLoginWPF
 {
     public partial class AddPurchaseWindow : Window
     {
-        public class PurchaseItem
-        {
-            public string Medicine { get; set; }
-            public string BatchNumber { get; set; }
-            public int Quantity { get; set; }
-            public decimal UnitPrice { get; set; }
-            public DateTime ExpiryDate { get; set; }
-            public decimal Total => Quantity * UnitPrice;
-        }
+        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+        private decimal currentProductPrice = 0; // To store the price of the selected product
 
         public AddPurchaseWindow()
         {
             InitializeComponent();
+            LoadSuppliers();
+            LoadProducts(); // Load products into the new ComboBox
+            dpPurchaseDate.SelectedDate = DateTime.Now;
+            UpdateTotalAmount(); // Initial update
+        }
 
-            // Set default dates
-            dpPurchaseDate.SelectedDate = DateTime.Today;
-            dpDeliveryDate.SelectedDate = DateTime.Today.AddDays(7);
-
-            // Initialize with some sample items
-            dgPurchaseItems.ItemsSource = new List<PurchaseItem>
+        private void LoadSuppliers()
+        {
+            try
             {
-                new PurchaseItem
+                using (var conn = new MySqlConnection(connectionString))
                 {
-                    Medicine = "Paracetamol 500mg",
-                    BatchNumber = "BATCH001",
-                    Quantity = 100,
-                    UnitPrice = 2.50m,
-                    ExpiryDate = DateTime.Today.AddYears(2)
-                },
-                new PurchaseItem
-                {
-                    Medicine = "Ibuprofen 200mg",
-                    BatchNumber = "BATCH002",
-                    Quantity = 50,
-                    UnitPrice = 3.75m,
-                    ExpiryDate = DateTime.Today.AddYears(2)
+                    conn.Open();
+                    var query = "SELECT supplier_id, supplier_name FROM suppliers ORDER BY supplier_name";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            DataTable suppliersTable = new DataTable();
+                            suppliersTable.Load(reader);
+                            cmbSuppliers.ItemsSource = suppliersTable.DefaultView;
+                            // DisplayMemberPath and SelectedValuePath are set in XAML
+                        }
+                    }
                 }
-            };
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading suppliers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
+        private void LoadProducts()
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    // Assuming 'products' table has 'product_id', 'product_name', and 'price'
+                    var query = "SELECT product_id, product_name, price FROM products WHERE quantity > 0 ORDER BY product_name"; // Or any other criteria
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            DataTable productsTable = new DataTable();
+                            productsTable.Load(reader);
+                            cmbProducts.ItemsSource = productsTable.DefaultView;
+                            // DisplayMemberPath and SelectedValuePath are set in XAML
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void CmbProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbProducts.SelectedItem is DataRowView selectedProduct)
+            {
+                try
+                {
+                    // Ensure the 'price' column exists and is of a numeric type
+                    currentProductPrice = Convert.ToDecimal(selectedProduct["price"]);
+                    txtUnitPriceDisplay.Text = $"Rs {currentProductPrice:F2}";
+                }
+                catch (Exception ex)
+                {
+                    currentProductPrice = 0;
+                    txtUnitPriceDisplay.Text = "Rs 0.00";
+                    MessageBox.Show($"Error fetching product price: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                currentProductPrice = 0;
+                txtUnitPriceDisplay.Text = "Rs 0.00";
+            }
             UpdateTotalAmount();
         }
 
-        private void AddItem_Click(object sender, RoutedEventArgs e)
+        private void TxtQuantity_TextChanged(object sender, TextChangedEventArgs e)
         {
-            //var items = dgPurchaseItems.ItemsSource as List<PurchaseItem> ?? new List<PurchaseItem>();
-            //items.Add(new PurchaseItem
-            //{
-            //    Medicine = "Amoxicillin 250mg",
-            //    BatchNumber = "NEWBATCH",
-            //    Quantity = 1,
-            //    UnitPrice = 5.00m,
-            //    ExpiryDate = DateTime.Today.AddYears(1)
-            //});
-            //dgPurchaseItems.ItemsSource = items;
-            //UpdateTotalAmount();
-
-            var addPurchaseWindow = new AddItemDialog();
-            addPurchaseWindow.ShowDialog();
-        }
-
-        private void RemoveItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (dgPurchaseItems.SelectedItem is PurchaseItem item)
-            {
-                var items = dgPurchaseItems.ItemsSource as List<PurchaseItem>;
-                items?.Remove(item);
-                dgPurchaseItems.ItemsSource = items;
-                UpdateTotalAmount();
-            }
+            UpdateTotalAmount();
         }
 
         private void UpdateTotalAmount()
         {
-            decimal total = 0;
-            if (dgPurchaseItems.ItemsSource is List<PurchaseItem> items)
+            if (int.TryParse(txtQuantity.Text, out int quantity) && quantity > 0)
             {
-                foreach (var item in items)
-                {
-                    total += item.Total;
-                }
+                decimal totalAmount = currentProductPrice * quantity;
+                txtTotalPriceDisplay.Text = $"Total Price: Rs {totalAmount:F2}";
             }
-            txtTotalAmount.Text = $"Total Amount: {total:C}";
+            else
+            {
+                txtTotalPriceDisplay.Text = "Total Price: Rs 0.00";
+            }
+        }
+
+        // Optional: Validate TextBox to accept only numbers
+        private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9]+"); // Regular expression to allow only numbers
+            e.Handled = regex.IsMatch(e.Text);
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Purchase saved successfully!", "Success",
-                MessageBoxButton.OK, MessageBoxImage.Information);
-            this.Close();
+            if (cmbSuppliers.SelectedValue == null ||
+                dpPurchaseDate.SelectedDate == null ||
+                cmbStatus.SelectedItem == null ||
+                cmbProducts.SelectedValue == null ||
+                string.IsNullOrWhiteSpace(txtQuantity.Text) ||
+                !int.TryParse(txtQuantity.Text, out int quantity) || quantity <= 0)
+            {
+                MessageBox.Show("Please fill in all required fields correctly (Supplier, Date, Status, Product, and valid Quantity).", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            var selectedStatusItem = cmbStatus.SelectedItem as ComboBoxItem;
+            if (selectedStatusItem == null)
+            {
+                MessageBox.Show("Invalid status selected.", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            string status = selectedStatusItem.Content.ToString();
+            int productId = (int)cmbProducts.SelectedValue;
+            decimal totalMonetaryAmount = currentProductPrice * quantity;
+
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Insert into product_purchases
+                            var purchaseQuery = @"INSERT INTO product_purchases 
+                                                  (supplier_id, product_id, date, status, total_amount)
+                                                  VALUES 
+                                                  (@supplierId, @productId, @date, @status, @totalAmount)";
+                            using (var purchaseCmd = new MySqlCommand(purchaseQuery, conn, transaction))
+                            {
+                                purchaseCmd.Parameters.AddWithValue("@supplierId", cmbSuppliers.SelectedValue);
+                                purchaseCmd.Parameters.AddWithValue("@productId", productId);
+                                purchaseCmd.Parameters.AddWithValue("@date", dpPurchaseDate.SelectedDate);
+                                purchaseCmd.Parameters.AddWithValue("@status", status);
+                                purchaseCmd.Parameters.AddWithValue("@totalAmount", totalMonetaryAmount); // Monetary total
+
+                                purchaseCmd.ExecuteNonQuery();
+                            }
+
+                            // If status is "Completed", update product quantity
+                            if (status == "Completed")
+                            {
+                                UpdateProductQuantityInProductsTable(conn, transaction, productId, quantity);
+                            }
+
+                            transaction.Commit();
+                            MessageBox.Show("Purchase saved successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                            this.Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            MessageBox.Show($"Error saving purchase: {ex.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error connecting to database: {ex.Message}", "Connection Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void UpdateProductQuantityInProductsTable(MySqlConnection conn, MySqlTransaction transaction, int productId, int purchasedQuantity)
+        {
+            // This method assumes you want to ADD the purchased quantity to the existing quantity
+            var updateQuery = "UPDATE products SET quantity = quantity + @purchasedQuantity WHERE product_id = @productId";
+            using (var updateCmd = new MySqlCommand(updateQuery, conn, transaction))
+            {
+                updateCmd.Parameters.AddWithValue("@purchasedQuantity", purchasedQuantity);
+                updateCmd.Parameters.AddWithValue("@productId", productId);
+                updateCmd.ExecuteNonQuery();
+            }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

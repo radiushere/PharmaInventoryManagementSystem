@@ -13,23 +13,16 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
         <Color x:Key="AccentGold">#FFD700</Color>
 
-        <!-- Convert Colors to Brushes -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Height" Value="40"/>
             <Setter Property="MinWidth" Value="120"/>
@@ -54,7 +47,7 @@
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -82,7 +75,7 @@
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -95,9 +88,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ SECTION STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -132,9 +122,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~ DATA GRID STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="CompactDataGrid" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="RowBackground" Value="White"/>
@@ -165,7 +152,6 @@
         </Style>
     </Window.Resources>
 
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -173,10 +159,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
             <DockPanel LastChildFill="True">
-                <Button DockPanel.Dock="Right" Content="←  Back to Products" Click="BackButton_Click" 
+                <Button DockPanel.Dock="Right" Content="← Back to Products" Click="BackButton_Click"
                         Style="{StaticResource SecondaryButton}" Background="White"/>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Inventory.png" Width="32" Height="32" Margin="0,0,15,0"/>
@@ -185,10 +170,8 @@
             </DockPanel>
         </Border>
 
-        <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,15">
             <StackPanel>
-                <!-- Product Information -->
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -196,8 +179,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Product Image -->
-                        <Border Grid.Column="0" Width="180" Height="180" Margin="0,0,20,0" 
+                        <Border Grid.Column="0" Width="180" Height="180" Margin="0,0,20,0"
                                 VerticalAlignment="Top" CornerRadius="8">
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2"/>
@@ -205,30 +187,28 @@
                             <Image x:Name="ProductImage" Source="/Assets/MedicineSample.png" Stretch="Uniform"/>
                         </Border>
 
-                        <!-- Basic Info -->
                         <StackPanel Grid.Column="1">
-                            <TextBlock x:Name="ProductName" Text="CardioSafe 100mg Tablets" FontSize="24" FontWeight="Bold" 
+                            <TextBlock x:Name="ProductName" FontSize="24" FontWeight="Bold"
                                        Foreground="{StaticResource PrimaryRedBrush}"/>
                             <Border Background="#E3F2FD" CornerRadius="4" Padding="8,2" Width="Auto" HorizontalAlignment="Left" Margin="0,5,0,15">
-                                <TextBlock x:Name="ProductCategory" Text="Cardiovascular Drugs" Foreground="#0277BD" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="ProductCategory" Foreground="#0277BD" FontWeight="SemiBold"/>
                             </Border>
 
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="NDC Code:" Style="{StaticResource ProductPropertyName}" Width="120"/>
-                                <TextBlock x:Name="ProductId" Text="12345-678-90" Style="{StaticResource ProductPropertyValue}"/>
+                                <TextBlock Text="Product ID:" Style="{StaticResource ProductPropertyName}" Width="120"/>
+                                <TextBlock x:Name="ProductId" Style="{StaticResource ProductPropertyValue}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Regulatory Status:" Style="{StaticResource ProductPropertyName}" Width="120"/>
-                                <Border Background="#4CAF50" CornerRadius="4" Padding="8,2" Width="Auto">
-                                    <TextBlock x:Name="StockStatus" Text="DRAP Approved" Foreground="White" FontWeight="SemiBold"/>
+                                <TextBlock Text="Stock Status:" Style="{StaticResource ProductPropertyName}" Width="120"/>
+                                <Border x:Name="StockStatusBorder" CornerRadius="4" Padding="8,2" Width="Auto">
+                                    <TextBlock x:Name="StockStatus" Foreground="White" FontWeight="SemiBold"/>
                                 </Border>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Product Details -->
                 <TextBlock Text="Product Details" Style="{StaticResource SectionHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
@@ -243,86 +223,92 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0" Grid.Row="0">
-                            <TextBlock Text="Active Ingredient:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="UnitPrice" Text="Lisinopril" Style="{StaticResource ProductPropertyValue}" FontWeight="SemiBold"/>
+                            <TextBlock Text="Product Name (Active Ingredient):" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="ProductNameDisplay" Style="{StaticResource ProductPropertyValue}" FontWeight="SemiBold"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="1">
-                            <TextBlock Text="Dosage Form:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="BatchNumber" Text="Oral Tablet" Style="{StaticResource ProductPropertyValue}"/>
+                            <TextBlock Text="Batch Number:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="BatchNumberDisplay" Style="{StaticResource ProductPropertyValue}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="2">
-                            <TextBlock Text="Strength:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="ManufactureDate" Text="100mg" Style="{StaticResource ProductPropertyValue}"/>
+                            <TextBlock Text="Unit Price:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="UnitPriceDisplay" Style="{StaticResource ProductPropertyValue}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="3">
-                            <TextBlock Text="Schedule:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="ExpiryDate" Text="Prescription Only (Rx)" Style="{StaticResource ProductPropertyValue}"/>
+                            <TextBlock Text="Expiry Date:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="ExpiryDateDisplay" Style="{StaticResource ProductPropertyValue}"/>
                         </StackPanel>
 
-                        <!-- Right Column -->
                         <StackPanel Grid.Column="1" Grid.Row="0">
-                            <TextBlock Text="Package Size:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="StockQuantity" Text="90 Tablets/Bottle" Style="{StaticResource ProductPropertyValue}" FontWeight="SemiBold"/>
+                            <TextBlock Text="Current Stock Quantity:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="StockQuantityDisplay" Style="{StaticResource ProductPropertyValue}" FontWeight="SemiBold"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="1" Grid.Row="1">
-                            <TextBlock Text="Storage Conditions:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="MinStockLevel" Text="15-30°C, protect from light" Style="{StaticResource ProductPropertyValue}"/>
+                            <TextBlock Text="Supplier:" Style="{StaticResource ProductPropertyName}"/>
+                            <TextBlock x:Name="SuppliersDisplay" Style="{StaticResource ProductPropertyValue}"/>
                         </StackPanel>
 
-                        <StackPanel Grid.Column="1" Grid.Row="2">
-                            <TextBlock Text="Manufacturer:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="SupplierName" Text="PharmaCare Global Ltd." Style="{StaticResource ProductPropertyValue}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="3">
-                            <TextBlock Text="Batch Expiry:" Style="{StaticResource ProductPropertyName}"/>
-                            <TextBlock x:Name="StorageLocation" Text="March 2025" Style="{StaticResource ProductPropertyValue}"/>
-                        </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Product Specifications -->
                 <TextBlock Text="Clinical Information" Style="{StaticResource SectionHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <StackPanel>
-                        <TextBlock Text="Indications:" Style="{StaticResource ProductPropertyName}"/>
-                        <TextBlock x:Name="ProductDescription" TextWrapping="Wrap" Margin="0,5,0,15" 
-                                   Text="Treatment of hypertension in adults and pediatric patients 6 years and older. Heart failure treatment. Adjuvant therapy post myocardial infarction."/>
-
-                        <TextBlock Text="Pharmacological Data:" Style="{StaticResource ProductPropertyName}"/>
-                        <StackPanel Margin="10,5,0,0">
-                            <TextBlock Text="• Half-life: 12 hours" Margin="0,3,0,3"/>
-                            <TextBlock Text="• Bioavailability: 25%" Margin="0,3,0,3"/>
-                            <TextBlock Text="• Protein binding: 0%" Margin="0,3,0,3"/>
-                            <TextBlock Text="• Excretion: Renal (100%)" Margin="0,3,0,3"/>
-                            <TextBlock Text="• Pregnancy Category: D" Margin="0,3,0,3"/>
-                        </StackPanel>
+                        <TextBlock Text="Indications (Description):" Style="{StaticResource ProductPropertyName}"/>
+                        <TextBlock x:Name="ProductDescription" TextWrapping="Wrap" Margin="0,5,0,0"/>
                     </StackPanel>
                 </Border>
 
-                <!-- Distribution History -->
-                <TextBlock Text="Distribution History" Style="{StaticResource SectionHeaderStyle}"/>
+                <TextBlock Text="Sales History" Style="{StaticResource SectionHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <DataGrid x:Name="SalesDataGrid" Style="{StaticResource CompactDataGrid}" Height="200">
                         <DataGrid.Columns>
-                            <DataGridTextColumn Header="Lot Number" Binding="{Binding OrderID}" Width="1*"/>
-                            <DataGridTextColumn Header="Distributor" Binding="{Binding Partner}" Width="1.5*"/>
-                            <DataGridTextColumn Header="Ship Date" Binding="{Binding OrderDate, StringFormat=MM/dd/yyyy}" Width="1*"/>
-                            <DataGridTextColumn Header="Units Shipped" Binding="{Binding Quantity}" Width="0.8*"/>
-                            <DataGridTextColumn Header="Batch Value" Binding="{Binding Total, StringFormat=C}" Width="1*"/>
+                            <DataGridTextColumn Header="Sale ID" Binding="{Binding SaleID}" Width="1*"/>
+                            <DataGridTextColumn Header="Sale Date" Binding="{Binding SaleDate, StringFormat='MM/dd/yyyy'}" Width="1*"/>
+                            <DataGridTextColumn Header="Quantity Sold" Binding="{Binding Quantity}" Width="0.8*"/>
+                            <DataGridTextColumn Header="Payment Method" Binding="{Binding PaymentMethod}" Width="1.2*"/>
+                            <DataGridTextColumn Header="Total Amount" Binding="{Binding TotalAmount, StringFormat=C}" Width="1*"/>
+                            <DataGridTextColumn Header="Associated Distributor" Binding="{Binding Partner}" Width="1.5*"/>
                         </DataGrid.Columns>
                     </DataGrid>
                 </Border>
+
+                <TextBlock Text="Product Purchases History" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <DataGrid x:Name="PurchasesDataGrid" Style="{StaticResource CompactDataGrid}" Height="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Purchase ID" Binding="{Binding PurchaseID}" Width="1*"/>
+                            <DataGridTextColumn Header="Supplier" Binding="{Binding SupplierName}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Purchase Date" Binding="{Binding PurchaseDate, StringFormat='MM/dd/yyyy'}" Width="1*"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="1*"/>
+                            <DataGridTextColumn Header="Total Amount" Binding="{Binding TotalAmount, StringFormat=C}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
+                <TextBlock Text="Orders Placed History" Style="{StaticResource SectionHeaderStyle}"/>
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <DataGrid x:Name="OrdersDataGrid" Style="{StaticResource CompactDataGrid}" Height="200">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Order ID" Binding="{Binding OrderID}" Width="1*"/>
+                            <DataGridTextColumn Header="Distributor" Binding="{Binding DistributorName}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Ordered Quantity" Binding="{Binding Quantity}" Width="1*"/>
+                            <DataGridTextColumn Header="Ordered Price" Binding="{Binding Price, StringFormat=C}" Width="1*"/>
+                            <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate, StringFormat='MM/dd/yyyy'}" Width="1*"/>
+                            <DataGridTextColumn Header="Delivery Date" Binding="{Binding DeliveryDate, StringFormat='MM/dd/yyyy'}" Width="1*"/>
+                            <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="1*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>
+
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Exit" Style="{StaticResource SecondaryButton}" Click="Exit"/>

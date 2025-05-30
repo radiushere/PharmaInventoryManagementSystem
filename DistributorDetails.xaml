@@ -13,23 +13,16 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
         <Color x:Key="AccentGold">#FFD700</Color>
 
-        <!-- Convert Colors to Brushes -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Height" Value="40"/>
             <Setter Property="MinWidth" Value="120"/>
@@ -95,9 +88,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ SECTION STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -132,49 +122,74 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~ DATA GRID STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <Style x:Key="CompactDataGrid" TargetType="DataGrid">
+        <Style x:Key="DataGridMain" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="RowBackground" Value="White"/>
             <Setter Property="AlternatingRowBackground" Value="#FFF5F5"/>
             <Setter Property="BorderBrush" Value="#E0E0E0"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Foreground" Value="#2D3436"/>
-            <Setter Property="RowHeight" Value="35"/>
-            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="RowHeight" Value="40"/>
+            <Setter Property="FontSize" Value="14"/>
             <Setter Property="HeadersVisibility" Value="Column"/>
             <Setter Property="GridLinesVisibility" Value="None"/>
             <Setter Property="CanUserAddRows" Value="False"/>
-            <Setter Property="IsReadOnly" Value="True"/>
-            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="15"
+                  Opacity="0.1"
+                  ShadowDepth="3"
+                  Direction="270"/>
+                </Setter.Value>
+            </Setter>
+
             <Setter Property="ColumnHeaderStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridColumnHeader">
                         <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
                         <Setter Property="Foreground" Value="White"/>
                         <Setter Property="FontWeight" Value="SemiBold"/>
-                        <Setter Property="Padding" Value="8,6"/>
+                        <Setter Property="Padding" Value="12,8"/>
                         <Setter Property="BorderThickness" Value="0"/>
-                        <Setter Property="Height" Value="35"/>
+                        <Setter Property="Height" Value="42"/>
                         <Setter Property="SeparatorVisibility" Value="Collapsed"/>
                     </Style>
                 </Setter.Value>
             </Setter>
+
             <Setter Property="RowStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridRow">
                         <Setter Property="Background" Value="Transparent"/>
                         <Setter Property="BorderBrush" Value="Transparent"/>
                         <Setter Property="Margin" Value="0,2"/>
+                        <Setter Property="Cursor" Value="Hand"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                                <Setter Property="Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect BlurRadius="12"
+                                      Color="{StaticResource PrimaryRed}"
+                                      Opacity="0.1"
+                                      ShadowDepth="2"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+                                <Setter Property="BorderThickness" Value="0,0,0,2"/>
+                            </Trigger>
+                        </Style.Triggers>
                     </Style>
                 </Setter.Value>
             </Setter>
+
             <Setter Property="CellStyle">
                 <Setter.Value>
                     <Style TargetType="DataGridCell">
-                        <Setter Property="Padding" Value="8"/>
+                        <Setter Property="Padding" Value="12"/>
                         <Setter Property="Template">
                             <Setter.Value>
                                 <ControlTemplate TargetType="DataGridCell">
@@ -188,6 +203,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
     </Window.Resources>
 
     <Grid>
@@ -197,11 +213,10 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
             <DockPanel LastChildFill="True">
-                <Button DockPanel.Dock="Right" Content="←  Back to Distributors" Click="BackButton_Click" 
-                        Style="{StaticResource SecondaryButton}" Background="White"/>
+                <Button DockPanel.Dock="Right" Content="←  Back to Distributors" Click="BackButton_Click"
+                    Style="{StaticResource SecondaryButton}" Background="White"/>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Manage Store.png" Width="32" Height="32" Margin="0,0,15,0"/>
                     <TextBlock Text="Distributor Details" FontSize="24" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
@@ -209,10 +224,8 @@
             </DockPanel>
         </Border>
 
-        <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,15">
             <StackPanel>
-                <!-- Distributor Information -->
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -220,37 +233,20 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Distributor Icon -->
-                        <Border Grid.Column="0" Width="80" Height="80" Background="{StaticResource PrimaryRedLightBrush}" 
-                                CornerRadius="40" Margin="0,0,20,0" VerticalAlignment="Top">
-                            <TextBlock x:Name="DistributorInitials" Text="PM" FontSize="30" FontWeight="Bold" 
-                                       Foreground="{StaticResource PrimaryRedBrush}" HorizontalAlignment="Center" 
-                                       VerticalAlignment="Center"/>
-                        </Border>
-
-                        <!-- Basic Info -->
                         <StackPanel Grid.Column="1">
-                            <TextBlock x:Name="DistributorName" Text="PharmaMed Distributors" FontSize="24" FontWeight="Bold" 
-                                       Foreground="{StaticResource PrimaryRedBrush}"/>
-                            <TextBlock x:Name="DistributorType" Text="Regional Wholesaler" FontSize="16" FontWeight="SemiBold" 
-                                       Foreground="#444444" Margin="0,5,0,15"/>
+                            <TextBlock x:Name="DistributorName" Text="PharmaMed Distributors" FontSize="24" FontWeight="Bold"
+                                   Foreground="{StaticResource PrimaryRedBrush}"/>
+                            <TextBlock x:Name="DistributorType" Text="Regional Wholesaler" FontSize="16" FontWeight="SemiBold"
+                                   Foreground="#444444" Margin="0,5,0,15"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
                                 <TextBlock Text="Distributor ID:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
                                 <TextBlock x:Name="DistributorId" Text="D2001" Style="{StaticResource PartnerPropertyValue}"/>
                             </StackPanel>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Status:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <Border Background="#4CAF50" CornerRadius="4" Padding="8,2" Width="Auto">
-                                    <TextBlock x:Name="DistributorStatus" Text="Active" Foreground="White" FontWeight="SemiBold"/>
-                                </Border>
-                            </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Geographical Information -->
                 <TextBlock Text="Geographical Information" Style="{StaticResource SectionHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
@@ -263,7 +259,6 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0" Grid.Row="0">
                             <TextBlock Text="Primary Region:" Style="{StaticResource PartnerPropertyName}"/>
                             <TextBlock x:Name="PrimaryRegion" Text="Northeast" Style="{StaticResource PartnerPropertyValue}"/>
@@ -273,22 +268,9 @@
                             <TextBlock Text="Service Areas:" Style="{StaticResource PartnerPropertyName}"/>
                             <TextBlock x:Name="ServiceAreas" Text="NY, PA, NJ, CT, MA" Style="{StaticResource PartnerPropertyValue}"/>
                         </StackPanel>
-
-                        <!-- Right Column -->
-                        <StackPanel Grid.Column="1" Grid.Row="0">
-                            <TextBlock Text="Warehouse Locations:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="WarehouseLocations" Text="Albany, NY; Philadelphia, PA" 
-                                      Style="{StaticResource PartnerPropertyValue}" TextWrapping="Wrap"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="1">
-                            <TextBlock Text="Delivery Radius:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="DeliveryRadius" Text="300 miles" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Contact Information -->
                 <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
@@ -302,117 +284,33 @@
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0" Grid.Row="0">
                             <TextBlock Text="Phone:" Style="{StaticResource PartnerPropertyName}"/>
                             <TextBlock x:Name="ContactPhone" Text="+1 (800) 555-1234" Style="{StaticResource PartnerPropertyValue}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="1">
-                            <TextBlock Text="Emergency Phone:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="EmergencyPhone" Text="+1 (800) 555-5678" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0" Grid.Row="2">
                             <TextBlock Text="Email:" Style="{StaticResource PartnerPropertyName}"/>
                             <TextBlock x:Name="ContactEmail" Text="support@pharmamed.com" Style="{StaticResource PartnerPropertyValue}"/>
                         </StackPanel>
-
-                        <!-- Right Column -->
-                        <StackPanel Grid.Column="1" Grid.Row="0">
-                            <TextBlock Text="Address:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="Address" Text="456 Distribution Parkway, Albany, NY 12205" 
-                                      Style="{StaticResource PartnerPropertyValue}" TextWrapping="Wrap"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="1">
-                            <TextBlock Text="Operations Manager:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="OperationsManager" Text="Michael Chen" 
-                                      Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="2">
-                            <TextBlock Text="Support Hours:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="SupportHours" Text="24/7" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Capacity Information -->
-                <TextBlock Text="Capacity Information" Style="{StaticResource SectionHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <StackPanel Grid.Column="0" Grid.Row="0">
-                            <TextBlock Text="Daily Delivery Capacity:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="DailyCapacity" Text="1500 packages" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="0">
-                            <TextBlock Text="Cold Chain Storage:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="ColdStorage" Text="Yes (GMP Certified)" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0" Grid.Row="1">
-                            <TextBlock Text="Vehicle Fleet:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="VehicleFleet" Text="45 refrigerated trucks" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="1">
-                            <TextBlock Text="Certifications:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="Certifications" Text="ISO 9001, GDP Compliant" Style="{StaticResource PartnerPropertyValue}"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-
-                <!-- Notes and Tags -->
-                <TextBlock Text="Notes and Tags" Style="{StaticResource SectionHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Notes Section -->
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Notes:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="Notes" Style="{StaticResource PartnerPropertyValue}" TextWrapping="Wrap" 
-                                       Text="Primary distributor for northeast region. Requires 48-hour notice for large orders. Maintains excellent cold chain compliance. Preferred partner for vaccine distribution."/>
-                        </StackPanel>
-
-                        <!-- Tags Section -->
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Tags:" Style="{StaticResource PartnerPropertyName}"/>
-                            <WrapPanel>
-                                <Border Background="{StaticResource PrimaryRedLightBrush}" CornerRadius="4" Padding="8,4" Margin="0,5,8,5">
-                                    <TextBlock Text="Cold Chain" Foreground="{StaticResource PrimaryRedBrush}" FontWeight="SemiBold"/>
-                                </Border>
-                                <Border Background="#E1F5FE" CornerRadius="4" Padding="8,4" Margin="0,5,8,5">
-                                    <TextBlock Text="24/7 Support" Foreground="#0277BD" FontWeight="SemiBold"/>
-                                </Border>
-                                <Border Background="#E8F5E9" CornerRadius="4" Padding="8,4" Margin="0,5,8,5">
-                                    <TextBlock Text="GMP Certified" Foreground="#2E7D32" FontWeight="SemiBold"/>
-                                </Border>
-                                <Border Background="#FFF3E0" CornerRadius="4" Padding="8,4" Margin="0,5,8,5">
-                                    <TextBlock Text="Regional Leader" Foreground="#E65100" FontWeight="SemiBold"/>
-                                </Border>
-                            </WrapPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+                <TextBlock Text="Orders Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <DataGrid x:Name="OrdersDataGrid" Style="{StaticResource DataGridMain}" AutoGenerateColumns="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Order ID" Binding="{Binding OrderId}" Width="*"/>
+                        <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="*"/>
+                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
+                        <DataGridTextColumn Header="Price" Binding="{Binding Price}" Width="*"/>
+                        <DataGridTextColumn Header="Order Date" Binding="{Binding OrderDate}" Width="*"/>
+                        <DataGridTextColumn Header="Delivery Date" Binding="{Binding DeliveryDate}" Width="*"/>
+                        <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Exit" Style="{StaticResource SecondaryButton}" Click="ExitPopup_Click"/>
@@ -420,4 +318,5 @@
             </StackPanel>
         </Border>
     </Grid>
+
 </Window>

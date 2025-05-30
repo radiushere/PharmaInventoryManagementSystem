@@ -14,11 +14,7 @@
         WindowStyle="None"
         AllowsTransparency="True">
 
-    <!-- Merged Resources from Main Window -->
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
@@ -36,9 +32,6 @@
         <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
         <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Storyboard x:Key="ButtonHoverEnter">
             <DoubleAnimation Duration="0:0:0.15"
                 Storyboard.TargetProperty="RenderTransform.ScaleX"
@@ -63,9 +56,6 @@
                To="Transparent"/>
         </Storyboard>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ BUTTONS STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -145,16 +135,13 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~ INPUT FIELDS STYLES ~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="InputFieldStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="5,5"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -177,13 +164,13 @@
             </Setter>
         </Style>
 
-        <Style x:Key="TextAreaStyle" TargetType="TextBox">
+        <Style x:Key="DescriptionTextBoxStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="5,5"/>
             <Setter Property="Height" Value="80"/>
             <Setter Property="TextWrapping" Value="Wrap"/>
             <Setter Property="AcceptsReturn" Value="True"/>
@@ -212,7 +199,7 @@
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
+            <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Padding" Value="12,10"/>
             <Setter Property="Height" Value="42"/>
@@ -260,9 +247,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ LABEL STYLES ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="FormLabelStyle" TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
@@ -271,7 +255,6 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
-        <!-- Window Control Buttons -->
         <Style x:Key="WindowButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
@@ -295,79 +278,84 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="30"/>
+        </Style>
+
     </Window.Resources>
 
-    <!-- Main Window Content -->
-    <Border CornerRadius="15" 
-            Background="White"
-            BorderThickness="1"
-            BorderBrush="#E0E0E0">
+    <Border CornerRadius="15"
+        Background="White"
+        BorderThickness="1"
+        BorderBrush="#E0E0E0">
 
         <Grid>
-            <!-- Window Header -->
-            <Border Height="50" 
-                    VerticalAlignment="Top" 
-                    Background="{StaticResource PrimaryRedBrush}"
-                    CornerRadius="15,15,0,0">
+            <Border Height="50"
+                VerticalAlignment="Top"
+                Background="{StaticResource PrimaryRedBrush}"
+                CornerRadius="15,15,0,0">
                 <Grid>
-                    <TextBlock Text="NEW PRODUCT" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               Margin="20,0,0,0"/>
-                    <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Right">
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Minimize_Click" 
-                                Content="─"
-                                Foreground="White"/>
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Close_Click" 
-                                Content="✕"
-                                Foreground="White"
-                                Margin="0,0,10,0"/>
+                    <TextBlock Text="NEW PRODUCT"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="20,0,0,0"/>
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Minimize_Click"
+                            Content="─"
+                            Foreground="White"/>
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Close_Click"
+                            Content="✕"
+                            Foreground="White"
+                            Margin="0,0,10,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
 
-            <!-- Content Area -->
             <Grid Margin="0,50,0,0">
-                <!-- Form Title -->
-                <Border Background="{StaticResource PrimaryRedLightBrush}" 
-                        Height="60" 
-                        VerticalAlignment="Top">
-                    <TextBlock Text="Product Registration Form" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="{StaticResource PrimaryRedDarkBrush}" 
-                               VerticalAlignment="Center" 
-                               Margin="30,0,0,0"/>
+                <Border Background="{StaticResource PrimaryRedLightBrush}"
+                    Height="60"
+                    VerticalAlignment="Top">
+                    <TextBlock Text="Product Registration Form"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryRedDarkBrush}"
+                           VerticalAlignment="Center"
+                           Margin="30,0,0,0"/>
                 </Border>
 
-                <!-- Main Form Content -->
-                <ScrollViewer Margin="0,60,0,70" 
-                              VerticalScrollBarVisibility="Auto" 
-                              HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer Margin="0,60,0,70"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="30,30,30,20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                            <Label Content="Product Name*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtName" 
-                                     Style="{StaticResource InputFieldStyle}" 
-                                     Margin="0,0,0,20"/>
+                            <Label Content="Product Name*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtName"
+                                 Style="{StaticResource InputFieldStyle}"
+                                 Margin="0,0,0,20"
+                                 Height="50"/>
 
-                            <Label Content="Quantity*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtQuantity" 
-                                     Style="{StaticResource InputFieldStyle}" 
-                                     Margin="0,0,0,20"/>
+                            <Label Content="Quantity*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtQuantity"
+                                 Style="{StaticResource InputFieldStyle}"
+                                 Margin="0,0,0,20"
+                                 Height="50"/>
 
                             <Grid Margin="0,0,0,20">
                                 <Grid.ColumnDefinitions>
@@ -376,86 +364,107 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <Label Content="Price*" 
-                                           Style="{StaticResource FormLabelStyle}"/>
-                                    <TextBox x:Name="txtPrice" 
-                                             Style="{StaticResource InputFieldStyle}"
-                                             Text="0.00"/>
+                                    <Label Content="Price*"
+                                       Style="{StaticResource FormLabelStyle}"/>
+                                    <TextBox x:Name="txtPrice"
+                                         Style="{StaticResource InputFieldStyle}"
+                                         Text="0.00"
+                                         Height="50"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                    <Label Content="Batch No*" 
-                                           Style="{StaticResource FormLabelStyle}"/>
-                                    <TextBox x:Name="txtBatchNo" 
-                                             Style="{StaticResource InputFieldStyle}"/>
+                                    <Label Content="Batch No*"
+                                       Style="{StaticResource FormLabelStyle}"/>
+                                    <TextBox x:Name="txtBatchNo"
+                                         Style="{StaticResource InputFieldStyle}"
+                                         Height="50"/>
                                 </StackPanel>
                             </Grid>
 
-                            <Label Content="Description" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtDescription" 
-                                     Style="{StaticResource TextAreaStyle}" 
-                                     Margin="0,0,0,20"/>
+                            <Label Content="Description"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtDescription"
+                                 Style="{StaticResource DescriptionTextBoxStyle}"
+                                 Margin="0,0,0,20"
+                                 Height="100"/>
+
+                            <Label Content="Category*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cmbCategory"
+                                  Style="{StaticResource ComboBoxStyle}"
+                                  Margin="0,0,0,20"
+                                  Height="30">
+                                <ComboBoxItem Content="Tablet"/>
+                                <ComboBoxItem Content="Syrup"/>
+                                <ComboBoxItem Content="Capsules"/>
+                                <ComboBoxItem Content="Injection"/>
+                                <ComboBoxItem Content="Ointment"/>
+                            </ComboBox>
                         </StackPanel>
 
-                        <!-- Right Column -->
                         <StackPanel Grid.Column="1" Margin="15,0,0,0">
                             <Grid Margin="0,0,0,20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
-
                                 <StackPanel Grid.Column="0">
-                                    <Label Content="Expiry Date*" 
-                                           Style="{StaticResource FormLabelStyle}"/>
-                                    <DatePicker x:Name="dpExpiryDate" 
-                                                Style="{StaticResource DatePickerStyle}"/>
+                                    <Label Content="Expiry Date*"
+                                       Style="{StaticResource FormLabelStyle}"/>
+                                    <DatePicker x:Name="dpExpiryDate"
+                                            Style="{StaticResource DatePickerStyle}"
+                                            Height="30"/>
                                 </StackPanel>
                             </Grid>
 
-                            <Label Content="Product Image" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <Border Height="150" 
-                                    Background="#F8F9FA" 
-                                    BorderBrush="{StaticResource BorderGrayBrush}" 
-                                    BorderThickness="1" 
-                                    CornerRadius="6" 
-                                    Margin="0,0,0,10">
+                            <Label Content="Product Image"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <Border Height="150"
+                                Background="#F8F9FA"
+                                BorderBrush="{StaticResource BorderGrayBrush}"
+                                BorderThickness="1"
+                                CornerRadius="6"
+                                Margin="0,0,0,10">
                                 <Grid>
                                     <Image x:Name="imgProduct" Stretch="Uniform" Margin="10"/>
-                                    <TextBlock x:Name="txtNoImage" 
-                                               Text="No image selected" 
-                                               HorizontalAlignment="Center" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#A0A0A0"
-                                               FontStyle="Italic"/>
+                                    <TextBlock x:Name="txtNoImage"
+                                           Text="No image selected"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="#A0A0A0"
+                                           FontStyle="Italic"/>
                                 </Grid>
                             </Border>
-                            <Button Content="Browse Image" 
-                                    x:Name="btnBrowseImage"
-                                    Click="BrowseImage_Click"
-                                    Style="{StaticResource SecondaryButton}" 
-                                    HorizontalAlignment="Left"
-                                    Margin="0,0,0,20"/>
+
+                            <Button Content="Browse Image"
+                                x:Name="btnBrowseImage"
+                                Click="BrowseImage_Click"
+                                Style="{StaticResource SecondaryButton}"
+                                HorizontalAlignment="Left"
+                                Margin="0,0,0,20"/>
+
+                            <Label Content="Supplier*"
+                                Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cmbSupplier"
+                                        Margin="0,0,0,20"
+                                        Height="50"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
 
-                <!-- Bottom Button Panel -->
-                <Border Background="{StaticResource LightBackgroundBrush}" 
-                        Height="70" 
-                        VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                Margin="0,0,30,0">
-                        <Button Content="Cancel" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Click="Cancel_Click" 
-                                Margin="0,0,15,0"/>
-                        <Button Content="Save Product" 
-                                Style="{StaticResource PrimaryButton}" 
-                                Click="Save_Click"/>
+                <Border Background="{StaticResource LightBackgroundBrush}"
+                    Height="70"
+                    VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,30,0">
+                        <Button Content="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Click="Cancel_Click"
+                            Margin="0,0,15,0"/>
+                        <Button Content="Save Product"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="Save_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>

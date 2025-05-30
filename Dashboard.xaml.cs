@@ -1,299 +1,362 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using LiveCharts;
+using LiveCharts.Wpf;
 
 namespace SimpleLoginWPF
 {
     public partial class Dashboard : Window
     {
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+
+        public SeriesCollection ChartSeries { get; set; }
+        public SeriesCollection OrderChartSeries { get; set; }
+        public string[] Labels { get; set; }
+        public string[] OrderLabels { get; set; }
+        public Func<double, string> YFormatter { get; set; }
+        public Func<double, string> OrderYFormatter { get; set; }
+
         public Dashboard()
         {
             InitializeComponent();
-            Loaded += MainWindow_Loaded;
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Initialize the dashboard with sample data
-            InitializeDashboard();
-
-            // Load sample inventory data
+            DataContext = this;
+            LoadDashboardData();
+            InitializeCharts();
             LoadInventoryData();
-
-            // Initialize the order summary chart
-            InitializeOrderChart();
         }
 
-        private void InitializeDashboard()
+        private void LoadDashboardData()
         {
-            // This method would typically load real data from a database
-            // For now, we'll just ensure the UI elements are properly initialized
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
 
-            // The chart in XAML is already populated with sample data
-            // In a real application, you would bind to actual data
+                // Load Sales Overview
+                var salesOverviewCommand = new MySqlCommand("SELECT SUM(total_amount) FROM sales", connection);
+                var sales = salesOverviewCommand.ExecuteScalar()?.ToString() ?? "0";
+                Sales = $"Rs {sales}";
+
+                var revenueCommand = new MySqlCommand("SELECT SUM(total_amount) FROM sales", connection);
+                var revenue = revenueCommand.ExecuteScalar()?.ToString() ?? "0";
+                Revenue = $"Rs {revenue}";
+
+                var profitCommand = new MySqlCommand("SELECT SUM(total_amount) FROM sales", connection);
+                var profit = profitCommand.ExecuteScalar()?.ToString() ?? "0";
+                Profit = $"Rs {profit}";
+
+                var costCommand = new MySqlCommand("SELECT SUM(total_amount) FROM product_purchases", connection);
+                var cost = costCommand.ExecuteScalar()?.ToString() ?? "0";
+                Cost = $"Rs {cost}";
+
+                // Load Inventory Summary
+                var quantityInHandCommand = new MySqlCommand("SELECT SUM(quantity) FROM products", connection);
+                var quantityInHand = quantityInHandCommand.ExecuteScalar()?.ToString() ?? "0";
+                QuantityInHand = quantityInHand;
+
+                // Placeholder for "To be received" as it requires specific business logic
+                ToBeReceived = "200";
+
+                // Load Purchase Overview
+                var purchaseCommand = new MySqlCommand("SELECT COUNT(*) FROM product_purchases", connection);
+                var purchase = purchaseCommand.ExecuteScalar()?.ToString() ?? "0";
+                Purchase = purchase;
+
+                PurchaseCost = Cost; // Reuse cost from above
+
+                var cancelCommand = new MySqlCommand("SELECT COUNT(*) FROM orders WHERE status = 'Cancelled'", connection);
+                var cancel = cancelCommand.ExecuteScalar()?.ToString() ?? "0";
+                Cancel = cancel;
+
+                var returnCommand = new MySqlCommand("SELECT SUM(price) FROM orders WHERE status = 'Completed'", connection);
+                var returnAmount = returnCommand.ExecuteScalar()?.ToString() ?? "0";
+                Return = $"Rs {returnAmount}";
+
+                // Load Product Summary
+                var distributorsCommand = new MySqlCommand("SELECT COUNT(*) FROM distributors", connection);
+                var distributors = distributorsCommand.ExecuteScalar()?.ToString() ?? "0";
+                NumberOfDistributors = distributors;
+
+                var categoriesCommand = new MySqlCommand("SELECT COUNT(DISTINCT category) FROM products", connection);
+                var categories = categoriesCommand.ExecuteScalar()?.ToString() ?? "0";
+                NumberOfCategories = categories;
+            }
         }
 
         private void LoadInventoryData()
         {
-            // Sample inventory data - in a real app, this would come from a database
-            var inventoryItems = new List<InventoryItem>
+            var inventoryItems = new List<InventoryItem>();
+
+            using (var connection = new MySqlConnection(connectionString))
             {
-                new InventoryItem { ProductId = "PH-1001", ProductName = "Paracetamol 500mg", Category = "Pain Relief", Quantity = 150, Price = 12.50m, Supplier = "MediCorp", LastUpdated = DateTime.Now.AddDays(-2) },
-                new InventoryItem { ProductId = "PH-1002", ProductName = "Ibuprofen 200mg", Category = "Pain Relief", Quantity = 85, Price = 15.75m, Supplier = "HealthPlus", LastUpdated = DateTime.Now.AddDays(-5) },
-                new InventoryItem { ProductId = "PH-1003", ProductName = "Cetirizine 10mg", Category = "Allergy", Quantity = 120, Price = 8.99m, Supplier = "PharmaDirect", LastUpdated = DateTime.Now.AddDays(-1) },
-                new InventoryItem { ProductId = "PH-1004", ProductName = "Loratadine 10mg", Category = "Allergy", Quantity = 65, Price = 10.25m, Supplier = "MediCorp", LastUpdated = DateTime.Now.AddDays(-3) },
-                new InventoryItem { ProductId = "PH-1005", ProductName = "Omeprazole 20mg", Category = "Acid Reducer", Quantity = 90, Price = 22.50m, Supplier = "HealthPlus", LastUpdated = DateTime.Now.AddDays(-7) },
-                new InventoryItem { ProductId = "PH-1006", ProductName = "Vitamin C 1000mg", Category = "Vitamins", Quantity = 200, Price = 9.99m, Supplier = "PharmaDirect", LastUpdated = DateTime.Now.AddDays(-4) },
-                new InventoryItem { ProductId = "PH-1007", ProductName = "Vitamin D3 1000IU", Category = "Vitamins", Quantity = 150, Price = 12.75m, Supplier = "MediCorp", LastUpdated = DateTime.Now.AddDays(-6) }
-            };
+                connection.Open();
+                var command = new MySqlCommand("SELECT product_id, product_name, quantity, price FROM products ORDER BY quantity DESC LIMIT 10", connection);
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        inventoryItems.Add(new InventoryItem
+                        {
+                            ProductId = reader["product_id"].ToString(),
+                            ProductName = reader["product_name"].ToString(),
+                            Quantity = Convert.ToInt32(reader["quantity"]),
+                            Price = Convert.ToDecimal(reader["price"]),
+                            LastUpdated = DateTime.Now // Placeholder, replace with actual field if available
+                        });
+                    }
+                }
+            }
 
             InventoryDataGrid.ItemsSource = inventoryItems;
         }
 
-        private void InitializeOrderChart()
+        private void InitializeCharts()
         {
-            // Sample data for the order summary chart
-            double[] orderedValues = { 3200, 2800, 3500, 3800, 4200 };
-            double[] deliveredValues = { 3000, 2700, 3200, 3500, 4000 };
+            var salesValues = new ChartValues<double>();
+            var purchaseValues = new ChartValues<double>();
+            var orderedValues = new ChartValues<double>();
+            var deliveredValues = new ChartValues<double>();
 
-            // Clear any existing elements
-            ChartCanvas.Children.Clear();
+            string[] monthLabels = new string[12];
+            for (int i = 0; i < 12; i++)
+                monthLabels[i] = new DateTime(DateTime.Now.Year, i + 1, 1).ToString("MMM");
 
-            // Draw the lines
-            Polyline orderedLine = new Polyline
+            try
             {
-                Stroke = new SolidColorBrush(Color.FromRgb(0xDE, 0x9A, 0x4F)),
-                StrokeThickness = 2,
-                Points = new PointCollection()
-            };
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
 
-            Polyline deliveredLine = new Polyline
+                    // Sales
+                    var salesCmd = new MySqlCommand(@"
+                SELECT MONTH(sale_date) AS month, SUM(total_amount) AS total
+                FROM sales
+                WHERE YEAR(sale_date) = YEAR(CURDATE())
+                GROUP BY MONTH(sale_date);", conn);
+                    var salesReader = salesCmd.ExecuteReader();
+
+                    var monthlySales = new double[12];
+                    while (salesReader.Read())
+                    {
+                        int month = salesReader.GetInt32("month") - 1;
+                        double total = salesReader.IsDBNull(1) ? 0 : salesReader.GetDouble("total");
+                        monthlySales[month] = total;
+                    }
+                    salesReader.Close();
+
+                    // Purchases
+                    var purchaseCmd = new MySqlCommand(@"
+                SELECT MONTH(date) AS month, SUM(total_amount) AS total
+                FROM product_purchases
+                WHERE YEAR(date) = YEAR(CURDATE())
+                GROUP BY MONTH(date);", conn);
+                    var purchaseReader = purchaseCmd.ExecuteReader();
+
+                    var monthlyPurchases = new double[12];
+                    while (purchaseReader.Read())
+                    {
+                        int month = purchaseReader.GetInt32("month") - 1;
+                        double total = purchaseReader.IsDBNull(1) ? 0 : purchaseReader.GetDouble("total");
+                        monthlyPurchases[month] = total;
+                    }
+                    purchaseReader.Close();
+
+                    // Orders (Placed)
+                    var orderCmd = new MySqlCommand(@"
+                SELECT MONTH(order_date) AS month, COUNT(*) AS total
+                FROM orders
+                WHERE YEAR(order_date) = YEAR(CURDATE())
+                GROUP BY MONTH(order_date);", conn);
+                    var orderReader = orderCmd.ExecuteReader();
+
+                    var monthlyOrders = new double[12];
+                    while (orderReader.Read())
+                    {
+                        int month = orderReader.GetInt32("month") - 1;
+                        double total = orderReader.GetInt32("total");
+                        monthlyOrders[month] = total;
+                    }
+                    orderReader.Close();
+
+                    // Deliveries
+                    var deliveryCmd = new MySqlCommand(@"
+                SELECT MONTH(delivery_date) AS month, COUNT(*) AS total
+                FROM orders
+                WHERE YEAR(delivery_date) = YEAR(CURDATE())
+                GROUP BY MONTH(delivery_date);", conn);
+                    var deliveryReader = deliveryCmd.ExecuteReader();
+
+                    var monthlyDeliveries = new double[12];
+                    while (deliveryReader.Read())
+                    {
+                        int month = deliveryReader.GetInt32("month") - 1;
+                        double total = deliveryReader.GetInt32("total");
+                        monthlyDeliveries[month] = total;
+                    }
+                    deliveryReader.Close();
+
+                    // Populate chart values
+                    salesValues.AddRange(monthlySales);
+                    purchaseValues.AddRange(monthlyPurchases);
+                    orderedValues.AddRange(monthlyOrders);
+                    deliveredValues.AddRange(monthlyDeliveries);
+                }
+            }
+            catch (Exception ex)
             {
-                Stroke = new SolidColorBrush(Color.FromRgb(0x3F, 0x87, 0xE5)),
-                StrokeThickness = 2,
-                Points = new PointCollection()
-            };
-
-            // Scale factor to fit the data in the available space
-            double yScale = 160.0 / 5000.0; // 160 is the canvas height for 4000 value
-            double xStep = 54.0; // Width between points
-
-            for (int i = 0; i < 5; i++)
-            {
-                double x = i * xStep + xStep / 2;
-
-                // Ordered line points
-                double orderedY = 160 - (orderedValues[i] * yScale);
-                orderedLine.Points.Add(new Point(x, orderedY));
-
-                // Delivered line points
-                double deliveredY = 160 - (deliveredValues[i] * yScale);
-                deliveredLine.Points.Add(new Point(x, deliveredY));
+                MessageBox.Show("Error loading chart data: " + ex.Message);
             }
 
-            ChartCanvas.Children.Add(orderedLine);
-            ChartCanvas.Children.Add(deliveredLine);
+            // Bind to Sales Chart
+            ChartSeries = new SeriesCollection
+    {
+        new ColumnSeries
+        {
+            Title = "Sales",
+            Values = salesValues,
+            Fill = System.Windows.Media.Brushes.ForestGreen
+        },
+        new ColumnSeries
+        {
+            Title = "Purchase",
+            Values = purchaseValues,
+            Fill = System.Windows.Media.Brushes.SkyBlue
+        }
+    };
 
-            // Add data point markers
-            for (int i = 0; i < 5; i++)
-            {
-                double x = i * xStep + xStep / 2;
+            XAxes = new AxesCollection
+    {
+        new Axis { Labels = monthLabels }
+    };
 
-                // Ordered marker
-                double orderedY = 160 - (orderedValues[i] * yScale);
-                Ellipse orderedMarker = new Ellipse
-                {
-                    Width = 6,
-                    Height = 6,
-                    Fill = new SolidColorBrush(Color.FromRgb(0xDE, 0x9A, 0x4F)),
-                    Margin = new Thickness(x - 3, orderedY - 3, 0, 0)
-                };
-                ChartCanvas.Children.Add(orderedMarker);
+            YAxes = new AxesCollection
+    {
+        new Axis { LabelFormatter = value => value.ToString("C") }
+    };
 
-                // Delivered marker
-                double deliveredY = 160 - (deliveredValues[i] * yScale);
-                Ellipse deliveredMarker = new Ellipse
-                {
-                    Width = 6,
-                    Height = 6,
-                    Fill = new SolidColorBrush(Color.FromRgb(0x3F, 0x87, 0xE5)),
-                    Margin = new Thickness(x - 3, deliveredY - 3, 0, 0)
-                };
-                ChartCanvas.Children.Add(deliveredMarker);
-            }
+            // Bind to Order Chart
+            OrderChartSeries = new SeriesCollection
+    {
+        new LineSeries
+        {
+            Title = "Ordered",
+            Values = orderedValues,
+            Stroke = System.Windows.Media.Brushes.Orange,
+            Fill = System.Windows.Media.Brushes.Transparent,
+            PointGeometry = DefaultGeometries.Circle
+        },
+        new LineSeries
+        {
+            Title = "Delivered",
+            Values = deliveredValues,
+            Stroke = System.Windows.Media.Brushes.MediumPurple,
+            Fill = System.Windows.Media.Brushes.Transparent,
+            PointGeometry = DefaultGeometries.Square
+        }
+    };
+
+            OrderXAxes = new AxesCollection
+    {
+        new Axis { Labels = monthLabels }
+    };
+
+            OrderYAxes = new AxesCollection
+    {
+        new Axis { LabelFormatter = value => value.ToString("N0") }
+    };
         }
 
-        #region Navigation Button Handlers
+
+        // Add these properties to your class
+        public AxesCollection XAxes { get; set; }
+        public AxesCollection YAxes { get; set; }
+        public AxesCollection OrderXAxes { get; set; }
+        public AxesCollection OrderYAxes { get; set; }
+
+
+        public string Sales { get; set; }
+        public string Revenue { get; set; }
+        public string Profit { get; set; }
+        public string Cost { get; set; }
+        public string QuantityInHand { get; set; }
+        public string ToBeReceived { get; set; }
+        public string Purchase { get; set; }
+        public string PurchaseCost { get; set; }
+        public string Cancel { get; set; }
+        public string Return { get; set; }
+        public string NumberOfDistributors { get; set; }
+        public string NumberOfCategories { get; set; }
 
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
-            // In a real application, this would navigate to the dashboard view
-            MessageBox.Show("Navigating to Dashboard", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            new Dashboard().Show();
+            this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            var inventory = new MainWindow();
-            inventory.Show();
-            this.Hide();
+            new MainWindow().Show();
+            this.Close();
         }
 
         private void Reports_Click(object sender, RoutedEventArgs e)
         {
-            Reports reports = new Reports();
-            reports.Show();
-            this.Hide();
+            new Reports().Show();
+            this.Close();
         }
 
-        private void Suppliers_Click(object sender, RoutedEventArgs e)
+        private void Partners_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Navigating to Suppliers", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
+            new Partners().Show();
+            this.Close();
         }
 
         private void Orders_Click(object sender, RoutedEventArgs e)
         {
-            var page = new Orders();
-            page.Show();
-            this.Hide();
+            new Orders().Show();
+            this.Close();
         }
 
         private void ManageStore_Click(object sender, RoutedEventArgs e)
         {
-            var page = new Distributors();
-            page.Show();
-            this.Hide();
-        }
-
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Navigating to Settings", "Navigation", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void Logout_Click(object sender, RoutedEventArgs e)
-        {
-            var page = new Login();
-            page.Show();
-            this.Hide();
-        }
-
-        #endregion
-
-        #region Search Box Handlers
-
-        private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (SearchBox.Text == "Search product, supplier, order")
-            {
-                SearchBox.Text = "";
-                SearchBox.Foreground = Brushes.Black;
-            }
-        }
-
-        private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(SearchBox.Text))
-            {
-                SearchBox.Text = "Search product, supplier, order";
-                SearchBox.Foreground = Brushes.Gray;
-            }
-        }
-
-        private void SearchBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter && !string.IsNullOrWhiteSpace(SearchBox.Text) && SearchBox.Text != "Search product, supplier, order")
-            {
-                // Perform search
-                MessageBox.Show($"Searching for: {SearchBox.Text}", "Search", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        #endregion
-
-        #region Action Button Handlers
-
-        private void Notification_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("You have no new notifications", "Notifications", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void Export_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Exporting inventory data...", "Export", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void Print_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Printing inventory report...", "Print", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void AddItem_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Opening add new item dialog...", "Add Item", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void EditItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is string productId)
-            {
-                MessageBox.Show($"Editing product: {productId}", "Edit Item", MessageBoxButton.OK, MessageBoxImage.Information);
-            }
-        }
-
-        private void DeleteItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is Button button && button.Tag is string productId)
-            {
-                var result = MessageBox.Show($"Are you sure you want to delete product {productId}?", "Delete Item", MessageBoxButton.YesNo, MessageBoxImage.Warning);
-                if (result == MessageBoxResult.Yes)
-                {
-                    MessageBox.Show($"Product {productId} deleted", "Delete Item", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-        }
-
-        #endregion
-
-        private void Partners_Click(object sender, RoutedEventArgs e)
-        {
-            Partners partners = new Partners();
-            partners.Show();
-            this.Hide();
-        }
-
-        private void Profile_Click(object sender, RoutedEventArgs e)
-        {
-            UserProfile userProfile = new UserProfile();
-            userProfile.Show();
-        }
-
-        private void AdminDashboard_Click(object sender, RoutedEventArgs e)
-        {
-            AdminDashboard adminDashboard = new AdminDashboard();
-            adminDashboard.Show();
-            this.Hide();
+            new Distributors().Show();
+            this.Close();
         }
 
         private void Purchase_Click(object sender, RoutedEventArgs e)
         {
-            var page = new Purchases();
-            page.Show();
-            this.Hide();
+            new Purchases().Show();
+            this.Close();
+        }
+
+        private void AdminDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            new AdminDashboard().Show();
+            this.Close();
+        }
+
+        private void Profile_Click(object sender, RoutedEventArgs e)
+        {
+            new UserProfile().Show();
+            this.Close();
+        }
+
+        private void Logout_Click(object sender, RoutedEventArgs e)
+        {
+            new Login().Show();
+            this.Close();
         }
     }
 
-    // Simple data model for inventory items
     public class InventoryItem
     {
-        public required string ProductId { get; set; }
-        public required string ProductName { get; set; }
-        public required string Category { get; set; }
+        public string ProductId { get; set; }
+        public string ProductName { get; set; }
         public int Quantity { get; set; }
         public decimal Price { get; set; }
-        public required string Supplier { get; set; }
         public DateTime LastUpdated { get; set; }
     }
 }

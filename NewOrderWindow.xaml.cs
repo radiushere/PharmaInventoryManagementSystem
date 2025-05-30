@@ -1,10 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
 using System.Configuration;
 using System.Linq;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace SimpleLoginWPF
 {
@@ -12,86 +11,101 @@ namespace SimpleLoginWPF
     {
         private readonly Orders _parentWindow;
         private readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
-        private List<Medicine> _medicines;
-        private List<Supplier> _suppliers;
-
-        public class OrderItem
-        {
-            public Medicine Medicine { get; set; }
-            public int Quantity { get; set; }
-            public decimal UnitPrice { get; set; }
-            public decimal Total => Quantity * UnitPrice;
-        }
 
         public NewOrderWindow(Orders parentWindow)
         {
             InitializeComponent();
             _parentWindow = parentWindow;
-            LoadSuppliers();
-            LoadMedicines();
+            LoadDistributors();
+            LoadProducts();
             dpOrderDate.SelectedDate = DateTime.Today;
             dpDeliveryDate.SelectedDate = DateTime.Today.AddDays(7);
             cmbStatus.SelectedIndex = 0;
-            dgOrderItems.ItemsSource = new List<OrderItem>();
         }
 
-        private void LoadSuppliers()
+        private void LoadDistributors()
         {
-            _suppliers = new List<Supplier>();
             using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                var query = "SELECT supplier_id, name FROM suppliers";
+                var query = "SELECT dist_id, name FROM distributors";
                 using (var cmd = new MySqlCommand(query, conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            _suppliers.Add(new Supplier
+                            cmbDistributors.Items.Add(new
                             {
-                                SupplierId = reader.GetInt32("supplier_id"),
+                                Id = reader.GetInt32("dist_id"),
                                 Name = reader.GetString("name")
                             });
                         }
                     }
                 }
             }
-            cmbSuppliers.ItemsSource = _suppliers;
-            cmbSuppliers.DisplayMemberPath = "Name";
+            cmbDistributors.DisplayMemberPath = "Name";
+            cmbDistributors.SelectedValuePath = "Id";
         }
 
-        private void LoadMedicines()
+        private void LoadProducts()
         {
-            _medicines = new List<Medicine>();
             using (var conn = new MySqlConnection(connectionString))
             {
                 conn.Open();
-                var query = "SELECT id, name FROM medicines";
+                var query = "SELECT product_id, product_name, price FROM products";
                 using (var cmd = new MySqlCommand(query, conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            _medicines.Add(new Medicine
+                            cmbProducts.Items.Add(new
                             {
-                                MedicineId = reader.GetInt32("id"),
-                                Name = reader.GetString("name")
+                                Id = reader.GetInt32("product_id"),
+                                Name = reader.GetString("product_name"),
+                                Price = reader.GetDecimal("price")
                             });
                         }
                     }
                 }
             }
-            var medicineColumn = dgOrderItems.Columns[0] as DataGridComboBoxColumn;
-            medicineColumn.ItemsSource = _medicines;
+            cmbProducts.DisplayMemberPath = "Name";
+            cmbProducts.SelectedValuePath = "Id";
+            cmbProducts.SelectionChanged += CmbProducts_SelectionChanged;
+        }
+
+        private void CmbProducts_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbProducts.SelectedItem != null)
+            {
+                var selectedProduct = (dynamic)cmbProducts.SelectedItem;
+                txtPrice.Text = selectedProduct.Price.ToString();
+                CalculateTotalAmount();
+            }
+        }
+
+        private void CalculateTotalAmount()
+        {
+            if (cmbProducts.SelectedItem != null && !string.IsNullOrEmpty(txtQuantity.Text))
+            {
+                var selectedProduct = (dynamic)cmbProducts.SelectedItem;
+                decimal price = selectedProduct.Price;
+                int quantity = int.Parse(txtQuantity.Text);
+                txtTotalAmount.Text = (price * quantity).ToString();
+            }
+        }
+
+        private void txtQuantity_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CalculateTotalAmount();
         }
 
         private bool ValidateInputs()
         {
-            if (cmbSuppliers.SelectedItem == null)
+            if (cmbDistributors.SelectedItem == null)
             {
-                MessageBox.Show("Please select a supplier", "Validation Error",
+                MessageBox.Show("Please select a distributor", "Validation Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
@@ -117,49 +131,14 @@ namespace SimpleLoginWPF
                 return false;
             }
 
-            if (dgOrderItems.Items.Count == 0)
+            if (cmbProducts.SelectedItem == null || string.IsNullOrEmpty(txtQuantity.Text) || int.Parse(txtQuantity.Text) <= 0)
             {
-                MessageBox.Show("Please add at least one order item", "Validation Error",
+                MessageBox.Show("Please select a product and enter a valid quantity", "Validation Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            foreach (OrderItem item in dgOrderItems.Items)
-            {
-                if (item.Medicine == null || item.Quantity <= 0 || item.UnitPrice <= 0)
-                {
-                    MessageBox.Show("Invalid item data", "Validation Error",
-                        MessageBoxButton.OK, MessageBoxImage.Warning);
-                    return false;
-                }
-            }
-
             return true;
-        }
-
-        private void AddItem_Click(object sender, RoutedEventArgs e)
-        {
-            AddItemDialog addItemDialog = new AddItemDialog();
-            addItemDialog.ShowDialog();
-        }
-
-        private void RemoveItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (dgOrderItems.SelectedItem is OrderItem item)
-            {
-                dgOrderItems.Items.Remove(item);
-                UpdateTotalAmount();
-            }
-        }
-
-        private void UpdateTotalAmount()
-        {
-            decimal total = 0;
-            foreach (OrderItem item in dgOrderItems.Items)
-            {
-                total += item.Total;
-            }
-            txtTotalAmount.Text = $"Total Amount: {total:C}";
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
@@ -175,36 +154,33 @@ namespace SimpleLoginWPF
                     {
                         try
                         {
+                            var selectedProduct = (dynamic)cmbProducts.SelectedItem;
+                            var selectedDistributor = (dynamic)cmbDistributors.SelectedItem;
+                            var quantity = int.Parse(txtQuantity.Text);
+                            var price = selectedProduct.Price * quantity;
+                            var status = ((ComboBoxItem)cmbStatus.SelectedItem).Content.ToString();
+
                             // Insert order
-                            var orderQuery = @"INSERT INTO orders 
-                                            (supplier_id, order_date, delivery_date, status, total_amount)
-                                            VALUES (@supplierId, @orderDate, @deliveryDate, @status, @totalAmount);
+                            var orderQuery = @"INSERT INTO orders
+                                            (dist_id, product_id, quantity, price, order_date, delivery_date, status)
+                                            VALUES (@distId, @productId, @quantity, @price, @orderDate, @deliveryDate, @status);
                                             SELECT LAST_INSERT_ID();";
 
-                            decimal totalAmount = ((IEnumerable<OrderItem>)dgOrderItems.ItemsSource).Sum(item => item.Total);
-
                             var orderCmd = new MySqlCommand(orderQuery, conn, transaction);
-                            orderCmd.Parameters.AddWithValue("@supplierId", ((Supplier)cmbSuppliers.SelectedItem).SupplierId);
+                            orderCmd.Parameters.AddWithValue("@distId", selectedDistributor.Id);
+                            orderCmd.Parameters.AddWithValue("@productId", selectedProduct.Id);
+                            orderCmd.Parameters.AddWithValue("@quantity", quantity);
+                            orderCmd.Parameters.AddWithValue("@price", price);
                             orderCmd.Parameters.AddWithValue("@orderDate", dpOrderDate.SelectedDate);
                             orderCmd.Parameters.AddWithValue("@deliveryDate", dpDeliveryDate.SelectedDate);
-                            orderCmd.Parameters.AddWithValue("@status", ((ComboBoxItem)cmbStatus.SelectedItem).Content.ToString());
-                            orderCmd.Parameters.AddWithValue("@totalAmount", totalAmount);
+                            orderCmd.Parameters.AddWithValue("@status", status);
 
                             int orderId = Convert.ToInt32(orderCmd.ExecuteScalar());
 
-                            // Insert order items
-                            foreach (OrderItem item in dgOrderItems.Items)
+                            // If the order status is "Completed," save it to the sales table
+                            if (status == "Completed")
                             {
-                                var itemQuery = @"INSERT INTO order_items 
-                                                (order_id, medicine_id, quantity, unit_price)
-                                                VALUES (@orderId, @medicineId, @quantity, @unitPrice)";
-
-                                var itemCmd = new MySqlCommand(itemQuery, conn, transaction);
-                                itemCmd.Parameters.AddWithValue("@orderId", orderId);
-                                itemCmd.Parameters.AddWithValue("@medicineId", item.Medicine.MedicineId);
-                                itemCmd.Parameters.AddWithValue("@quantity", item.Quantity);
-                                itemCmd.Parameters.AddWithValue("@unitPrice", item.UnitPrice);
-                                itemCmd.ExecuteNonQuery();
+                                SaveOrderToSales(orderId, selectedProduct.Id, quantity, price, dpDeliveryDate.SelectedDate.Value);
                             }
 
                             transaction.Commit();
@@ -230,23 +206,37 @@ namespace SimpleLoginWPF
             }
         }
 
+        private void SaveOrderToSales(int orderId, int productId, int quantity, decimal price, DateTime deliveryDate)
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var query = @"INSERT INTO sales
+                                  (product_id, quantity, payment_method, total_amount, sale_date)
+                                  VALUES (@productId, @quantity, @paymentMethod, @totalAmount, @saleDate)";
+
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@productId", productId);
+                        cmd.Parameters.AddWithValue("@quantity", quantity);
+                        cmd.Parameters.AddWithValue("@paymentMethod", "unspecified");
+                        cmd.Parameters.AddWithValue("@totalAmount", price);
+                        cmd.Parameters.AddWithValue("@saleDate", deliveryDate);
+
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving order to sales: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void Cancel_Click(object sender, RoutedEventArgs e) => this.Close();
         private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
         private void Close_Click(object sender, RoutedEventArgs e) => this.Close();
     }
-
-    public class Supplier
-    {
-        public int SupplierId { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Medicine
-    {
-        public int MedicineId { get; set; }
-        public string Name { get; set; }
-    }
-
-
-
 }

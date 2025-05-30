@@ -13,23 +13,16 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <Color x:Key="PrimaryRed">#B30000</Color>
+        <Color x:Key="PrimaryRed">#B30000</Color>
             <Color x:Key="PrimaryRedDark">#8A0000</Color>
             <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
             <Color x:Key="AccentGold">#FFD700</Color>
 
-            <!-- Convert Colors to Brushes -->
             <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
             <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
             <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
             <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
 
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
             <Storyboard x:Key="ButtonHoverEnter">
                 <DoubleAnimation Duration="0:0:0.15"
                      Storyboard.TargetProperty="RenderTransform.ScaleX"
@@ -68,16 +61,6 @@
                 </DoubleAnimationUsingKeyFrames>
             </Storyboard>
 
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~ SIDEBAR STYLES ~~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- Normal Sidebar Button Style -->
-            <!-- Default Sidebar Button Style -->
-            <!-- Default Sidebar Button Style -->
-            <!-- Default Sidebar Button Style -->
-            <!-- Default Sidebar Button Style -->
-            <!-- Default Sidebar Button Style -->
-            <!-- Default Sidebar Button Style -->
             <Style x:Key="SidebarButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="Foreground" Value="#2D3436"/>
@@ -139,10 +122,6 @@
                 </Setter>
             </Style>
 
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~~ DATA GRID ~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
             <Style x:Key="DataGridMain" TargetType="DataGrid">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="RowBackground" Value="White"/>
@@ -225,85 +204,75 @@
                 </Setter>
             </Style>
 
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- Make these 40x40 by default so they match the search box height -->
-            <Style x:Key="AddMoreButton" TargetType="Button">
-                <Setter Property="Width" Value="40"/>
-                <Setter Property="Height" Value="40"/>
-                <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
-                <Setter Property="Foreground" Value="White"/>
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Effect">
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="16"
+        <Style x:Key="AddMoreButton" TargetType="Button">
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="16"
                               Opacity="0.3"
                               Color="{StaticResource PrimaryRed}"/>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}"
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
                         CornerRadius="20">
-                                <Grid>
-                                    <Ellipse x:Name="HoverOverlay"
+                            <Grid>
+                                <Ellipse x:Name="HoverOverlay"
                                  Fill="White"
                                  Opacity="0"/>
-                                    <ContentPresenter HorizontalAlignment="Center"
+                                <ContentPresenter HorizontalAlignment="Center"
                                           VerticalAlignment="Center"/>
-                                </Grid>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter TargetName="HoverOverlay"
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="HoverOverlay"
                                 Property="Opacity"
                                 Value="0.1"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
-            <!-- We’ll reuse the same style for the Profile button, 
-     but if you want to differentiate it, define another style. -->
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~ FILTER DROPDOWN ~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <Style x:Key="FilterComboBoxStyle" TargetType="ComboBox">
-                <Setter Property="Background" Value="#FAFAFA"/>
-                <Setter Property="Foreground" Value="#2D3436"/>
-                <Setter Property="FontSize" Value="14"/>
-                <Setter Property="Padding" Value="10,4"/>
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="#E0E0E0"/>
-                <Setter Property="Cursor" Value="Hand"/>
-                <Setter Property="Width" Value="140"/>
-                <Setter Property="Height" Value="40"/>
-                <Setter Property="Effect">
-                    <Setter.Value>
-                        <DropShadowEffect BlurRadius="5" Opacity="0.2" ShadowDepth="2"/>
-                    </Setter.Value>
-                </Setter>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="ComboBox">
-                            <Grid>
-                                <Border x:Name="MainBorder"
+        <Style x:Key="FilterComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Background" Value="#FAFAFA"/>
+            <Setter Property="Foreground" Value="#2D3436"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="10,4"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Width" Value="140"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="5" Opacity="0.2" ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="MainBorder"
                     Background="{TemplateBinding Background}"
                     CornerRadius="4"
                     BorderBrush="{TemplateBinding BorderBrush}"
                     BorderThickness="{TemplateBinding BorderThickness}">
-                                    <Grid>
-                                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                <Grid>
+                                    <ContentPresenter Margin="{TemplateBinding Padding}"
                                       VerticalAlignment="Center"
                                       HorizontalAlignment="Left"
                                       RecognizesAccessKey="True"/>
-                                        <ToggleButton x:Name="ToggleButton"
+                                    <ToggleButton x:Name="ToggleButton"
                                   Focusable="false"
                                   IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
                                   ClickMode="Press"
@@ -312,47 +281,44 @@
                                   HorizontalAlignment="Right"
                                   Width="20"
                                   Margin="0,0,4,0">
-                                            <Path x:Name="Arrow"
+                                        <Path x:Name="Arrow"
                               Data="M 0 0 L 4 4 L 8 0 Z"
                               Fill="{TemplateBinding Foreground}"
                               HorizontalAlignment="Center"
                               VerticalAlignment="Center"/>
-                                        </ToggleButton>
-                                    </Grid>
-                                </Border>
-                                <Popup x:Name="PART_Popup"
+                                    </ToggleButton>
+                                </Grid>
+                            </Border>
+                            <Popup x:Name="PART_Popup"
                    Placement="Bottom"
                    AllowsTransparency="True"
                    Focusable="False"
                    IsOpen="{TemplateBinding IsDropDownOpen}"
                    PopupAnimation="Slide">
-                                    <Border x:Name="PopupBorder"
+                                <Border x:Name="PopupBorder"
                         Background="White"
                         BorderBrush="{TemplateBinding BorderBrush}"
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="4">
-                                        <ScrollViewer Margin="0" SnapsToDevicePixels="True">
-                                            <StackPanel IsItemsHost="True"
+                                    <ScrollViewer Margin="0" SnapsToDevicePixels="True">
+                                        <StackPanel IsItemsHost="True"
                                     KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                        </ScrollViewer>
-                                    </Border>
-                                </Popup>
-                            </Grid>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsEnabled" Value="False">
-                                    <Setter TargetName="MainBorder" Property="Background" Value="#EEE"/>
-                                    <Setter TargetName="Arrow" Property="Fill" Value="#888"/>
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <!-- ~~~~~~~ SEARCH & STATS ~~~~~~~~ -->
-            <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-            <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="MainBorder" Property="Background" Value="#EEE"/>
+                                <Setter TargetName="Arrow" Property="Fill" Value="#888"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="BorderBrush" Value="#E0E0E0"/>
                 <Setter Property="BorderThickness" Value="1"/>
@@ -368,7 +334,7 @@
                               ShadowDepth="2"/>
                     </Setter.Value>
                 </Setter>
-            </Style>
+        </Style>
 
             <Style x:Key="StatsBoxStyle" TargetType="Border">
                 <Setter Property="Background" Value="White"/>
@@ -458,7 +424,7 @@ Click="ManageStore_Click">
                 </Button>
 
                 <Button Style="{StaticResource SelectedSidebarButtonStyle}"
-Click="ManageStore_Click">
+Click="Admin_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Suppliers.png"
        Width="22"
@@ -530,13 +496,15 @@ Click="ManageStore_Click">
                     <ComboBox x:Name="FilterComboBox" Style="{StaticResource FilterComboBoxStyle}"
                   Margin="10,0" SelectionChanged="FilterComboBox_SelectionChanged">
                         <ComboBoxItem Content="All Users"/>
-                        <ComboBoxItem Content="Admins"/>
-                        <ComboBoxItem Content="Managers"/>
+                        <ComboBoxItem Content="Admin"/>
+                        <ComboBoxItem Content="Manager"/>
+                        <ComboBoxItem Content="Distributor"/>
+                        <ComboBoxItem Content="Product Specialist"/>
+                        <ComboBoxItem Content="Warehouse Manager"/>
                     </ComboBox>
 
                     <Button Style="{StaticResource AddMoreButton}" Content="+" 
                 Margin="10,0" Click="AddOrder_Click" ToolTip="Create New Order"/>
-                    <!-- Profile Button (uses same style) -->
                     <Button Style="{StaticResource AddMoreButton}"
             Content="👤"
             Margin="10,0"
@@ -562,55 +530,49 @@ Click="ManageStore_Click">
 
                 <Border Style="{StaticResource StatsBoxStyle}" Grid.Column="1">
                     <StackPanel>
-                        <TextBlock Text="Active Sessions" Foreground="#2D3436" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="ActiveSessions" FontSize="24" FontWeight="Bold" Foreground="#007B00"/>
+                        <TextBlock Text="Admins" Foreground="#2D3436" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="AdminCount" FontSize="24" FontWeight="Bold" Foreground="#007B00"/>
                     </StackPanel>
                 </Border>
 
                 <Border Style="{StaticResource StatsBoxStyle}" Grid.Column="2">
                     <StackPanel>
-                        <TextBlock Text="Today's Logs" Foreground="#2D3436" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="TodaysLogs" FontSize="24" FontWeight="Bold" Foreground="#CC5500"/>
+                        <TextBlock Text="Managers" Foreground="#2D3436" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="ManagerCount" FontSize="24" FontWeight="Bold" Foreground="#CC5500"/>
                     </StackPanel>
                 </Border>
 
                 <Border Style="{StaticResource StatsBoxStyle}" Grid.Column="3">
                     <StackPanel>
-                        <TextBlock Text="System Health" Foreground="#2D3436" FontWeight="SemiBold"/>
-                        <TextBlock x:Name="SystemHealth" FontSize="24" FontWeight="Bold" Foreground="#0088CC"/>
+                        <TextBlock Text="Distributor" Foreground="#2D3436" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="DistributorCount" FontSize="24" FontWeight="Bold" Foreground="#0088CC"/>
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <!-- Admin Data Grid -->
-            <DataGrid x:Name="AdminDataGrid" Grid.Row="2"
-                      Style="{StaticResource DataGridMain}"
-                      AutoGenerateColumns="False" >
+            <DataGrid x:Name="AdminDataGrid" Grid.Row="2" Style="{StaticResource DataGridMain}" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="User ID" Binding="{Binding UserId}" Width="1*"/>
+                    <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="1*"/>
                     <DataGridTextColumn Header="Username" Binding="{Binding Username}" Width="2*"/>
+                    <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="2*"/>
+                    <DataGridTextColumn Header="Full Name" Binding="{Binding FullName}" Width="2*"/>
                     <DataGridTextColumn Header="Role" Binding="{Binding Role}" Width="1.2*"/>
-                    <DataGridTextColumn Header="Last Login" Binding="{Binding LastLogin,StringFormat=yyyy-MM-dd HH:mm}" Width="2*"/>
-                    <DataGridCheckBoxColumn Header="Active" Binding="{Binding IsActive}" Width="0.8*"/>
+                    <DataGridTextColumn Header="Account Status" Binding="{Binding AccountStatus}" Width="1.5*"/>
+                    <DataGridTextColumn Header="Created At" Binding="{Binding CreatedAt, StringFormat=yyyy-MM-dd HH:mm}" Width="2*"/>
                     <DataGridTemplateColumn Header="Actions" Width="1.5*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Edit" 
-                                            Style="{StaticResource AddMoreButton}" 
-                                            Margin="2" Padding="8,4"
-                                            Click="EditUser_Click"/>
-                                    <Button Content="Reset" 
-                                            Style="{StaticResource AddMoreButton}" 
-                                            Margin="2" Padding="8,4"
-                                            Background="#FFD700"
-                                            Click="ResetPassword_Click"/>
+                                    <Button Content="Edit" Style="{StaticResource AddMoreButton}" Margin="2" Padding="8,4" Click="EditUser_Click"/>
+                                    <Button Content="Delete" Style="{StaticResource AddMoreButton}" Margin="2" Padding="8,4" Background="#FFD700" Click="Delete_Click"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
+
+
         </Grid>
     </Grid>
 </Window>

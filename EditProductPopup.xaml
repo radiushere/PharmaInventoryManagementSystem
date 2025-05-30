@@ -10,9 +10,9 @@
         Width="800"
         Background="#F8FAFC"
         FontFamily="Segoe UI"
-        WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -24,6 +24,30 @@
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Height" Value="40"/>
@@ -49,7 +73,7 @@
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -77,7 +101,7 @@
                                 Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center"
-                                                 VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -107,7 +131,7 @@
 
         <Style x:Key="FormTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="34"/>
-            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Padding" Value="3,0"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontSize" Value="13"/>
@@ -115,12 +139,12 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
-                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                        <Border BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}"
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="4">
-                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" 
-                                        Margin="{TemplateBinding Padding}"/>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false"
+                                          Margin="{TemplateBinding Padding}"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -149,6 +173,8 @@
         </Style>
     </Window.Resources>
 
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -156,7 +182,6 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
             <DockPanel LastChildFill="True">
                 <StackPanel Orientation="Horizontal">
@@ -166,10 +191,8 @@
             </DockPanel>
         </Border>
 
-        <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10">
             <StackPanel>
-                <!-- Basic Information -->
                 <TextBlock Text="Basic Information" Style="{StaticResource FormHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
@@ -178,10 +201,9 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Product Image -->
                         <StackPanel Grid.Column="0" Width="150" Margin="0,0,20,0">
-                            <Border Width="120" Height="120" Margin="0,0,0,10" 
-                                VerticalAlignment="Top" CornerRadius="8" BorderBrush="#DDDDDD" BorderThickness="1">
+                            <Border Width="120" Height="120" Margin="0,0,0,10"
+                            VerticalAlignment="Top" CornerRadius="8" BorderBrush="#DDDDDD" BorderThickness="1">
                                 <Border.Effect>
                                     <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
                                 </Border.Effect>
@@ -190,7 +212,6 @@
                             <Button Content="Change" Style="{StaticResource SecondaryButton}" Width="120" Height="38" Margin="0,5,0,0" Click="Button_Click"/>
                         </StackPanel>
 
-                        <!-- Basic Info Form -->
                         <Grid Grid.Column="1">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="120"/>
@@ -204,32 +225,20 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Text="Product Name:" Grid.Row="0" Grid.Column="0" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="ProductNameTextBox" Text="CardioSafe 100mg Tablets" Grid.Row="0" Grid.Column="1" Style="{StaticResource FormTextBox}"/>
+                            <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource FormTextBox}"/>
 
-                            <TextBlock Text="NDC Code:" Grid.Row="1" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
-                            <TextBox x:Name="ProductIdTextBox" Text="12345-678-90" Grid.Row="1" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0"/>
+                            <TextBlock Text="Product ID (NDC):" Grid.Row="1" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
+                            <TextBox x:Name="ProductIdTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0" IsReadOnly="True"/>
 
                             <TextBlock Text="Category:" Grid.Row="2" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
-                            <ComboBox x:Name="CategoryComboBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource FormComboBox}" Margin="0,10,0,0">
-                                <ComboBoxItem Content="Antibiotics" IsSelected="False"/>
-                                <ComboBoxItem Content="Analgesics" IsSelected="False"/>
-                                <ComboBoxItem Content="Cardiovascular Drugs" IsSelected="True"/>
-                                <ComboBoxItem Content="Antidiabetics" IsSelected="False"/>
-                                <ComboBoxItem Content="Respiratory Drugs" IsSelected="False"/>
-                            </ComboBox>
+                            <ComboBox x:Name="CategoryComboBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource FormComboBox}" Margin="0,10,0,0"/>
 
-                            <TextBlock Text="Status:" Grid.Row="3" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
-                            <ComboBox x:Name="StatusComboBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource FormComboBox}" Margin="0,10,0,0">
-                                <ComboBoxItem Content="Active Batch" IsSelected="True"/>
-                                <ComboBoxItem Content="Discontinued" IsSelected="False"/>
-                                <ComboBoxItem Content="Pending Approval" IsSelected="False"/>
-                                <ComboBoxItem Content="Limited Supply" IsSelected="False"/>
-                            </ComboBox>
+                            <TextBlock Text="Batch Number:" Grid.Row="3" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
+                            <TextBox x:Name="BatchNumberTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0"/>
                         </Grid>
                     </Grid>
                 </Border>
 
-                <!-- Product Details -->
                 <TextBlock Text="Product Details" Style="{StaticResource FormHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
@@ -242,118 +251,41 @@
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
-                            <TextBlock Text="Active Ingredient:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="ActiveIngredientTextBox" Text="Lisinopril" Style="{StaticResource FormTextBox}" FontSize="11"/>
+                            <TextBlock Text="Quantity (in stock):" Style="{StaticResource FormFieldLabel}"/>
+                            <TextBox x:Name="QuantityTextBox" Style="{StaticResource FormTextBox}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,10,10,0">
-                            <TextBlock Text="Dosage Form:" Style="{StaticResource FormFieldLabel}"/>
-                            <ComboBox x:Name="DosageFormComboBox" Style="{StaticResource FormComboBox}">
-                                <ComboBoxItem Content="Oral Tablet" IsSelected="True"/>
-                                <ComboBoxItem Content="Capsule" IsSelected="False"/>
-                                <ComboBoxItem Content="Liquid" IsSelected="False"/>
-                                <ComboBoxItem Content="Injectable" IsSelected="False"/>
-                            </ComboBox>
+                            <TextBlock Text="Unit Price:" Style="{StaticResource FormFieldLabel}"/>
+                            <TextBox x:Name="UnitPriceTextBox" Style="{StaticResource FormTextBox}"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,10,10,0">
-                            <TextBlock Text="Strength:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="StrengthTextBox" Text="100mg" Style="{StaticResource FormTextBox}"/>
+                            <TextBlock Text="Expiry Date:" Style="{StaticResource FormFieldLabel}"/>
+                            <DatePicker x:Name="ExpiryDatePicker" FontSize="13" Height="34"/>
                         </StackPanel>
 
                         <StackPanel Grid.Column="0" Grid.Row="3" Margin="0,10,10,0">
-                            <TextBlock Text="Schedule:" Style="{StaticResource FormFieldLabel}"/>
-                            <ComboBox x:Name="ScheduleComboBox" Style="{StaticResource FormComboBox}">
-                                <ComboBoxItem Content="Prescription Only (Rx)" IsSelected="True"/>
-                                <ComboBoxItem Content="OTC" IsSelected="False"/>
-                                <ComboBoxItem Content="Controlled" IsSelected="False"/>
-                            </ComboBox>
+                            <TextBlock Text="Supplier:" Style="{StaticResource FormFieldLabel}"/>
+                            <ComboBox x:Name="SupplierComboBox"
+                                  Style="{StaticResource FormComboBox}"
+                                  DisplayMemberPath="Name"    SelectedValuePath="Id"      SelectedValue="{Binding SelectedSupplierId, Mode=TwoWay}"
+                                  ToolTip="Select the supplier for this product."/>
                         </StackPanel>
 
-                        <!-- Right Column -->
                         <StackPanel Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
-                            <TextBlock Text="Package Size:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="PackageSizeTextBox" FontSize="11" Text="90 Tablets/Bottle" Style="{StaticResource FormTextBox}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,10,0,0">
-                            <TextBlock Text="Storage Conditions:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="StorageTextBox" FontSize="11" Text="15-30°C, protect from light" Style="{StaticResource FormTextBox}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="2" Margin="10,10,0,0">
-                            <TextBlock Text="Manufacturer:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="ManufacturerTextBox" FontSize="11" Text="PharmaCare Global Ltd." Style="{StaticResource FormTextBox}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="1" Grid.Row="3" Margin="10,10,0,0">
-                            <TextBlock Text="Batch Expiry:" Style="{StaticResource FormFieldLabel}"/>
-                            <DatePicker x:Name="ExpiryDatePicker" FontSize="11" Height="34" SelectedDate="03/01/2025"/>
+                            <TextBlock Text="Description:" Style="{StaticResource FormFieldLabel}"/>
+                            <TextBox x:Name="IndicationsTextBox" FontSize="11" Style="{StaticResource FormTextBox}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
                         </StackPanel>
                     </Grid>
-                </Border>
-
-                <!-- Clinical Information -->
-                <TextBlock Text="Clinical Information" Style="{StaticResource FormHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <StackPanel>
-                        <TextBlock Text="Indications:" Style="{StaticResource FormFieldLabel}"/>
-                        <TextBox x:Name="IndicationsTextBox" FontSize="11" Style="{StaticResource FormTextBox}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"
-                                 Text="Treatment of hypertension in adults and pediatric patients 6 years and older. Heart failure treatment. Adjuvant therapy post myocardial infarction."/>
-
-                        <TextBlock Text="Pharmacological Data:" Style="{StaticResource FormFieldLabel}" Margin="0,15,0,3"/>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-
-                            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
-                                <TextBlock Text="Half-life:" Style="{StaticResource FormFieldLabel}" FontSize="12" Margin="0,2,0,2"/>
-                                <TextBox x:Name="HalfLifeTextBox" Text="12 hours" Style="{StaticResource FormTextBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,8,10,0">
-                                <TextBlock Text="Bioavailability:" Style="{StaticResource FormFieldLabel}" FontSize="12" Margin="0,2,0,2"/>
-                                <TextBox x:Name="BioavailabilityTextBox" Text="25%" Style="{StaticResource FormTextBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,8,10,0">
-                                <TextBlock Text="Protein binding:" Style="{StaticResource FormFieldLabel}" FontSize="12" Margin="0,2,0,2"/>
-                                <TextBox x:Name="ProteinBindingTextBox" Text="0%" Style="{StaticResource FormTextBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
-                                <TextBlock Text="Excretion:" Style="{StaticResource FormFieldLabel}" FontSize="12" Margin="0,2,0,2"/>
-                                <TextBox x:Name="ExcretionTextBox" Text="Renal (100%)" Style="{StaticResource FormTextBox}"/>
-                            </StackPanel>
-
-                            <StackPanel Grid.Column="1" Grid.Row="1" Margin="10,8,0,0">
-                                <TextBlock Text="Pregnancy Category:" Style="{StaticResource FormFieldLabel}" FontSize="12" Margin="0,2,0,2"/>
-                                <ComboBox x:Name="PregnancyCategoryComboBox" Style="{StaticResource FormComboBox}">
-                                    <ComboBoxItem Content="A" IsSelected="False"/>
-                                    <ComboBoxItem Content="B" IsSelected="False"/>
-                                    <ComboBoxItem Content="C" IsSelected="False"/>
-                                    <ComboBoxItem Content="D" IsSelected="True"/>
-                                    <ComboBoxItem Content="X" IsSelected="False"/>
-                                </ComboBox>
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
                 </Border>
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,12">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
@@ -361,4 +293,5 @@
             </StackPanel>
         </Border>
     </Grid>
+
 </Window>

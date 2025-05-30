@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Configuration;
 using System.Windows;
 
 namespace SimpleLoginWPF
@@ -6,34 +8,130 @@ namespace SimpleLoginWPF
     public partial class EditPurchaseDialog : Window
     {
         private readonly PurchaseDetails _parentWindow;
+        private static readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+
+        public int PurchaseId { get; set; }
 
         public EditPurchaseDialog(PurchaseDetails parentWindow)
         {
             InitializeComponent();
             _parentWindow = parentWindow;
+
+            if (int.TryParse(_parentWindow.PurchaseId.Text, out int parsedPurchaseId))
+            {
+                PurchaseId = parsedPurchaseId;
+            }
+            else
+            {
+                MessageBox.Show("Invalid Purchase ID format.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                PurchaseId = 0;
+            }
+
+            LoadSuppliers();
+            LoadProducts();
             LoadCurrentPurchaseData();
+        }
+
+        private void LoadSuppliers()
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var query = "SELECT supplier_id, supplier_name FROM suppliers";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                SupplierComboBox.Items.Add(new
+                                {
+                                    Id = reader["supplier_id"],
+                                    Name = reader["supplier_name"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading suppliers: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void LoadProducts()
+        {
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var query = "SELECT product_id, product_name FROM products";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ProductComboBox.Items.Add(new
+                                {
+                                    Id = reader["product_id"],
+                                    Name = reader["product_name"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading products: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadCurrentPurchaseData()
         {
-            // Load current purchase data from parent window
-            PurchaseIdTextBox.Text = _parentWindow.PurchaseId.Text;
-            PurchaseDatePicker.SelectedDate = DateTime.Parse(_parentWindow.PurchaseDate.Text);
-            DeliveryDatePicker.SelectedDate = DateTime.Parse(_parentWindow.DeliveryDate.Text);
-            TotalAmountTextBox.Text = _parentWindow.TotalAmount.Text.TrimStart('$');
-            NotesTextBox.Text = _parentWindow.PurchaseNotes.Text;
-
-            // Set selected values in combo boxes
-            SetComboBoxSelectedItem(SupplierComboBox, _parentWindow.SupplierName.Text);
-            SetComboBoxSelectedItem(StatusComboBox, _parentWindow.PurchaseStatus.Text);
-            SetComboBoxSelectedItem(PaymentMethodComboBox, _parentWindow.PaymentMethod.Text);
+            try
+            {
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var query = @"SELECT pp.purchase_id, pp.date, pp.supplier_id, pp.product_id, pp.status, pp.total_amount
+                                  FROM product_purchases pp
+                                  WHERE pp.purchase_id = @purchaseId";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@purchaseId", _parentWindow.PurchaseId);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                PurchaseIdTextBox.Text = reader["purchase_id"].ToString();
+                                PurchaseDatePicker.SelectedDate = (DateTime)reader["date"];
+                                SetComboBoxSelectedItem(SupplierComboBox, reader["supplier_id"].ToString());
+                                SetComboBoxSelectedItem(ProductComboBox, reader["product_id"].ToString());
+                                SetComboBoxSelectedItem(StatusComboBox, reader["status"].ToString());
+                                TotalAmountTextBox.Text = reader["total_amount"].ToString();
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading purchase data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void SetComboBoxSelectedItem(System.Windows.Controls.ComboBox comboBox, string value)
         {
-            foreach (System.Windows.Controls.ComboBoxItem item in comboBox.Items)
+            foreach (var item in comboBox.Items)
             {
-                if (item.Content.ToString() == value)
+                var comboBoxItem = (dynamic)item;
+                if (comboBoxItem.Id.ToString() == value)
                 {
                     comboBox.SelectedItem = item;
                     break;
@@ -45,29 +143,30 @@ namespace SimpleLoginWPF
         {
             try
             {
-                // Update the parent window's data with edited values
-                _parentWindow.PurchaseDate.Text = PurchaseDatePicker.SelectedDate?.ToString("yyyy-MM-dd") ?? "";
-                _parentWindow.DeliveryDate.Text = DeliveryDatePicker.SelectedDate?.ToString("yyyy-MM-dd") ?? "";
+                using (var conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    var query = @"UPDATE product_purchases
+                                  SET date = @date, supplier_id = @supplierId, product_id = @productId, status = @status, total_amount = @totalAmount
+                                  WHERE purchase_id = @purchaseId";
+                    using (var cmd = new MySqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@purchaseId", PurchaseIdTextBox.Text);
+                        cmd.Parameters.AddWithValue("@date", PurchaseDatePicker.SelectedDate);
+                        cmd.Parameters.AddWithValue("@supplierId", ((dynamic)SupplierComboBox.SelectedItem).Id);
+                        cmd.Parameters.AddWithValue("@productId", ((dynamic)ProductComboBox.SelectedItem).Id);
+                        cmd.Parameters.AddWithValue("@status", ((System.Windows.Controls.ComboBoxItem)StatusComboBox.SelectedItem).Content);
+                        cmd.Parameters.AddWithValue("@totalAmount", TotalAmountTextBox.Text);
 
-                _parentWindow.SupplierName.Text = ((System.Windows.Controls.ComboBoxItem)SupplierComboBox.SelectedItem).Content.ToString();
-                _parentWindow.PurchaseStatus.Text = ((System.Windows.Controls.ComboBoxItem)StatusComboBox.SelectedItem).Content.ToString();
-                _parentWindow.PaymentMethod.Text = ((System.Windows.Controls.ComboBoxItem)PaymentMethodComboBox.SelectedItem).Content.ToString();
-
-                _parentWindow.TotalAmount.Text = "$" + TotalAmountTextBox.Text.TrimStart('$');
-                _parentWindow.PurchaseNotes.Text = NotesTextBox.Text;
-
-                // Update the purchase title to reflect any changes
-                _parentWindow.PurchaseTitle.Text = $"Raw Materials Purchase #{PurchaseIdTextBox.Text}";
-
-                MessageBox.Show("Purchase details updated successfully.", "Success",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                        cmd.ExecuteNonQuery();
+                    }
+                }
 
                 DialogResult = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving changes: {ex.Message}", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error saving purchase data: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

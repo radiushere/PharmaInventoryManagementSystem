@@ -42,9 +42,9 @@ namespace SimpleLoginWPF
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(txtPhone.Text) || !Regex.IsMatch(txtPhone.Text, @"^\d{10}$"))
+            if (string.IsNullOrWhiteSpace(txtPhone.Text))
             {
-                MessageBox.Show("Valid 10-digit phone number is required", "Validation Error",
+                MessageBox.Show("Phone number is required", "Validation Error",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
@@ -88,21 +88,41 @@ namespace SimpleLoginWPF
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    var query = @"INSERT INTO distributors 
-                                  (name, region, distribution_type, phone, email, service_area)
-                                  VALUES
-                                  (@name, @region, @distributionType, @phone, @email, @serviceArea)";
 
-                    using (var cmd = new MySqlCommand(query, conn))
+                    // Insert into distributors table
+                    var distributorQuery = @"INSERT INTO distributors
+                                            (name, region, distributor_type, email, service_area)
+                                            VALUES
+                                            (@name, @region, @distributorType, @email, @serviceArea);
+                                            SELECT LAST_INSERT_ID();";
+
+                    int distributorId;
+                    using (var cmd = new MySqlCommand(distributorQuery, conn))
                     {
                         cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
                         cmd.Parameters.AddWithValue("@region", txtRegion.Text.Trim());
-                        cmd.Parameters.AddWithValue("@distributionType", ((ComboBoxItem)cmbDistributionType.SelectedItem).Content.ToString());
-                        cmd.Parameters.AddWithValue("@phone", txtPhone.Text.Trim());
+                        cmd.Parameters.AddWithValue("@distributorType", ((ComboBoxItem)cmbDistributionType.SelectedItem).Content.ToString());
                         cmd.Parameters.AddWithValue("@email", txtEmail.Text.Trim());
                         cmd.Parameters.AddWithValue("@serviceArea", txtServiceArea.Text.Trim());
 
-                        cmd.ExecuteNonQuery();
+                        distributorId = Convert.ToInt32(cmd.ExecuteScalar());
+                    }
+
+                    // Insert phone numbers into distributor_phones table
+                    var phoneNumbers = txtPhone.Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var phoneNumber in phoneNumbers)
+                    {
+                        var phoneQuery = @"INSERT INTO distributor_phones
+                                           (dist_id, phone)
+                                           VALUES
+                                           (@distId, @phone)";
+
+                        using (var phoneCmd = new MySqlCommand(phoneQuery, conn))
+                        {
+                            phoneCmd.Parameters.AddWithValue("@distId", distributorId);
+                            phoneCmd.Parameters.AddWithValue("@phone", phoneNumber.Trim());
+                            phoneCmd.ExecuteNonQuery();
+                        }
                     }
                 }
 

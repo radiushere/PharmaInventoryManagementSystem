@@ -1,8 +1,9 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Configuration;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Configuration;
 
 namespace SimpleLoginWPF
 {
@@ -21,10 +22,7 @@ namespace SimpleLoginWPF
 
         private void LoadPartnerTypes()
         {
-            cmbType.Items.Add("Hospital");
-            cmbType.Items.Add("Clinic");
-            cmbType.Items.Add("Pharmacy");
-            cmbType.Items.Add("Research Center");
+            cmbType.ItemsSource = new[] { "Hospital", "Clinic", "Pharmacy", "Research Center" };
             cmbType.SelectedIndex = 0;
         }
 
@@ -32,36 +30,36 @@ namespace SimpleLoginWPF
         {
             if (string.IsNullOrWhiteSpace(txtName.Text))
             {
-                MessageBox.Show("Partner name is required", "Validation Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Partner name is required", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (string.IsNullOrWhiteSpace(txtContactPerson.Text))
             {
-                MessageBox.Show("Contact person is required", "Validation Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Contact person is required", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(txtPhone.Text))
+            if (string.IsNullOrWhiteSpace(txtPhones.Text))
             {
-                MessageBox.Show("Phone number is required", "Validation Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("At least one phone number is required", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (dpContractStart.SelectedDate == null)
             {
-                MessageBox.Show("Contract start date is required", "Validation Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Contract start date is required", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            if (dpContractEnd.SelectedDate == null)
+            {
+                MessageBox.Show("Contract end date is required", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
             if (!decimal.TryParse(txtCreditLimit.Text, out _))
             {
-                MessageBox.Show("Invalid credit limit format", "Validation Error",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Invalid credit limit format", "Validation Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
 
@@ -77,24 +75,36 @@ namespace SimpleLoginWPF
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    var query = @"INSERT INTO partners 
-                                (name, partner_type, contact_person, phone, 
-                                 contract_start, contract_end, credit_limit)
-                                VALUES
-                                (@name, @type, @contact, @phone, 
-                                 @start, @end, @credit)";
 
-                    using (var cmd = new MySqlCommand(query, conn))
+                    // Insert into partners table
+                    var partnerQuery = @"INSERT INTO partners 
+                                        (partner_name, partner_type, contact_person, contract_start, contract_end, credit_limit)
+                                        VALUES (@name, @type, @contact, @start, @end, @credit);
+                                        SELECT LAST_INSERT_ID();";
+
+                    long partnerId;
+                    using (var cmd = new MySqlCommand(partnerQuery, conn))
                     {
                         cmd.Parameters.AddWithValue("@name", txtName.Text.Trim());
                         cmd.Parameters.AddWithValue("@type", cmbType.SelectedItem.ToString());
                         cmd.Parameters.AddWithValue("@contact", txtContactPerson.Text.Trim());
-                        cmd.Parameters.AddWithValue("@phone", txtPhone.Text.Trim());
                         cmd.Parameters.AddWithValue("@start", dpContractStart.SelectedDate);
                         cmd.Parameters.AddWithValue("@end", dpContractEnd.SelectedDate);
                         cmd.Parameters.AddWithValue("@credit", decimal.Parse(txtCreditLimit.Text));
+                        partnerId = Convert.ToInt64(cmd.ExecuteScalar());
+                    }
 
-                        cmd.ExecuteNonQuery();
+                    // Insert phone numbers into partner_contacts table
+                    string[] phones = txtPhones.Text.Split(',').Select(p => p.Trim()).Where(p => p != "").ToArray();
+                    var phoneQuery = @"INSERT INTO partner_phones (partner_id, phone_number) VALUES (@partnerId, @phone)";
+                    foreach (var phone in phones)
+                    {
+                        using (var cmd = new MySqlCommand(phoneQuery, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@partnerId", partnerId);
+                            cmd.Parameters.AddWithValue("@phone", phone);
+                            cmd.ExecuteNonQuery();
+                        }
                     }
                 }
 
@@ -104,15 +114,13 @@ namespace SimpleLoginWPF
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error saving partner: {ex.Message}", "Database Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Error saving partner: {ex.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e) => this.Close();
 
-        private void Minimize_Click(object sender, RoutedEventArgs e) =>
-            WindowState = WindowState.Minimized;
+        private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         private void Close_Click(object sender, RoutedEventArgs e) => this.Close();
     }

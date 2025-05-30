@@ -14,11 +14,7 @@
         WindowStyle="None"
         AllowsTransparency="True">
 
-    <!-- Merged Resources from Main Window -->
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
@@ -27,7 +23,6 @@
         <Color x:Key="BorderGray">#E0E0E0</Color>
         <Color x:Key="TextDark">#2D3436</Color>
 
-        <!-- Convert Colors to Brushes -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
@@ -36,9 +31,6 @@
         <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
         <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Storyboard x:Key="ButtonHoverEnter">
             <DoubleAnimation Duration="0:0:0.15"
                 Storyboard.TargetProperty="RenderTransform.ScaleX"
@@ -63,9 +55,6 @@
                To="Transparent"/>
         </Storyboard>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ BUTTONS STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -145,16 +134,13 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~ INPUT FIELDS STYLES ~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="InputFieldStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="2,2"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -170,67 +156,6 @@
                             <Trigger Property="IsFocused" Value="True">
                                 <Setter Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
                                 <Setter Property="BorderThickness" Value="2"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
-            <Setter Property="Height" Value="42"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <Border x:Name="MainBorder"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="6">
-                                <Grid>
-                                    <ContentPresenter Content="{TemplateBinding SelectionBoxItem}"
-                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                                                      Margin="{TemplateBinding Padding}"
-                                                      VerticalAlignment="Center"/>
-                                    <Path x:Name="Arrow"
-                                          Data="M 0 0 L 4 4 L 8 0 Z"
-                                          Fill="{TemplateBinding Foreground}"
-                                          HorizontalAlignment="Right"
-                                          VerticalAlignment="Center"
-                                          Margin="0,0,12,0"/>
-                                </Grid>
-                            </Border>
-                            <Popup x:Name="PART_Popup"
-                                   PlacementTarget="{Binding ElementName=MainBorder}"
-                                   Placement="Bottom"
-                                   IsOpen="{TemplateBinding IsDropDownOpen}"
-                                   PopupAnimation="Slide">
-                                <Border Background="White"
-                                        BorderBrush="{StaticResource BorderGrayBrush}"
-                                        BorderThickness="1"
-                                        CornerRadius="6"
-                                        Padding="2">
-                                    <ScrollViewer MaxHeight="200">
-                                        <ItemsPresenter/>
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsFocused" Value="True">
-                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
-                                <Setter TargetName="MainBorder" Property="BorderThickness" Value="2"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="MainBorder" Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -289,10 +214,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ LABEL STYLES ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        
         <Style x:Key="FormLabelStyle" TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
@@ -301,7 +223,6 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
-        <!-- Window Control Buttons -->
         <Style x:Key="WindowButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
@@ -327,37 +248,35 @@
         </Style>
     </Window.Resources>
 
-    <!-- Main Window Content -->
     <Border CornerRadius="15" 
-            Background="White"
-            BorderThickness="1"
-            BorderBrush="#E0E0E0" >
-        <!-- Effect="{DynamicResource {x:Static SystemDropShadowChrome.ShadowDepth4}}" -->
-            
+        Background="White"
+        BorderThickness="1"
+        BorderBrush="#E0E0E0">
+
         <Grid>
             <!-- Window Header -->
-            <Border Height="50" 
-                    VerticalAlignment="Top" 
-                    Background="{StaticResource PrimaryRedBrush}"
-                    CornerRadius="15,15,0,0">
+            <Border Height="50"
+                VerticalAlignment="Top"
+                Background="{StaticResource PrimaryRedBrush}"
+                CornerRadius="15,15,0,0">
                 <Grid>
-                    <TextBlock Text="NEW PARTNER" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               Margin="20,0,0,0"/>
-                    <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Right">
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Minimize_Click" 
-                                Content="─"
-                                Foreground="White"/>
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Close_Click" 
-                                Content="✕"
-                                Foreground="White"
-                                Margin="0,0,10,0"/>
+                    <TextBlock Text="NEW PARTNER"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="20,0,0,0"/>
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Minimize_Click"
+                            Content="─"
+                            Foreground="White"/>
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Close_Click"
+                            Content="✕"
+                            Foreground="White"
+                            Margin="0,0,10,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -365,21 +284,21 @@
             <!-- Content Area -->
             <Grid Margin="0,50,0,0">
                 <!-- Form Title -->
-                <Border Background="{StaticResource PrimaryRedLightBrush}" 
-                        Height="60" 
-                        VerticalAlignment="Top">
-                    <TextBlock Text="Partner Registration Form" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="{StaticResource PrimaryRedDarkBrush}" 
-                               VerticalAlignment="Center" 
-                               Margin="30,0,0,0"/>
+                <Border Background="{StaticResource PrimaryRedLightBrush}"
+                    Height="60"
+                    VerticalAlignment="Top">
+                    <TextBlock Text="Partner Registration Form"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryRedDarkBrush}"
+                           VerticalAlignment="Center"
+                           Margin="30,0,0,0"/>
                 </Border>
 
                 <!-- Main Form Content -->
-                <ScrollViewer Margin="0,60,0,70" 
-                              VerticalScrollBarVisibility="Auto" 
-                              HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer Margin="0,60,0,70"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="30,30,30,20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -388,33 +307,36 @@
 
                         <!-- Left Column -->
                         <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                            <Label Content="Partner Name*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtName" 
-                                     Style="{StaticResource InputFieldStyle}" 
-                                     Margin="0,0,0,20"/>
+                            <Label Content="Partner Name*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtName"
+                                 Style="{StaticResource InputFieldStyle}"
+                                 Margin="0,0,0,20"/>
 
-                            <Label Content="Contact Person*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtContactPerson" 
-                                     Style="{StaticResource InputFieldStyle}" 
-                                     Margin="0,0,0,20"/>
+                            <Label Content="Contact Person*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtContactPerson"
+                                 Style="{StaticResource InputFieldStyle}"
+                                 Margin="0,0,0,20"/>
 
-                            <Label Content="Phone Number*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtPhone" 
-                                     Style="{StaticResource InputFieldStyle}" 
-                                     Margin="0,0,0,20"/>
+                            <Label Content="Phone Numbers (comma separated)*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtPhones"
+                                 Style="{StaticResource InputFieldStyle}"
+                                 Margin="0,0,0,20"/>
                         </StackPanel>
 
                         <!-- Right Column -->
                         <StackPanel Grid.Column="1" Margin="15,0,0,0">
-                            <Label Content="Partner Type*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <ComboBox x:Name="cmbType" 
-                                      Style="{StaticResource ComboBoxStyle}" 
-                                      ItemsSource="{Binding PartnerTypes}" 
-                                      Margin="0,0,0,20"/>
+                            <Label Content="Partner Type*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cmbType"
+                                  Padding="4,10"
+                                      IsEnabled="True"
+                                      IsHitTestVisible="True"
+                                      Panel.ZIndex="10"
+                                      Margin="0,0,0,20">
+                            </ComboBox>
 
                             <Grid Margin="0,0,0,20">
                                 <Grid.ColumnDefinitions>
@@ -423,47 +345,48 @@
                                 </Grid.ColumnDefinitions>
 
                                 <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                                    <Label Content="Contract Start*" 
-                                           Style="{StaticResource FormLabelStyle}"/>
-                                    <DatePicker x:Name="dpContractStart" 
-                                                Style="{StaticResource DatePickerStyle}"/>
+                                    <Label Content="Contract Start*"
+                                       Style="{StaticResource FormLabelStyle}"/>
+                                    <DatePicker x:Name="dpContractStart"
+                                            Style="{StaticResource DatePickerStyle}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                    <Label Content="Contract End" 
-                                           Style="{StaticResource FormLabelStyle}"/>
-                                    <DatePicker x:Name="dpContractEnd" 
-                                                Style="{StaticResource DatePickerStyle}"/>
+                                    <Label Content="Contract End"
+                                       Style="{StaticResource FormLabelStyle}"/>
+                                    <DatePicker x:Name="dpContractEnd"
+                                            Style="{StaticResource DatePickerStyle}"/>
                                 </StackPanel>
                             </Grid>
 
-                            <Label Content="Credit Limit " 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtCreditLimit" 
-                                     Style="{StaticResource InputFieldStyle}" 
-                                     Text="0.00"/>
+                            <Label Content="Credit Limit"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtCreditLimit"
+                                 Style="{StaticResource InputFieldStyle}"
+                                 Text="0.00"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
 
                 <!-- Bottom Button Panel -->
-                <Border Background="{StaticResource LightBackgroundBrush}" 
-                        Height="70" 
-                        VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                Margin="0,0,30,0">
-                        <Button Content="Cancel" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Click="Cancel_Click" 
-                                Margin="0,0,15,0"/>
-                        <Button Content="Save Partner" 
-                                Style="{StaticResource PrimaryButton}" 
-                                Click="Save_Click"/>
+                <Border Background="{StaticResource LightBackgroundBrush}"
+                    Height="70"
+                    VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,30,0">
+                        <Button Content="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Click="Cancel_Click"
+                            Margin="0,0,15,0"/>
+                        <Button Content="Save Partner"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="Save_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Grid>
     </Border>
+
 </Window>

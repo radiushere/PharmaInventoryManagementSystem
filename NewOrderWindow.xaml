@@ -15,9 +15,6 @@
         AllowsTransparency="True">
 
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
@@ -33,10 +30,7 @@
         <SolidColorBrush x:Key="LightBackgroundBrush" Color="{StaticResource LightBackground}"/>
         <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
         <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
-
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        
         <Storyboard x:Key="ButtonHoverEnter">
             <DoubleAnimation Duration="0:0:0.15" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.03"/>
             <DoubleAnimation Duration="0:0:0.15" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.03"/>
@@ -53,9 +47,6 @@
                To="Transparent"/>
         </Storyboard>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ BUTTONS STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -133,9 +124,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~ INPUT FIELDS STYLES ~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="InputFieldStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
@@ -292,9 +280,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ LABEL STYLES ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="FormLabelStyle" TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
@@ -303,7 +288,6 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
-        <!-- Window Control Buttons -->
         <Style x:Key="WindowButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
@@ -328,33 +312,33 @@
         </Style>
     </Window.Resources>
 
-    <Border CornerRadius="15" 
-            Background="White"
-            BorderThickness="1"
-            BorderBrush="#E0E0E0">
+    <Border CornerRadius="15"
+        Background="White"
+        BorderThickness="1"
+        BorderBrush="#E0E0E0">
         <Grid>
             <!-- Window Header -->
-            <Border Height="50" 
-                    VerticalAlignment="Top" 
-                    Background="{StaticResource PrimaryRedBrush}"
-                    CornerRadius="15,15,0,0">
+            <Border Height="50"
+                VerticalAlignment="Top"
+                Background="{StaticResource PrimaryRedBrush}"
+                CornerRadius="15,15,0,0">
                 <Grid>
-                    <TextBlock Text="NEW ORDER" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               Margin="20,0,0,0"/>
+                    <TextBlock Text="NEW ORDER"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="20,0,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Minimize_Click" 
-                                Content="─"
-                                Foreground="White"/>
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Close_Click" 
-                                Content="✕"
-                                Foreground="White"
-                                Margin="0,0,10,0"/>
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Minimize_Click"
+                            Content="─"
+                            Foreground="White"/>
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Close_Click"
+                            Content="✕"
+                            Foreground="White"
+                            Margin="0,0,10,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -362,21 +346,21 @@
             <!-- Content Area -->
             <Grid Margin="0,50,0,0">
                 <!-- Form Title -->
-                <Border Background="{StaticResource PrimaryRedLightBrush}" 
-                        Height="60" 
-                        VerticalAlignment="Top">
-                    <TextBlock Text="Order Creation Form" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="{StaticResource PrimaryRedDarkBrush}" 
-                               VerticalAlignment="Center" 
-                               Margin="30,0,0,0"/>
+                <Border Background="{StaticResource PrimaryRedLightBrush}"
+                    Height="60"
+                    VerticalAlignment="Top">
+                    <TextBlock Text="Order Creation Form"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryRedDarkBrush}"
+                           VerticalAlignment="Center"
+                           Margin="30,0,0,0"/>
                 </Border>
 
                 <!-- Main Form Content -->
-                <ScrollViewer Margin="0,60,0,70" 
-                              VerticalScrollBarVisibility="Auto" 
-                              HorizontalScrollBarVisibility="Disabled">
+                <ScrollViewer Margin="0,60,0,70"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalScrollBarVisibility="Disabled">
                     <Grid Margin="30,30,30,20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -385,121 +369,86 @@
 
                         <!-- Left Column - Order Details -->
                         <StackPanel Grid.Column="0" Margin="0,0,15,0">
-                            <Label Content="Supplier*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <ComboBox x:Name="cmbSuppliers" 
-                                    Style="{StaticResource ComboBoxStyle}" 
-                                    Margin="0,0,0,20"/>
+                            <Label Content="Distributor*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cmbDistributors"
+                                Padding="10"
+                                Margin="0,0,0,20"/>
 
-                            <Label Content="Order Date*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <DatePicker x:Name="dpOrderDate" 
-                                      Style="{StaticResource DatePickerStyle}"
-                                      Margin="0,0,0,20"/>
+                            <Label Content="Order Date*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <DatePicker x:Name="dpOrderDate"
+                                  Style="{StaticResource DatePickerStyle}"
+                                  Margin="0,0,0,20"/>
 
-                            <Label Content="Delivery Date*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <DatePicker x:Name="dpDeliveryDate" 
-                                      Style="{StaticResource DatePickerStyle}"
-                                      Margin="0,0,0,20"/>
+                            <Label Content="Delivery Date*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <DatePicker x:Name="dpDeliveryDate"
+                                  Style="{StaticResource DatePickerStyle}"
+                                  Margin="0,0,0,20"/>
 
-                            <Label Content="Status*" 
-                                   Style="{StaticResource FormLabelStyle}"/>
-                            <ComboBox x:Name="cmbStatus" 
-                                     Style="{StaticResource ComboBoxStyle}"
-                                     Margin="0,0,0,20">
+                            <Label Content="Status*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cmbStatus"
+                                 Padding="10"
+                                 Margin="0,0,0,20">
                                 <ComboBoxItem Content="Pending"/>
-                                <ComboBoxItem Content="Processing"/>
-                                <ComboBoxItem Content="Delivered"/>
+                                <ComboBoxItem Content="Completed"/>
                                 <ComboBoxItem Content="Cancelled"/>
                             </ComboBox>
                         </StackPanel>
 
                         <!-- Right Column - Order Items -->
                         <StackPanel Grid.Column="1" Margin="15,0,0,0">
-                            <DockPanel Margin="0,0,0,10">
-                                <Button Content="Add Item" 
-                                        Click="AddItem_Click"
-                                        Style="{StaticResource SecondaryButton}"
-                                        DockPanel.Dock="Right"
-                                        Margin="10,0,0,0"/>
-                                <TextBlock Text="Order Items" 
-                                           FontSize="14"
-                                           FontWeight="SemiBold"
-                                           Foreground="{StaticResource PrimaryRedDarkBrush}"/>
-                            </DockPanel>
+                            <Label Content="Product*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <ComboBox x:Name="cmbProducts"
+                                 Padding="10"
+                                 Margin="0,0,0,20"/>
 
-                            <DataGrid x:Name="dgOrderItems" 
-                                    AutoGenerateColumns="False"
-                                    HeadersVisibility="Column"
-                                    CanUserAddRows="False"
-                                    SelectionMode="Single"
-                                    Background="White"
-                                    BorderThickness="1"
-                                    BorderBrush="{StaticResource BorderGrayBrush}"
-                                    RowHeight="35"
-                                    FontSize="14">
-                                <DataGrid.Columns>
-                                    <DataGridComboBoxColumn Header="Medicine" 
-                                                          Width="*"
-                                                          x:Name="medicineColumn"
-                                                          SelectedItemBinding="{Binding Medicine}"
-                                                          DisplayMemberPath="Name"/>
-                                    <DataGridTextColumn Header="Quantity" 
-                                                       Binding="{Binding Quantity}"
-                                                       Width="100"/>
-                                    <DataGridTextColumn Header="Unit Price" 
-                                                       Binding="{Binding UnitPrice}"
-                                                       Width="120"/>
-                                    <DataGridTextColumn Header="Total" 
-                                                       Binding="{Binding Total}"
-                                                       Width="120"
-                                                       IsReadOnly="True"/>
-                                    <DataGridTemplateColumn Width="80">
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Button Content="Remove" 
-                                                        Click="RemoveItem_Click"
-                                                        Style="{StaticResource SecondaryButton}"
-                                                        Padding="8,4"/>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
+                            <Label Content="Quantity*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtQuantity"
+                               Style="{StaticResource InputFieldStyle}"
+                               Margin="0,0,0,20"/>
 
-                            <TextBlock x:Name="txtTotalAmount" 
-                                      HorizontalAlignment="Right"
-                                      Margin="0,10,0,0"
-                                      FontSize="14"
-                                      FontWeight="SemiBold"
-                                      Foreground="{StaticResource PrimaryRedDarkBrush}"/>
+                            <Label Content="Price*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtPrice"
+                               Style="{StaticResource InputFieldStyle}"
+                               IsReadOnly="True"
+                               Margin="0,0,0,20"/>
+
+                            <Label Content="Total Amount*"
+                               Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtTotalAmount"
+                               Style="{StaticResource InputFieldStyle}"
+                               IsReadOnly="True"
+                               Margin="0,0,0,20"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
 
                 <!-- Bottom Button Panel -->
-                <Border Background="{StaticResource LightBackgroundBrush}" 
-                        Height="70" 
-                        VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                Margin="0,0,30,0">
-                        <Button Content="Cancel" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Click="Cancel_Click" 
-                                Margin="0,0,15,0"/>
-                        <Button Content="Save Order" 
-                                Style="{StaticResource PrimaryButton}" 
-                                Click="Save_Click"/>
+                <Border Background="{StaticResource LightBackgroundBrush}"
+                    Height="70"
+                    VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,30,0">
+                        <Button Content="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Click="Cancel_Click"
+                            Margin="0,0,15,0"/>
+                        <Button Content="Save Order"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="Save_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Grid>
-        
-        
-        
     </Border>
-    
+
+
 </Window>

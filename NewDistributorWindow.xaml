@@ -133,16 +133,13 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~ INPUT FIELDS STYLES ~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="InputFieldStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="2,2"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -277,9 +274,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ LABEL STYLES ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="FormLabelStyle" TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
@@ -313,33 +307,33 @@
         </Style>
     </Window.Resources>
 
-    <Border CornerRadius="15" 
-            Background="White"
-            BorderThickness="1"
-            BorderBrush="#E0E0E0">
+    <Border CornerRadius="15"
+        Background="White"
+        BorderThickness="1"
+        BorderBrush="#E0E0E0">
         <Grid>
             <!-- Window Header -->
-            <Border Height="50" 
-                    VerticalAlignment="Top" 
-                    Background="{StaticResource PrimaryRedBrush}"
-                    CornerRadius="15,15,0,0">
+            <Border Height="50"
+                VerticalAlignment="Top"
+                Background="{StaticResource PrimaryRedBrush}"
+                CornerRadius="15,15,0,0">
                 <Grid>
-                    <TextBlock Text="NEW DISTRIBUTOR" 
-                               FontSize="16" 
-                               FontWeight="Bold" 
-                               Foreground="White"
-                               VerticalAlignment="Center"
-                               Margin="20,0,0,0"/>
+                    <TextBlock Text="NEW DISTRIBUTOR"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           VerticalAlignment="Center"
+                           Margin="20,0,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Minimize_Click" 
-                                Content="─"
-                                Foreground="White"/>
-                        <Button Style="{StaticResource WindowButtonStyle}" 
-                                Click="Close_Click" 
-                                Content="✕"
-                                Foreground="White"
-                                Margin="0,0,10,0"/>
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Minimize_Click"
+                            Content="─"
+                            Foreground="White"/>
+                        <Button Style="{StaticResource WindowButtonStyle}"
+                            Click="Close_Click"
+                            Content="✕"
+                            Foreground="White"
+                            Margin="0,0,10,0"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -347,20 +341,20 @@
             <!-- Content Area -->
             <Grid Margin="0,50,0,0">
                 <!-- Form Title -->
-                <Border Background="{StaticResource PrimaryRedLightBrush}" 
-                        Height="60" 
-                        VerticalAlignment="Top">
-                    <TextBlock Text="Distributor Registration Form" 
-                               FontSize="18" 
-                               FontWeight="Bold" 
-                               Foreground="{StaticResource PrimaryRedDarkBrush}" 
-                               VerticalAlignment="Center" 
-                               Margin="30,0,0,0"/>
+                <Border Background="{StaticResource PrimaryRedLightBrush}"
+                    Height="60"
+                    VerticalAlignment="Top">
+                    <TextBlock Text="Distributor Registration Form"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryRedDarkBrush}"
+                           VerticalAlignment="Center"
+                           Margin="30,0,0,0"/>
                 </Border>
 
                 <!-- Main Form Content -->
-                <ScrollViewer Margin="0,60,0,70" 
-                              VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Margin="0,60,0,70"
+                          VerticalScrollBarVisibility="Auto">
                     <Grid Margin="30,30,30,20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -376,51 +370,50 @@
                             <TextBox x:Name="txtRegion" Style="{StaticResource InputFieldStyle}" Margin="0,0,0,20"/>
 
                             <Label Content="Distribution Type*" Style="{StaticResource FormLabelStyle}"/>
-                            <ComboBox x:Name="cmbDistributionType" 
-                                      Style="{StaticResource ComboBoxStyle}"
-                                      Margin="0,0,0,20">
-                                <ComboBoxItem Content="Wholesale"/>
-                                <ComboBoxItem Content="Retail"/>
-                                <ComboBoxItem Content="Hospital"/>
-                                <ComboBoxItem Content="Online"/>
+                            <ComboBox x:Name="cmbDistributionType" Padding="4,10"
+                                  Margin="0,0,0,20">
+                                <ComboBoxItem Content="Institutional"/>
+                                <ComboBoxItem Content="Commercial"/>
                             </ComboBox>
                         </StackPanel>
 
                         <!-- Right Column -->
                         <StackPanel Grid.Column="1" Margin="15,0,0,0">
-                            <Label Content="Phone*" Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtPhone" Style="{StaticResource InputFieldStyle}" Margin="0,0,0,20"/>
+                            <Label Content="Phone* (seperate by comma)" Style="{StaticResource FormLabelStyle}"/>
+                            <TextBox x:Name="txtPhone" Style="{StaticResource InputFieldStyle}" Margin="0,0,0,20"
+                                 ToolTip="Enter phone numbers separated by commas"/>
 
                             <Label Content="Email*" Style="{StaticResource FormLabelStyle}"/>
                             <TextBox x:Name="txtEmail" Style="{StaticResource InputFieldStyle}" Margin="0,0,0,20"/>
 
                             <Label Content="Service Area*" Style="{StaticResource FormLabelStyle}"/>
-                            <TextBox x:Name="txtServiceArea" 
-                                   Style="{StaticResource TextAreaStyle}"
-                                   Height="100"
-                                   Margin="0,0,0,20"/>
+                            <TextBox x:Name="txtServiceArea"
+                               Style="{StaticResource TextAreaStyle}"
+                               Height="100"
+                               Margin="0,0,0,20"/>
                         </StackPanel>
                     </Grid>
                 </ScrollViewer>
 
                 <!-- Bottom Button Panel -->
-                <Border Background="{StaticResource LightBackgroundBrush}" 
-                        Height="70" 
-                        VerticalAlignment="Bottom">
-                    <StackPanel Orientation="Horizontal" 
-                                HorizontalAlignment="Right" 
-                                VerticalAlignment="Center" 
-                                Margin="0,0,30,0">
-                        <Button Content="Cancel" 
-                                Style="{StaticResource SecondaryButton}" 
-                                Click="Cancel_Click" 
-                                Margin="0,0,15,0"/>
-                        <Button Content="Save Distributor" 
-                                Style="{StaticResource PrimaryButton}" 
-                                Click="Save_Click"/>
+                <Border Background="{StaticResource LightBackgroundBrush}"
+                    Height="70"
+                    VerticalAlignment="Bottom">
+                    <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Margin="0,0,30,0">
+                        <Button Content="Cancel"
+                            Style="{StaticResource SecondaryButton}"
+                            Click="Cancel_Click"
+                            Margin="0,0,15,0"/>
+                        <Button Content="Save Distributor"
+                            Style="{StaticResource PrimaryButton}"
+                            Click="Save_Click"/>
                     </StackPanel>
                 </Border>
             </Grid>
         </Grid>
     </Border>
+
 </Window>

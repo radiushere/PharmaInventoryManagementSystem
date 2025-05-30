@@ -14,23 +14,16 @@
         WindowState="Maximized">
 
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
         <Color x:Key="AccentGold">#FFD700</Color>
 
-        <!-- Convert Colors to Brushes -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Storyboard x:Key="ButtonHoverEnter">
             <DoubleAnimation Duration="0:0:0.15"
                 Storyboard.TargetProperty="RenderTransform.ScaleX"
@@ -50,7 +43,7 @@
             <DoubleAnimation Duration="0:0:0.15"
                 Storyboard.TargetProperty="RenderTransform.ScaleY"
                 To="1"/>
-            <!-- Return background to Transparent -->
+
             <ColorAnimation Duration="0:0:0.15"
                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
                To="Transparent"/>
@@ -69,16 +62,6 @@
             </DoubleAnimationUsingKeyFrames>
         </Storyboard>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ SIDEBAR STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- Normal Sidebar Button Style -->
-        <!-- Default Sidebar Button Style -->
-        <!-- Default Sidebar Button Style -->
-        <!-- Default Sidebar Button Style -->
-        <!-- Default Sidebar Button Style -->
-        <!-- Default Sidebar Button Style -->
-        <!-- Default Sidebar Button Style -->
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="White"/>
             <Setter Property="Foreground" Value="#2D3436"/>
@@ -97,7 +80,6 @@
            Padding="8,0"
            SnapsToDevicePixels="True">
                             <DockPanel VerticalAlignment="Center">
-                                <!-- Fix: Properly display image -->
                                 <Image Source="{TemplateBinding Tag}"
                   Width="24" Height="24"
                   Margin="10,0,5,0"
@@ -350,9 +332,6 @@ but if you want to differentiate it, define another style. -->
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ SEARCH & STATS ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="SearchBoxStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="#E0E0E0"/>
@@ -392,69 +371,81 @@ but if you want to differentiate it, define another style. -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Updated Sidebar with Partners Button -->
         <Border Grid.Column="0" Background="White">
             <StackPanel>
-                <!-- Logo -->
                 <Image Source="/Assets/aliflogo-removebg-preview.png"
                        Width="140" Height="100" Margin="20,30"/>
 
                 <!-- Navigation Buttons -->
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Dashboard_Click">
+                <Button x:Name="DashboardButton" Style="{StaticResource SidebarButtonStyle}" Click="Dashboard_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Home.png" Width="22" Height="22" Margin="5,0,15,0"/>
-                        <TextBlock Text="Dashboard" VerticalAlignment="Center"/>
+                        <TextBlock Text="Dashboard"/>
                     </StackPanel>
                 </Button>
-
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Inventory_Click">
+                <Button x:Name="InventoryButton" Style="{StaticResource SidebarButtonStyle}" Click="Inventory_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Inventory.png" Width="22" Height="22" Margin="5,0,15,0"/>
-                        <TextBlock Text="Inventory" VerticalAlignment="Center"/>
+                        <TextBlock Text="Inventory"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Reports_Click">
+                <Button x:Name="ReportsButton" Style="{StaticResource SidebarButtonStyle}" Click="Reports_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Report.png" Width="22" Height="22" Margin="5,0,15,0"/>
-                        <TextBlock Text="Reports" VerticalAlignment="Center"/>
+                        <TextBlock Text="Reports"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SelectedSidebarButtonStyle}" Click="Partners_Click">
+                <Button x:Name="PartnersButton" Style="{StaticResource SelectedSidebarButtonStyle}" Click="Partners_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Suppliers.png" Width="22" Height="22" Margin="5,0,15,0"/>
-                        <TextBlock Text="Partners" VerticalAlignment="Center"/>
+                        <TextBlock Text="Partners"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Orders_Click">
+                <Button x:Name="OrdersButton" Style="{StaticResource SidebarButtonStyle}" Click="Orders_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Order.png" Width="22" Height="22" Margin="5,0,15,0"/>
-                        <TextBlock Text="Orders" VerticalAlignment="Center"/>
+                        <TextBlock Text="Orders"/>
                     </StackPanel>
                 </Button>
 
-                <!-- New Distributors Button -->
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Distributors_Click">
+                <Button x:Name="DistributorsButton" Style="{StaticResource SidebarButtonStyle}"
+            Click="Distributor_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="/Assets/Manage Store.png" Width="22" Height="22" Margin="5,0,15,0"/>
-                        <TextBlock Text="Distributors" VerticalAlignment="Center"/>
+                        <Image Source="/Assets/Manage Store.png"
+                Width="22"
+                Height="22"
+                Margin="5,0,15,0"/>
+                        <TextBlock Text="Distributors"
+                VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}"
-    Click="Purchases_Click">
+                <Button x:Name="PurchasesButton" Style="{StaticResource SidebarButtonStyle}"
+        Click="Purchases_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Inventory.png"
-        Width="22"
-        Height="22"
-        Margin="5,0,15,0"/>
+Width="22"
+Height="22"
+Margin="5,0,15,0"/>
                         <TextBlock Text="Purchases"
-        VerticalAlignment="Center"/>
+VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
 
+                <Button x:Name="AdminButton" Style="{StaticResource SidebarButtonStyle}"
+            Click="AdminDashboard_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Suppliers.png"
+                Width="22"
+                Height="22"
+                Margin="5,0,15,0"/>
+                        <TextBlock Text="Admin Page"
+                VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
                 <!-- Logout Button -->
                 <Button Style="{StaticResource SidebarButtonStyle}" 
         Click="Logout_Click"
@@ -481,17 +472,17 @@ but if you want to differentiate it, define another style. -->
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                     <Grid>
                         <TextBox x:Name="SearchBox"
-    Style="{StaticResource SearchBoxStyle}"
-    TextChanged="SearchBox_TextChanged"
-    GotFocus="SearchBox_GotFocus"
-    LostFocus="SearchBox_LostFocus"/>
+                         Style="{StaticResource SearchBoxStyle}"
+                         TextChanged="SearchBox_TextChanged"
+                         GotFocus="SearchBox_GotFocus"
+                         LostFocus="SearchBox_LostFocus"/>
 
                         <TextBlock IsHitTestVisible="False"
-    Text="Search Partners..."
-    VerticalAlignment="Center"
-    HorizontalAlignment="Left"
-    Margin="12,0,0,0"
-    Foreground="Gray">
+                           Text="Search Partners..."
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Left"
+                           Margin="12,0,0,0"
+                           Foreground="Gray">
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Setter Property="Visibility" Value="Visible"/>
@@ -518,7 +509,7 @@ but if you want to differentiate it, define another style. -->
 
                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                     <ComboBox x:Name="FilterComboBox" Style="{StaticResource FilterComboBoxStyle}"
-                            Margin="10,0" SelectionChanged="FilterComboBox_SelectionChanged">
+                      Margin="10,0" SelectionChanged="FilterComboBox_SelectionChanged">
                         <ComboBoxItem Content="All Partners"/>
                         <ComboBoxItem Content="Hospital"/>
                         <ComboBoxItem Content="Clinic"/>
@@ -526,11 +517,11 @@ but if you want to differentiate it, define another style. -->
                         <ComboBoxItem Content="Research Center"/>
                     </ComboBox>
 
-                    <Button Style="{StaticResource AddMoreButton}" Content="+" 
-                          Click="AddPartner_Click" ToolTip="Add New Partner"/>
+                    <Button Style="{StaticResource AddMoreButton}" Content="+"
+                    Click="AddPartner_Click" ToolTip="Add New Partner"/>
 
-                    <Button Style="{StaticResource AddMoreButton}" Content="👤" 
-        Margin="10,0" Click="Profile_Click" ToolTip="User Profile"/>
+                    <Button Style="{StaticResource AddMoreButton}" Content="👤"
+                    Margin="10,0" Click="Profile_Click" ToolTip="User Profile"/>
 
                 </StackPanel>
             </DockPanel>
@@ -567,33 +558,33 @@ but if you want to differentiate it, define another style. -->
 
             <!-- DataGrid -->
             <DataGrid x:Name="PartnersDataGrid" Grid.Row="2"
-                    Style="{StaticResource DataGridMain}"
-                    AutoGenerateColumns="False">
+              Style="{StaticResource DataGridMain}"
+              AutoGenerateColumns="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="ID" Binding="{Binding PartnerID}" Width="0.8*"/>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="2*"/>
+                    <DataGridTextColumn Header="Name" Binding="{Binding PartnerName}" Width="2*"/>
                     <DataGridTextColumn Header="Type" Binding="{Binding PartnerType}" Width="1.2*"/>
                     <DataGridTextColumn Header="Contact" Binding="{Binding ContactPerson}" Width="1.5*"/>
-                    <DataGridTextColumn Header="Phone" Binding="{Binding Phone}" Width="1.2*"/>
-                    <DataGridTextColumn Header="Contract Start" 
-                                     Binding="{Binding ContractStart, StringFormat=yyyy-MM-dd}" Width="1.2*"/>
-                    <DataGridTextColumn Header="Contract End" 
-                                     Binding="{Binding ContractEnd, StringFormat=yyyy-MM-dd}" Width="1.2*"/>
-                    <DataGridTextColumn Header="Credit Limit" 
-                                     Binding="{Binding CreditLimit, StringFormat=C}" Width="1*"/>
+                    <DataGridTextColumn Header="Phone" Binding="{Binding PhoneNumber}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Contract Start"
+                                Binding="{Binding ContractStart, StringFormat=yyyy-MM-dd}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Contract End"
+                                Binding="{Binding ContractEnd, StringFormat=yyyy-MM-dd}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Credit Limit"
+                                Binding="{Binding CreditLimit, StringFormat=C}" Width="1*"/>
                     <DataGridTemplateColumn Header="Actions" Width="1.5*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Details" 
-                        Style="{StaticResource AddMoreButton}" 
-                        Margin="2" Padding="8,4"
-                        Click="Details_Click"/>
-                                    <Button Content="Delete" 
-                        Style="{StaticResource AddMoreButton}" 
-                        Margin="2" Padding="8,4"
-                        Background="#FFD700"
-                        Click="Delete_Click"/>
+                                    <Button Content="Details"
+                                    Style="{StaticResource AddMoreButton}"
+                                    Margin="2" Padding="8,4"
+                                    Click="Details_Click"/>
+                                    <Button Content="Delete"
+                                    Style="{StaticResource AddMoreButton}"
+                                    Margin="2" Padding="8,4"
+                                    Background="#FFD700"
+                                    Click="Delete_Click"/>
                                 </StackPanel>
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
@@ -601,5 +592,6 @@ but if you want to differentiate it, define another style. -->
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
+
     </Grid>
 </Window>

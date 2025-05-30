@@ -42,26 +42,26 @@ namespace SimpleLoginWPF
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            string username = UsernameTextBox.Text;
-            string password = PasswordBox.Password;
-            string role = "User"; // Default role, you can add a dropdown later.
+            //string username = UsernameTextBox.Text;
+            //string password = PasswordBox.Password;
+            //string role = "User"; // Default role, you can add a dropdown later.
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-            {
-                MessageBox.Show("Username and password cannot be empty.");
-                return;
-            }
+            //if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            //{
+            //    MessageBox.Show("Username and password cannot be empty.");
+            //    return;
+            //}
 
-            bool success = DatabaseHelper.RegisterUser(username, password, role);
+            //bool success = DatabaseHelper.RegisterUser(username, password, role);
 
-            if (success)
-            {
-                MessageBox.Show("Registration successful!");
-            }
-            else
-            {
-                MessageBox.Show("Error registering user.");
-            }
+            //if (success)
+            //{
+            //    MessageBox.Show("Registration successful!");
+            //}
+            //else
+            //{
+            //    MessageBox.Show("Error registering user.");
+            //}
         }
 
     }

@@ -3,11 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:SimpleLoginWPF"
         mc:Ignorable="d"
         Title="Reports" Height="720" Width="1280"
-        WindowState="Maximized">
-    
+        WindowState="Maximized" Loaded="Reports_Loaded">
+
     <Window.Resources>
 
         <Style x:Key="SidebarButtonStyle" TargetType="Button">
@@ -266,138 +267,82 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <Style x:Key="FilterComboBoxStyle" TargetType="ComboBox">
-            <Setter Property="Background" Value="#FAFAFA"/>
-            <Setter Property="Foreground" Value="#2D3436"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="10,4"/>
-            <Setter Property="BorderThickness" Value="1"/>
-            <Setter Property="BorderBrush" Value="#E0E0E0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Width" Value="140"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Effect">
-                <Setter.Value>
-                    <DropShadowEffect BlurRadius="5" Opacity="0.2" ShadowDepth="2"/>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="ComboBox">
-                        <Grid>
-                            <Border x:Name="MainBorder"
-             Background="{TemplateBinding Background}"
-             CornerRadius="4"
-             BorderBrush="{TemplateBinding BorderBrush}"
-             BorderThickness="{TemplateBinding BorderThickness}">
-                                <Grid>
-                                    <ContentPresenter Margin="{TemplateBinding Padding}"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Left"
-                               RecognizesAccessKey="True"/>
-                                    <ToggleButton x:Name="ToggleButton"
-                           Focusable="false"
-                           IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-                           ClickMode="Press"
-                           Background="Transparent"
-                           BorderThickness="0"
-                           HorizontalAlignment="Right"
-                           Width="20"
-                           Margin="0,0,4,0">
-                                        <Path x:Name="Arrow"
-                       Data="M 0 0 L 4 4 L 8 0 Z"
-                       Fill="{TemplateBinding Foreground}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"/>
-                                    </ToggleButton>
-                                </Grid>
-                            </Border>
-                            <Popup x:Name="PART_Popup"
-            Placement="Bottom"
-            AllowsTransparency="True"
-            Focusable="False"
-            IsOpen="{TemplateBinding IsDropDownOpen}"
-            PopupAnimation="Slide">
-                                <Border x:Name="PopupBorder"
-                 Background="White"
-                 BorderBrush="{TemplateBinding BorderBrush}"
-                 BorderThickness="{TemplateBinding BorderThickness}"
-                 CornerRadius="4">
-                                    <ScrollViewer Margin="0" SnapsToDevicePixels="True">
-                                        <StackPanel IsItemsHost="True"
-                             KeyboardNavigation.DirectionalNavigation="Contained"/>
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="MainBorder" Property="Background" Value="#EEE"/>
-                                <Setter TargetName="Arrow" Property="Fill" Value="#888"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
     </Window.Resources>
 
     <Grid>
+
+
         <!-- Sidebar -->
         <StackPanel Background="White" Width="240" HorizontalAlignment="Left">
             <Image Source="/Assets/aliflogo-removebg-preview.png" Width="140" Height="100" Margin="20"/>
-            <Button Style="{StaticResource SidebarButtonStyle}" Tag="/Assets/Home.png" Click="Dashboard_Click">
+            <Button x:Name="DashboardButton" Style="{StaticResource SidebarButtonStyle}" Click="Dashboard_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Home.png" Width="22" Height="22" Margin="5,0,15,0"/>
                     <TextBlock Text="Dashboard"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource SidebarButtonStyle}" Tag="/Assets/Inventory_Selected.png" Click="Inventory_Click">
+
+            <Button x:Name="InventoryButton" Style="{StaticResource SidebarButtonStyle}" Click="Inventory_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Inventory.png" Width="22" Height="22" Margin="5,0,15,0"/>
                     <TextBlock Text="Inventory"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource SelectedSidebarButtonStyle}" Tag="/Assets/Report.png" Click="Reports_Click">
+
+            <Button x:Name="ReportsButton" Style="{StaticResource SelectedSidebarButtonStyle}" Click="Reports_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Report.png" Width="22" Height="22" Margin="5,0,15,0"/>
                     <TextBlock Text="Reports"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource SidebarButtonStyle}" Tag="/Assets/Suppliers.png" Click="Suppliers_Click">
+
+            <Button x:Name="PartnersButton" Style="{StaticResource SidebarButtonStyle}" Click="Partners_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Suppliers.png" Width="22" Height="22" Margin="5,0,15,0"/>
                     <TextBlock Text="Partners"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource SidebarButtonStyle}" Tag="/Assets/Order.png" Click="Orders_Click">
+
+            <Button x:Name="OrdersButton" Style="{StaticResource SidebarButtonStyle}" Click="Orders_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Order.png" Width="22" Height="22" Margin="5,0,15,0"/>
                     <TextBlock Text="Orders"/>
                 </StackPanel>
             </Button>
-            <Button Style="{StaticResource SidebarButtonStyle}" Tag="/Assets/Manage Store.png" Click="ManageStore_Click">
+
+            <Button x:Name="DistributorsButton" Style="{StaticResource SidebarButtonStyle}"
+            Click="Distributor_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Manage Store.png"
-Width="22"
-Height="22"
-Margin="5,0,15,0"/>
+                Width="22"
+                Height="22"
+                Margin="5,0,15,0"/>
                     <TextBlock Text="Distributors"
-    VerticalAlignment="Center"/>
+                VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
 
-            <Button Style="{StaticResource SidebarButtonStyle}"
-    Click="Purchases_Click">
+            <Button x:Name="PurchasesButton" Style="{StaticResource SidebarButtonStyle}"
+        Click="Purchases_Click">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Inventory.png"
-        Width="22"
-        Height="22"
-        Margin="5,0,15,0"/>
+Width="22"
+Height="22"
+Margin="5,0,15,0"/>
                     <TextBlock Text="Purchases"
-        VerticalAlignment="Center"/>
+VerticalAlignment="Center"/>
+                </StackPanel>
+            </Button>
+
+            <Button x:Name="AdminButton" Style="{StaticResource SidebarButtonStyle}"
+            Click="AdminDashboard_Click">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/Suppliers.png"
+                Width="22"
+                Height="22"
+                Margin="5,0,15,0"/>
+                    <TextBlock Text="Admin Page"
+                VerticalAlignment="Center"/>
                 </StackPanel>
             </Button>
             <Button Style="{StaticResource SidebarButtonStyle}" Margin="0,40,0,0" Tag="/Assets/Logout.png" Click="Logout_Click" Foreground="Red">
@@ -411,7 +356,6 @@ Margin="5,0,15,0"/>
             </Button>
         </StackPanel>
 
-        <!-- Main Content -->
         <Grid Margin="250,20,20,20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="60"/>
@@ -419,32 +363,23 @@ Margin="5,0,15,0"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Top Bar -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="REPORTS" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" Margin="25,0,0,0"/>
+                <TextBlock Text="Reports Overview" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
 
-                <StackPanel Grid.Column="1" Orientation="Horizontal">
-                    <ComboBox x:Name="ReportPeriodComboBox" Style="{StaticResource FilterComboBoxStyle}"
-                            Margin="10,0" SelectionChanged="ReportPeriodChanged">
-                        <ComboBoxItem Content="Daily"/>
-                        <ComboBoxItem Content="Weekly"/>
-                        <ComboBoxItem Content="Monthly"/>
-                        <ComboBoxItem Content="Yearly" IsSelected="True"/>
-                    </ComboBox>
-                    <Button Style="{StaticResource AddMoreButton}" Content="📥" 
-                          Click="DownloadReport_Click" ToolTip="Download Report"
-                          Margin="10,0" Padding="8"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource AddMoreButton}" Content="📥"
+                    Click="DownloadReport_Click" ToolTip="Download Report"
+                    Margin="10,0" Padding="8"/>
                     <Button Style="{StaticResource AddMoreButton}" Content="👤"
-                          Margin="10,0" Click="Profile_Click"/>
+                    Margin="10,0" Click="Profile_Click"/>
                 </StackPanel>
             </Grid>
 
-            <!-- Metric Cards -->
             <Grid Grid.Row="1" Margin="0,10,0,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -453,172 +388,106 @@ Margin="5,0,15,0"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Gross Profit -->
                 <Border Grid.Column="0" Style="{StaticResource MetricCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock x:Name="GrossProfitTitle" Text="Gross Profit" Foreground="#6E6E6E" FontSize="12"/>
-                            <TextBlock Text="Rs. 23,560,000" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="▲" Foreground="#4CAF50" FontWeight="Bold"/>
-                                <TextBlock Text=" 8.5% Change" Foreground="#4CAF50" FontSize="11"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <Border Grid.Column="1" Width="36" Height="36" Background="#F2F6FF" CornerRadius="18">
-                            <TextBlock Text="💰" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </Grid>
+                    <StackPanel>
+                        <TextBlock x:Name="GrossProfitTitle" Text="Gross Revenue" Foreground="#6E6E6E" FontSize="12"/>
+                        <TextBlock x:Name="GrossProfitValue" Text="Rs. 0" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
+                    </StackPanel>
                 </Border>
 
-                <!-- Net Profit -->
                 <Border Grid.Column="1" Style="{StaticResource MetricCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock x:Name="NetProfitTitle" Text="Net Profit" Foreground="#6E6E6E" FontSize="12"/>
-                            <TextBlock Text="Rs. 3,560,000" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="▲" Foreground="#4CAF50" FontWeight="Bold"/>
-                                <TextBlock Text=" 5.2% Change" Foreground="#4CAF50" FontSize="11"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <Border Grid.Column="1" Width="36" Height="36" Background="#F2FFF6" CornerRadius="18">
-                            <TextBlock Text="📈" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </Grid>
+                    <StackPanel>
+                        <TextBlock x:Name="NetProfitTitle" Text="Total Profit" Foreground="#6E6E6E" FontSize="12"/>
+                        <TextBlock x:Name="NetProfitValue" Text="Rs. 0" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
+                    </StackPanel>
                 </Border>
 
-                <!-- Total Sales -->
                 <Border Grid.Column="2" Style="{StaticResource MetricCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock x:Name="SalesTitle" Text="Total Sales" Foreground="#6E6E6E" FontSize="12"/>
-                            <TextBlock Text="1,258 Items" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="▲" Foreground="#4CAF50" FontWeight="Bold"/>
-                                <TextBlock Text=" 12.3% Change" Foreground="#4CAF50" FontSize="11"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <Border Grid.Column="1" Width="36" Height="36" Background="#F2F6FF" CornerRadius="18">
-                            <TextBlock Text="🛒" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </Grid>
+                    <StackPanel>
+                        <TextBlock x:Name="SalesTitle" Text="Total Items Sold" Foreground="#6E6E6E" FontSize="12"/>
+                        <TextBlock x:Name="TotalSalesValue" Text="0 Items" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
+                    </StackPanel>
                 </Border>
 
-                <!-- Inventory Value -->
                 <Border Grid.Column="3" Style="{StaticResource MetricCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0">
-                            <TextBlock x:Name="InventoryTitle" Text="Inventory Value" Foreground="#6E6E6E" FontSize="12"/>
-                            <TextBlock Text="Rs. 58,900,000" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="▼" Foreground="#F44336" FontWeight="Bold"/>
-                                <TextBlock Text=" 3.1% Change" Foreground="#F44336" FontSize="11"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <Border Grid.Column="1" Width="36" Height="36" Background="#FFF2F2" CornerRadius="18">
-                            <TextBlock Text="📦" FontSize="16" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </Grid>
+                    <StackPanel>
+                        <TextBlock x:Name="InventoryTitle" Text="Current Inventory Value" Foreground="#6E6E6E" FontSize="12"/>
+                        <TextBlock x:Name="InventoryValue" Text="Rs. 0" FontSize="18" FontWeight="Bold" Margin="0,5,0,8"/>
+                    </StackPanel>
                 </Border>
             </Grid>
 
-            <!-- Charts and Tables -->
             <Grid Grid.Row="2" Margin="0,15,0,0">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="250"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!-- Chart Section -->
                 <Border Grid.Row="0" Style="{StaticResource ChartHeaderStyle}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Stretch">
-                            <TextBlock x:Name="ChartTitle" Text="Annual Sales Report" FontSize="16" FontWeight="SemiBold"/>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
-                                <RadioButton x:Name="DailyToggle" Content="Daily" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod"/>
-                                <RadioButton x:Name="WeeklyToggle" Content="Weekly" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod"/>
-                                <RadioButton x:Name="MonthlyToggle" Content="Monthly" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod" IsChecked="True"/>
-                                <RadioButton x:Name="YearlyToggle" Content="Yearly" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod"/>
-                            </StackPanel>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                        <TextBlock x:Name="ChartTitle" Text="Sales Report" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,10,0">
+                            <RadioButton x:Name="DailyToggle" Content="Daily" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod" Checked="TimePeriod_Checked"/>
+                            <RadioButton x:Name="WeeklyToggle" Content="Weekly" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod" Checked="TimePeriod_Checked"/>
+                            <RadioButton x:Name="MonthlyToggle" Content="Monthly" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod" IsChecked="True" Checked="TimePeriod_Checked"/>
+                            <RadioButton x:Name="YearlyToggle" Content="Yearly" Style="{StaticResource TimePeriodToggleStyle}" GroupName="ChartPeriod" Checked="TimePeriod_Checked"/>
                         </StackPanel>
-
-                        <!-- Chart Content -->
-                        <Border Grid.Row="1" Margin="0,15,0,0">
-                            <Grid>
-                                <!-- Sample Chart Content -->
-                                <TextBlock Text="Sales Chart Visualization" HorizontalAlignment="Center" VerticalAlignment="Center"
-                                       Foreground="#CCCCCC" FontSize="18"/>
-                            </Grid>
-                        </Border>
-                    </Grid>
+                    </StackPanel>
                 </Border>
 
-                <!-- Data Tables -->
-                <Grid Grid.Row="1" Margin="0,15,0,0">
+                <Border Grid.Row="1" Margin="0,5,0,0">
+                    <lvc:CartesianChart x:Name="SalesChart" Series="{Binding SalesSeries}" Margin="0,0,0,10">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Period" Labels="{Binding ChartLabels}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Amount (Rs.)" LabelFormatter="{Binding Formatter}"></lvc:Axis>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Border>
+
+                <Grid Grid.Row="1" Margin="0,239,0,0" Grid.RowSpan="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Recent Sales -->
-                    <Border Grid.Column="0" Style="{StaticResource ChartHeaderStyle}" Margin="0,0,7.5,0">
-                        <DataGrid Style="{StaticResource DataGridMain}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Date" Binding="{Binding Date}" Width="*"/>
-                                <DataGridTextColumn Header="Product" Binding="{Binding Product}" Width="2*"/>
-                                <DataGridTextColumn Header="Amount" Binding="{Binding Amount}" Width="*"/>
-                            </DataGrid.Columns>
-                            <DataGrid.Items>
-                                
-                            </DataGrid.Items>
-                        </DataGrid>
+
+                    <Border Grid.Column="0" Style="{StaticResource ChartHeaderStyle}" Margin="0,0,7,0">
+                        <StackPanel>
+                            <TextBlock Text="Recent Sales" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <DataGrid x:Name="RecentSalesDataGrid" Style="{StaticResource DataGridMain}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              ItemsSource="{Binding RecentSalesData}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Sale Date" Binding="{Binding SaleDate, StringFormat='yyyy-MM-dd'}" Width="*"/>
+                                    <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="2*"/>
+                                    <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="*"/>
+                                    <DataGridTextColumn Header="Total Amount (Rs.)" Binding="{Binding TotalAmount, StringFormat='N2'}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
                     </Border>
 
-                    <!-- Inventory Alerts -->
-                    <Border Grid.Column="1" Style="{StaticResource ChartHeaderStyle}" Margin="7.5,0,0,0">
-                        <DataGrid Style="{StaticResource DataGridMain}" AutoGenerateColumns="False">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Product" Binding="{Binding Product}" Width="2*"/>
-                                <DataGridTextColumn Header="Stock" Binding="{Binding Stock}" Width="*"/>
-                                <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
-                            </DataGrid.Columns>
-                            <DataGrid.Items>
-                                <!--<local:InventoryData Product="Ibuprofen 400mg" Stock="45" Status="Low Stock"/>
-                                <local:InventoryData Product="Aspirin 75mg" Stock="120" Status="Adequate"/>-->
-                            </DataGrid.Items>
-                        </DataGrid>
+                    <Border Grid.Column="1" Style="{StaticResource ChartHeaderStyle}" Margin="7,0,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Inventory Alerts" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <DataGrid x:Name="InventoryAlertsDataGrid" Style="{StaticResource DataGridMain}"
+                              AutoGenerateColumns="False" IsReadOnly="True"
+                              ItemsSource="{Binding InventoryAlertsData}">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="2*"/>
+                                    <DataGridTextColumn Header="Current Stock" Binding="{Binding Quantity}" Width="*"/>
+                                    <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
                     </Border>
                 </Grid>
             </Grid>
         </Grid>
+
     </Grid>
+
 </Window>

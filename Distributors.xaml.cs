@@ -16,17 +16,76 @@ namespace SimpleLoginWPF
         public Distributors()
         {
             InitializeComponent();
+            AccessLevelControl();
             LoadDistributorsData();
             SetupStats();
-            SetupConverters();
         }
 
-        private void SetupConverters()
+        public void AccessLevelControl()
         {
-            //if (!Resources.Contains("StringToVisibilityConverter"))
-            //{
-            //    Resources.Add("StringToVisibilityConverter", new StringToVisibilityConverter());
-            //}
+            string role = UserSession.Role;
+
+            switch (role)
+            {
+                case "Admin":
+                    DashboardButton.Visibility = Visibility.Visible;
+                    InventoryButton.Visibility = Visibility.Visible;
+                    ReportsButton.Visibility = Visibility.Visible;
+                    PartnersButton.Visibility = Visibility.Visible;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    DistributorsButton.Visibility = Visibility.Visible;
+                    PurchasesButton.Visibility = Visibility.Visible;
+                    AdminButton.Visibility = Visibility.Visible;
+                    break;
+
+                case "Manager":
+                    DashboardButton.Visibility = Visibility.Visible;
+                    InventoryButton.Visibility = Visibility.Visible;
+                    ReportsButton.Visibility = Visibility.Visible;
+                    PartnersButton.Visibility = Visibility.Visible;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    DistributorsButton.Visibility = Visibility.Visible;
+                    PurchasesButton.Visibility = Visibility.Visible;
+                    AdminButton.Visibility = Visibility.Collapsed;
+                    break;
+
+                case "Warehouse Manager":
+                    DashboardButton.Visibility = Visibility.Visible;
+                    InventoryButton.Visibility = Visibility.Visible;
+                    ReportsButton.Visibility = Visibility.Visible;
+                    PartnersButton.Visibility = Visibility.Collapsed;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    DistributorsButton.Visibility = Visibility.Visible;
+                    PurchasesButton.Visibility = Visibility.Visible;
+                    AdminButton.Visibility = Visibility.Collapsed;
+                    break;
+
+                case "Product Specialist":
+                    DashboardButton.Visibility = Visibility.Visible;
+                    InventoryButton.Visibility = Visibility.Visible;
+                    ReportsButton.Visibility = Visibility.Visible;
+                    PartnersButton.Visibility = Visibility.Collapsed;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    DistributorsButton.Visibility = Visibility.Visible;
+                    PurchasesButton.Visibility = Visibility.Visible;
+                    AdminButton.Visibility = Visibility.Collapsed;
+                    break;
+
+                case "Distributor":
+                    DashboardButton.Visibility = Visibility.Visible;
+                    InventoryButton.Visibility = Visibility.Visible;
+                    ReportsButton.Visibility = Visibility.Visible;
+                    PartnersButton.Visibility = Visibility.Collapsed;
+                    OrdersButton.Visibility = Visibility.Visible;
+                    DistributorsButton.Visibility = Visibility.Visible;
+                    PurchasesButton.Visibility = Visibility.Visible;
+                    AdminButton.Visibility = Visibility.Collapsed;
+                    break;
+
+                default:
+                    MessageBox.Show("Unknown role: " + role);
+                    break;
+            }
         }
 
         public void LoadDistributorsData()
@@ -36,12 +95,25 @@ namespace SimpleLoginWPF
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    var query = @"SELECT distributor_id AS DistributorID, name AS Name, 
-                                region AS Region, distribution_type AS DistributionType,
-                                phone AS Phone, email AS Email, service_area AS ServiceArea 
-                                FROM distributors";
+                    var query = @"
+                       SELECT
+                            d.dist_id AS DistributorID,
+                            d.name AS Name,
+                            d.region AS Region,
+                            d.distributor_type AS DistributorType,
+                            d.email AS Email,
+                            d.service_area AS ServiceArea,
+                            (
+                                SELECT dp.phone
+                                FROM distributor_phones dp
+                                WHERE dp.dist_id = d.dist_id
+                                LIMIT 1
+                            ) AS Phone
+                        FROM
+                            distributors d;";
 
                     var adapter = new MySqlDataAdapter(query, conn);
+
                     distributorsDataTable.Clear();
                     adapter.Fill(distributorsDataTable);
                     DistributorsDataGrid.ItemsSource = distributorsDataTable.DefaultView;
@@ -63,7 +135,7 @@ namespace SimpleLoginWPF
             foreach (DataRow row in distributorsDataTable.Rows)
             {
                 regions.Add(row["Region"].ToString());
-                if (row["DistributionType"].ToString() == "Wholesale") wholesaleCount++;
+                if (row["DistributorType"].ToString() == "Institutional") wholesaleCount++;
             }
 
             WholesaleCount.Text = wholesaleCount.ToString();
@@ -75,19 +147,81 @@ namespace SimpleLoginWPF
             var searchText = SearchBox.Text.Trim();
             var filter = $"Name LIKE '%{searchText}%' OR Region LIKE '%{searchText}%' " +
                         $"OR Email LIKE '%{searchText}%' OR Phone LIKE '%{searchText}%'";
-            distributorsDataTable.DefaultView.RowFilter = filter;
+            distributorsDataTable.DefaultView.RowFilter = string.IsNullOrEmpty(searchText) ? "" : filter;
         }
 
         private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (FilterComboBox.SelectedIndex == 0)
+            var comboBox = sender as ComboBox;
+            var selectedType = (comboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            if (selectedType == "All")
             {
                 distributorsDataTable.DefaultView.RowFilter = "";
             }
             else
             {
-                var filterType = ((ComboBoxItem)FilterComboBox.SelectedItem).Content.ToString();
-                distributorsDataTable.DefaultView.RowFilter = $"DistributionType = '{filterType}'";
+                distributorsDataTable.DefaultView.RowFilter = $"DistributorType = '{selectedType}'";
+            }
+        }
+
+        private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            if (SearchBox.Text == "Search Distributors...")
+                SearchBox.Text = "";
+        }
+
+        private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(SearchBox.Text))
+                SearchBox.Text = "Search Distributors...";
+        }
+
+        private void AddDistributor_Click(object sender, RoutedEventArgs e)
+        {
+            var newPartnerWindow = new NewDistributorWindow(this);
+            newPartnerWindow.Owner = this;
+            newPartnerWindow.ShowDialog();
+        }
+
+        private void Profile_Click(object sender, RoutedEventArgs e)
+        {
+            var page = new UserProfile();
+            page.Show();
+        }
+
+        private void Details_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var distributor = button.DataContext as DataRowView;
+            var popupDetails = new DistributorDetails(Convert.ToInt32(distributor["DistributorID"]));
+            popupDetails.Owner = this;
+            popupDetails.ShowDialog();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as Button;
+            var distributor = button.DataContext as DataRowView;
+
+            if (MessageBox.Show("Are you sure you want to delete this distributor?", "Confirm Delete", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    using (var conn = new MySqlConnection(connectionString))
+                    {
+                        conn.Open();
+                        var deleteQuery = "DELETE FROM distributors WHERE dist_id = @distId";
+                        var command = new MySqlCommand(deleteQuery, conn);
+                        command.Parameters.AddWithValue("@distId", distributor["DistributorID"]);
+                        command.ExecuteNonQuery();
+                    }
+                    LoadDistributorsData();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error deleting distributor: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
         }
 
@@ -96,7 +230,7 @@ namespace SimpleLoginWPF
         {
             var page = new Dashboard();
             page.Show();
-            this.Hide();
+            this.Close();
         }
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
@@ -105,17 +239,11 @@ namespace SimpleLoginWPF
             this.Close();
         }
 
-        private void Reports_Click(object sender, RoutedEventArgs e) 
+        private void Reports_Click(object sender, RoutedEventArgs e)
         {
             var page = new Reports();
             page.Show();
-            this.Hide();
-        }
-
-        private void Suppliers_Click(object sender, RoutedEventArgs e)
-        {
-            //new Suppliers().Show();
-            //this.Close();
+            this.Close();
         }
 
         private void Orders_Click(object sender, RoutedEventArgs e)
@@ -133,33 +261,8 @@ namespace SimpleLoginWPF
             this.Close();
         }
 
-        private void AddDistributor_Click(object sender, RoutedEventArgs e)
-        {
-            var newPartnerWindow = new NewDistributorWindow(this);
-            newPartnerWindow.Owner = this;
-            newPartnerWindow.ShowDialog();
-        }
-
-        private void Profile_Click(object sender, RoutedEventArgs e)
-        {
-            var page = new UserProfile();
-            page.Show();
-        }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e) =>
             Application.Current.MainWindow?.Show();
-
-        private void SearchBox_GotFocus(object sender, RoutedEventArgs e)
-        {
-            if (SearchBox.Text == "Search Distributors...")
-                SearchBox.Text = "";
-        }
-
-        private void SearchBox_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(SearchBox.Text))
-                SearchBox.Text = "Search Distributors...";
-        }
 
         private void DistributorsDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -177,21 +280,19 @@ namespace SimpleLoginWPF
         {
             var page = new Purchases();
             page.Show();
-            this.Hide();
+            this.Close();
         }
 
-        private void Details_Click(object sender, RoutedEventArgs e)
+        private void Distributor_Click(object sender, RoutedEventArgs e)
         {
-            var popupDetails = new DistributorDetails(1);
-            popupDetails.Owner = this;
-            popupDetails.ShowDialog();
+            new Distributors().Show();
+            this.Close();
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private void AdminDashboard_Click(object sender, RoutedEventArgs e)
         {
-            var popupDetails = new DistributorDetails(1);
-            popupDetails.Owner = this;
-            popupDetails.ShowDialog();
+            new AdminDashboard().Show();
+            this.Close();
         }
     }
 }

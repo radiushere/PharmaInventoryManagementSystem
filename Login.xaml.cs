@@ -14,9 +14,6 @@ using System.Windows.Shapes;
 
 namespace SimpleLoginWPF
 {
-    /// <summary>
-    /// Interaction logic for Login.xaml
-    /// </summary>
     public partial class Login : Window
     {
         public Login()
@@ -71,9 +68,8 @@ namespace SimpleLoginWPF
 
             if (role != null)
             {
-                MessageBox.Show("Login successful! Role: " + role);
+                MessageBox.Show($"Login successful! Role: {role}, ID: {UserSession.UserID}");
 
-                // Open the main window
                 var mainWindow = new Dashboard();
                 mainWindow.Show();
                 this.Close();
@@ -83,5 +79,7 @@ namespace SimpleLoginWPF
                 MessageBox.Show("Invalid username or password.");
             }
         }
+
+
     }
 }

@@ -13,24 +13,16 @@
         WindowStartupLocation="CenterScreen">
 
     <Window.Resources>
-
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
         <Color x:Key="AccentGold">#FFD700</Color>
 
-        <!-- Convert Colors to Brushes -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
         <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ ACTION BUTTONS ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="ActionButton" TargetType="Button">
             <Setter Property="Height" Value="40"/>
             <Setter Property="MinWidth" Value="120"/>
@@ -96,9 +88,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ SECTION STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
             <Setter Property="FontSize" Value="18"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -133,9 +122,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~ DATA GRID STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="CompactDataGrid" TargetType="DataGrid">
             <Setter Property="Background" Value="White"/>
             <Setter Property="RowBackground" Value="White"/>
@@ -205,10 +191,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
         <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
             <DockPanel LastChildFill="True">
-                <Button DockPanel.Dock="Right" Content="←  Back to Purchases" Click="BackButton_Click" 
+                <Button DockPanel.Dock="Right" Content="← Back to Purchases" Click="BackButton_Click"
                         Style="{StaticResource SecondaryButton}" Background="White"/>
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Purchase.png" Width="32" Height="32" Margin="0,0,15,0"/>
@@ -217,10 +202,8 @@
             </DockPanel>
         </Border>
 
-        <!-- Content -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,15">
             <StackPanel>
-                <!-- Purchase Summary -->
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -228,183 +211,124 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0">
-                            <TextBlock x:Name="PurchaseTitle" Text="Raw Materials Purchase #PM-2023-0456" 
-                                      FontSize="20" FontWeight="Bold" Foreground="{StaticResource PrimaryRedBrush}" Margin="0,0,0,10"/>
+                            <TextBlock Text="Purchase Overview" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
                                 <TextBlock Text="Purchase ID:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <TextBlock x:Name="PurchaseId" Text="PM-2023-0456" Style="{StaticResource PartnerPropertyValue}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Supplier:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <TextBlock x:Name="SupplierName" Text="MediChem Supplies Ltd." Style="{StaticResource PartnerPropertyValue}"/>
+                                <TextBlock x:Name="PurchaseId" Style="{StaticResource PartnerPropertyValue}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
                                 <TextBlock Text="Purchase Date:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <TextBlock x:Name="PurchaseDate" Text="2023-11-15" Style="{StaticResource PartnerPropertyValue}"/>
-                            </StackPanel>
-                        </StackPanel>
-
-                        <!-- Right Column -->
-                        <StackPanel Grid.Column="1">
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Status:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <Border Background="#4CAF50" CornerRadius="4" Padding="8,2" Width="Auto">
-                                    <TextBlock x:Name="PurchaseStatus" Text="Completed" Foreground="White" FontWeight="SemiBold"/>
-                                </Border>
+                                <TextBlock x:Name="PurchaseDate" Style="{StaticResource PartnerPropertyValue}"/>
                             </StackPanel>
 
                             <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
                                 <TextBlock Text="Total Amount:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <TextBlock x:Name="TotalAmount" Text="$24,850.75" Style="{StaticResource PartnerPropertyValue}" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="TotalAmount" Style="{StaticResource PartnerPropertyValue}" FontWeight="SemiBold"/>
                             </StackPanel>
+                        </StackPanel>
 
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Payment Method:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <TextBlock x:Name="PaymentMethod" Text="Bank Transfer" Style="{StaticResource PartnerPropertyValue}"/>
-                            </StackPanel>
-
-                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5">
-                                <TextBlock Text="Delivery Date:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
-                                <TextBlock x:Name="DeliveryDate" Text="2023-11-22" Style="{StaticResource PartnerPropertyValue}"/>
+                        <StackPanel Grid.Column="1">
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,5" VerticalAlignment="Bottom" Height="Auto">
+                                <TextBlock Text="Status:" Style="{StaticResource PartnerPropertyName}" Width="140"/>
+                                <Border CornerRadius="4" Padding="8,2" Width="Auto">
+                                    <TextBlock x:Name="PurchaseStatus" Foreground="White" FontWeight="SemiBold"/>
+                                </Border>
                             </StackPanel>
                         </StackPanel>
                     </Grid>
                 </Border>
 
-                <!-- Materials Purchased -->
-                <TextBlock Text="Materials Purchased" Style="{StaticResource SectionHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <DataGrid x:Name="MaterialsDataGrid" Style="{StaticResource CompactDataGrid}" AutoGenerateColumns="False">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Material" Binding="{Binding MaterialName}" Width="2*"/>
-                            <DataGridTextColumn Header="Batch No." Binding="{Binding BatchNumber}" Width="1*"/>
-                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="0.8*"/>
-                            <DataGridTextColumn Header="Unit" Binding="{Binding Unit}" Width="0.7*"/>
-                            <DataGridTextColumn Header="Unit Price" Binding="{Binding UnitPrice, StringFormat=C}" Width="1*"/>
-                            <DataGridTextColumn Header="Total" Binding="{Binding Total, StringFormat=C}" Width="1*"/>
-                            <DataGridTextColumn Header="Expiry" Binding="{Binding ExpiryDate, StringFormat=yyyy-MM-dd}" Width="1*"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Border>
-
-                <!-- Batch Details -->
-                <TextBlock Text="Batch Details" Style="{StaticResource SectionHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <StackPanel>
-                        <!-- Sample batch 1 -->
-                        <Border Style="{StaticResource BatchInfoStyle}">
-                            <StackPanel>
-                                <TextBlock Text="Paracetamol API (Batch: PC-API-1123)" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Text="Quantity:" Grid.Column="0" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="500 kg" Grid.Column="1" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
-
-                                    <TextBlock Text="Expiry:" Grid.Column="2" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="2025-06-30" Grid.Column="3" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
-
-                                    <TextBlock Text="COA:" Grid.Column="0" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="COA-1123-PC-API" Grid.Column="1" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
-
-                                    <TextBlock Text="Storage:" Grid.Column="2" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="Room Temperature" Grid.Column="3" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <!-- Sample batch 2 -->
-                        <Border Style="{StaticResource BatchInfoStyle}" Margin="0,10,0,0">
-                            <StackPanel>
-                                <TextBlock Text="Ibuprofen API (Batch: IB-API-0923)" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="Auto"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-
-                                    <TextBlock Text="Quantity:" Grid.Column="0" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="300 kg" Grid.Column="1" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
-
-                                    <TextBlock Text="Expiry:" Grid.Column="2" Grid.Row="0" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="2025-03-15" Grid.Column="3" Grid.Row="0" Style="{StaticResource PartnerPropertyValue}"/>
-
-                                    <TextBlock Text="COA:" Grid.Column="0" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="COA-0923-IB-API" Grid.Column="1" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
-
-                                    <TextBlock Text="Storage:" Grid.Column="2" Grid.Row="1" Style="{StaticResource PartnerPropertyName}" Width="80"/>
-                                    <TextBlock Text="Cool, Dry Place" Grid.Column="3" Grid.Row="1" Style="{StaticResource PartnerPropertyValue}"/>
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Border>
-
-                <!-- Documents and Notes -->
-                <TextBlock Text="Documents" Style="{StaticResource SectionHeaderStyle}"/>
                 <Border Style="{StaticResource ContentCardStyle}">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                        <!-- Documents -->
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="Attached Documents:" Style="{StaticResource PartnerPropertyName}"/>
-                            <StackPanel Margin="0,5,0,0">
-                                <Button Content="Invoice #INV-45678.pdf" Style="{StaticResource SecondaryButton}" 
-                                        HorizontalAlignment="Left" Margin="0,5,0,5" Padding="10,5"/>
-                                <Button Content="Certificate of Analysis.pdf" Style="{StaticResource SecondaryButton}" 
-                                        HorizontalAlignment="Left" Margin="0,5,0,5" Padding="10,5"/>
-                                <Button Content="Delivery Note.pdf" Style="{StaticResource SecondaryButton}" 
-                                        HorizontalAlignment="Left" Margin="0,5,0,5" Padding="10,5"/>
-                            </StackPanel>
-                        </StackPanel>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Supplier Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
-                        <!-- Notes -->
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="Purchase Notes:" Style="{StaticResource PartnerPropertyName}"/>
-                            <TextBlock x:Name="PurchaseNotes" Style="{StaticResource PartnerPropertyValue}" TextWrapping="Wrap" 
-                                       Text="This purchase includes active pharmaceutical ingredients (APIs) for our Q1 2024 production. 
-                                      
-The Paracetamol API meets USP standards and has been pre-approved by our QA team. 
-                                      
-The Ibuprofen API requires additional testing before release to production. 
-                                      
-Special storage instructions: Ibuprofen API must be kept below 25°C."/>
-                        </StackPanel>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Supplier Name:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="SupplierName" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Contact Person:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="SupplierContactName" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Company Name:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" x:Name="SupplierCompanyName" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Email:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" x:Name="SupplierEmail" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Phone:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="5" Grid.Column="1" x:Name="SupplierPhone" Style="{StaticResource PartnerPropertyValue}"/>
+                    </Grid>
+                </Border>
+
+                <Border Style="{StaticResource ContentCardStyle}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="4" Text="Product Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Product Name:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ProductNameText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Category:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="2" Grid.Column="1" x:Name="ProductCategoryText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Unit Price:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="3" Grid.Column="1" x:Name="ProductUnitPriceText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="4" Grid.Column="0" Text="Purchased Qty:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="4" Grid.Column="1" x:Name="ProductPurchasedQuantityText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="5" Grid.Column="0" Text="Stock Qty:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="5" Grid.Column="1" x:Name="ProductStockQuantityText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="6" Grid.Column="0" Text="Batch No.:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="6" Grid.Column="1" x:Name="ProductBatchNumText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="7" Grid.Column="0" Text="Expiry Date:" Style="{StaticResource PartnerPropertyName}"/>
+                        <TextBlock Grid.Row="7" Grid.Column="1" x:Name="ProductExpiryDateText" Style="{StaticResource PartnerPropertyValue}"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="Description:" Style="{StaticResource PartnerPropertyName}" VerticalAlignment="Top"/>
+                        <TextBlock Grid.Row="1" Grid.Column="3" Grid.RowSpan="7" x:Name="ProductDescriptionText" Style="{StaticResource PartnerPropertyValue}" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
                     </Grid>
                 </Border>
             </StackPanel>
         </ScrollViewer>
 
-        <!-- Footer with Action Buttons -->
         <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Print Details" Style="{StaticResource SecondaryButton}" Click="PrintDetails_Click"/>
                 <Button Content="Edit" Style="{StaticResource ActionButton}" Click="EditProduct_Click" Margin="10,0,0,0"/>
-                <Button Content="Receive Materials" Style="{StaticResource ActionButton}" Click="ReceiveMaterials_Click" Margin="10,0,0,0"/>
             </StackPanel>
         </Border>
     </Grid>

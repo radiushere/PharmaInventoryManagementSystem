@@ -108,7 +108,7 @@
         <!-- Updated InputField style to improve text visibility -->
         <Style x:Key="InputField" TargetType="TextBox">
             <Setter Property="FontSize" Value="13"/>
-            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Padding" Value="2,2"/>
             <Setter Property="BorderBrush" Value="#CCCCCC"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Height" Value="40"/>
@@ -170,10 +170,10 @@
         </Border>
 
         <!-- Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10" Grid.RowSpan="2">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10">
             <StackPanel>
                 <!-- Basic Information -->
-                <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
                 <Grid Margin="0,5,0,10">
                     <Grid.ColumnDefinitions>
@@ -181,7 +181,6 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -189,39 +188,28 @@
                     <!-- Left Column -->
                     <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
                         <TextBlock Text="Partner Name" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="PartnerNameInput" Text="Allied Hospital" Style="{StaticResource InputField}" Height="49"/>
+                        <TextBox x:Name="PartnerNameInput" Text="Allied Hospital" Style="{StaticResource InputField}" Height="30"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
                         <TextBlock Text="Partner Type" Style="{StaticResource InputLabel}"/>
-                        <ComboBox x:Name="PartnerTypeInput" Style="{StaticResource InputComboBox}" SelectedIndex="0">
+                        <ComboBox x:Name="PartnerTypeInput" Style="{StaticResource InputComboBox}" SelectedIndex="0" Height="30">
                             <ComboBoxItem Content="Hospital"/>
                             <ComboBoxItem Content="Clinic"/>
                             <ComboBoxItem Content="Pharmacy"/>
-                            <ComboBoxItem Content="Laboratory"/>
-                            <ComboBoxItem Content="Insurance"/>
-                        </ComboBox>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,0,10,0">
-                        <TextBlock Text="Status" Style="{StaticResource InputLabel}"/>
-                        <ComboBox x:Name="StatusInput" Style="{StaticResource InputComboBox}" SelectedIndex="0">
-                            <ComboBoxItem Content="Active"/>
-                            <ComboBoxItem Content="Inactive"/>
-                            <ComboBoxItem Content="Pending"/>
-                            <ComboBoxItem Content="Suspended"/>
+                            <ComboBoxItem Content="Research Center"/>
                         </ComboBox>
                     </StackPanel>
 
                     <!-- Right Column -->
                     <StackPanel Grid.Column="1" Grid.Row="0">
                         <TextBlock Text="Partner ID" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="PartnerIdInput" Text="P1001" Style="{StaticResource InputField}" IsEnabled="False" Background="#F0F0F0" Height="48"/>
+                        <TextBox x:Name="PartnerIdInput" Text="P1001" Style="{StaticResource InputField}" IsEnabled="False" Background="#F0F0F0" Height="30"/>
                     </StackPanel>
                 </Grid>
 
                 <!-- Contact Information -->
-                <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
                 <Grid Margin="0,5,0,10">
                     <Grid.ColumnDefinitions>
@@ -231,47 +219,35 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <!-- Left Column -->
                     <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
                         <TextBlock Text="Contact Person" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="ContactPersonInput" Text="Dr. Sarah Johnson" Style="{StaticResource InputField}" Height="52"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
-                        <TextBlock Text="Phone" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="ContactPhoneInput" Text="+1 (555) 123-4567" Style="{StaticResource InputField}"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,0,10,0">
-                        <TextBlock Text="Email" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="ContactEmailInput" Text="sjohnson@alliedhospital.org" Style="{StaticResource InputField}" Height="57"/>
+                        <TextBox x:Name="ContactPersonInput" Text="Dr. Sarah Johnson" Style="{StaticResource InputField}" Height="30"/>
                     </StackPanel>
 
                     <!-- Right Column -->
                     <StackPanel Grid.Column="1" Grid.Row="0">
                         <TextBlock Text="Address" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="AddressInput" 
-                                Text="1234 Medical Center Blvd, New York, NY 10001" 
-                                Style="{StaticResource MultilineInputField}"
-                                Height="70"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Grid.Row="1">
-                        <TextBlock Text="Secondary Contact" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="SecondaryContactInput" Text="Robert Williams (Operations Manager)" Style="{StaticResource InputField}"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Grid.Row="2">
-                        <TextBlock Text="Secondary Phone" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="SecondaryPhoneInput" Text="+1 (555) 987-6543" Style="{StaticResource InputField}" Height="65"/>
+                        <TextBox x:Name="AddressInput"
+                            Text="1234 Medical Center Blvd, New York, NY 10001"
+                            Style="{StaticResource MultilineInputField}"
+                            Height="70"/>
                     </StackPanel>
                 </Grid>
 
+                <!-- Phone Numbers -->
+                <TextBlock Text="Phone Numbers" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+
+                <StackPanel x:Name="PhoneNumbersPanel" Margin="0,5,0,10">
+                    <!-- Phone number entries will be added here dynamically -->
+                </StackPanel>
+
+                <Button Content="Add Phone Number" Style="{StaticResource ActionButton}" Click="AddPhoneNumber_Click" Margin="0,5,0,10"/>
+
                 <!-- Contract Information -->
-                <TextBlock Text="Contract Information" Style="{StaticResource SectionHeaderStyle}"/>
+                <TextBlock Text="Contract Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
                 <Grid Margin="0,5,0,10">
                     <Grid.ColumnDefinitions>
@@ -287,64 +263,20 @@
                     <!-- Left Column -->
                     <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
                         <TextBlock Text="Contract Start" Style="{StaticResource InputLabel}"/>
-                        <DatePicker x:Name="ContractStartInput" Height="40" Margin="0,0,0,8"/>
+                        <DatePicker x:Name="ContractStartInput" Height="30" Margin="0,0,0,8"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
                         <TextBlock Text="Credit Limit" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="CreditLimitInput" Text="250000.00" Style="{StaticResource InputField}" Height="55"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,0,10,0">
-                        <TextBlock Text="Payment Terms" Style="{StaticResource InputLabel}"/>
-                        <ComboBox x:Name="PaymentTermsInput" Style="{StaticResource InputComboBox}" SelectedIndex="0">
-                            <ComboBoxItem Content="Net 30"/>
-                            <ComboBoxItem Content="Net 60"/>
-                            <ComboBoxItem Content="Net 90"/>
-                            <ComboBoxItem Content="Immediate"/>
-                        </ComboBox>
+                        <TextBox x:Name="CreditLimitInput" Text="250000.00" Style="{StaticResource InputField}" Height="30"/>
                     </StackPanel>
 
                     <!-- Right Column -->
                     <StackPanel Grid.Column="1" Grid.Row="0">
                         <TextBlock Text="Contract End" Style="{StaticResource InputLabel}"/>
-                        <DatePicker x:Name="ContractEndInput" Height="40" Margin="0,0,0,8"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Grid.Row="1">
-                        <TextBlock Text="Current Balance" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="CurrentBalanceInput" Text="78450.25" Style="{StaticResource InputField}" IsEnabled="False" Background="#F0F0F0" Height="55"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Grid.Row="2">
-                        <TextBlock Text="Contract Type" Style="{StaticResource InputLabel}"/>
-                        <ComboBox x:Name="ContractTypeInput" Style="{StaticResource InputComboBox}" SelectedIndex="0">
-                            <ComboBoxItem Content="Standard Supply"/>
-                            <ComboBoxItem Content="Premium"/>
-                            <ComboBoxItem Content="Service"/>
-                            <ComboBoxItem Content="Distribution"/>
-                        </ComboBox>
+                        <DatePicker x:Name="ContractEndInput" Height="30" Margin="0,0,0,8"/>
                     </StackPanel>
                 </Grid>
-
-                <!-- Notes -->
-                <TextBlock Text="Notes" Style="{StaticResource SectionHeaderStyle}"/>
-                <TextBlock Text="Partner Notes" Style="{StaticResource InputLabel}"/>
-                <TextBox x:Name="NotesInput" 
-                         Text="Allied Hospital is one of our premium partners. They typically order monthly with large volumes. They have specific requirements for packaging and delivery scheduling. Special discount of 12% applies to all orders. Contact Dr. Johnson for new product proposals." 
-                         Style="{StaticResource MultilineInputField}"
-                         Height="100"/>
-
-                <!-- Tags -->
-                <TextBlock Text="Tags" Style="{StaticResource SectionHeaderStyle}"/>
-                <WrapPanel Margin="0,5,0,10">
-                    <CheckBox Content="Premium" Margin="0,0,15,0" IsChecked="True" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="Hospital" Margin="0,0,15,0" IsChecked="True" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="Regular Order" Margin="0,0,15,0" IsChecked="True" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="Special Discount" Margin="0,0,15,0" IsChecked="True" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="VIP" Margin="0,0,15,0" VerticalContentAlignment="Center"/>
-                    <CheckBox Content="International" Margin="0,0,15,0" VerticalContentAlignment="Center"/>
-                </WrapPanel>
             </StackPanel>
         </ScrollViewer>
 
@@ -356,4 +288,5 @@
             </StackPanel>
         </Border>
     </Grid>
+
 </Window>

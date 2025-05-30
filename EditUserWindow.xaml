@@ -143,17 +143,14 @@
                 </Setter.Value>
             </Setter>
         </Style>
-
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~ INPUT FIELDS STYLES ~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+        
         <Style x:Key="InputFieldStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="4,2"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -409,17 +406,19 @@
                             <Label Content="Role*" 
                                    Style="{StaticResource FormLabelStyle}"/>
                             <ComboBox x:Name="cmbRole" 
-                                      Style="{StaticResource ComboBoxStyle}"
+                                      Padding="10"
                                       Margin="0,0,0,20">
-                                <ComboBoxItem Content="Administrator"/>
+                                <ComboBoxItem Content="Admin"/>
                                 <ComboBoxItem Content="Manager"/>
-                                <ComboBoxItem Content="Staff"/>
+                                <ComboBoxItem Content="Warehouse Manager"/>
+                                <ComboBoxItem Content="Distributor"/>
+                                <ComboBoxItem Content="Product Specialist"/>
                             </ComboBox>
 
                             <Label Content="Account Status*" 
                                    Style="{StaticResource FormLabelStyle}"/>
                             <ComboBox x:Name="cmbStatus" 
-                                      Style="{StaticResource ComboBoxStyle}"
+                                      Padding="10"
                                       Margin="0,0,0,20">
                                 <ComboBoxItem Content="Active"/>
                                 <ComboBoxItem Content="Suspended"/>

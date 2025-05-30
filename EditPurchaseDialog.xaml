@@ -124,7 +124,6 @@
         </Style>
 
         <Style x:Key="FormDatePicker" TargetType="DatePicker" BasedOn="{StaticResource FormControl}">
-            <Setter Property="BorderBrush" Value="#D1D1D1"/>
             <Setter Property="BorderThickness" Value="1"/>
         </Style>
     </Window.Resources>
@@ -162,50 +161,27 @@
                     <DatePicker x:Name="PurchaseDatePicker" Style="{StaticResource FormDatePicker}"/>
 
                     <TextBlock Text="Supplier" Style="{StaticResource FormLabel}"/>
-                    <ComboBox x:Name="SupplierComboBox" Style="{StaticResource FormComboBox}">
-                        <ComboBoxItem Content="MediChem Supplies Ltd." IsSelected="True"/>
-                        <ComboBoxItem Content="BioPharma Materials Inc."/>
-                        <ComboBoxItem Content="PharmaSource Global"/>
-                        <ComboBoxItem Content="Medical Ingredients Corp."/>
-                    </ComboBox>
+                    <ComboBox x:Name="SupplierComboBox" Style="{StaticResource FormComboBox}"/>
 
-                    <TextBlock Text="Status" Style="{StaticResource FormLabel}"/>
-                    <ComboBox x:Name="StatusComboBox" Style="{StaticResource FormComboBox}">
-                        <ComboBoxItem Content="Draft"/>
-                        <ComboBoxItem Content="Pending"/>
-                        <ComboBoxItem Content="Partially Received"/>
-                        <ComboBoxItem Content="Completed" IsSelected="True"/>
-                        <ComboBoxItem Content="Cancelled"/>
-                    </ComboBox>
-
-                    <TextBlock Text="Payment Method" Style="{StaticResource FormLabel}"/>
-                    <ComboBox x:Name="PaymentMethodComboBox" Style="{StaticResource FormComboBox}">
-                        <ComboBoxItem Content="Bank Transfer" IsSelected="True"/>
-                        <ComboBoxItem Content="Credit Card"/>
-                        <ComboBoxItem Content="Check"/>
-                        <ComboBoxItem Content="Cash"/>
-                    </ComboBox>
+                    
                 </StackPanel>
 
                 <!-- Right Column -->
                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
                     <TextBlock Text="Delivery Information" Style="{StaticResource DialogHeaderStyle}"/>
 
-                    <TextBlock Text="Delivery Date" Style="{StaticResource FormLabel}"/>
-                    <DatePicker x:Name="DeliveryDatePicker" Style="{StaticResource FormDatePicker}"/>
-
                     <TextBlock Text="Total Amount" Style="{StaticResource FormLabel}"/>
                     <TextBox x:Name="TotalAmountTextBox" Style="{StaticResource FormTextBox}"/>
 
-                    <TextBlock Text="Notes" Style="{StaticResource FormLabel}"/>
-                    <TextBox x:Name="NotesTextBox" 
-                             TextWrapping="Wrap" 
-                             AcceptsReturn="True" 
-                             VerticalScrollBarVisibility="Auto" 
-                             Height="150" 
-                             Padding="8"
-                             BorderBrush="#D1D1D1"
-                             BorderThickness="1"/>
+                    <TextBlock Text="Status" Style="{StaticResource FormLabel}"/>
+                    <ComboBox x:Name="StatusComboBox" Style="{StaticResource FormComboBox}">
+                        <ComboBoxItem Content="Completed"/>
+                        <ComboBoxItem Content="Pending"/>
+                        <ComboBoxItem Content="Cancelled"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Product" Style="{StaticResource FormLabel}"/>
+                    <ComboBox x:Name="ProductComboBox" Style="{StaticResource FormComboBox}"/>
                 </StackPanel>
             </Grid>
         </ScrollViewer>
@@ -218,4 +194,5 @@
             </StackPanel>
         </Border>
     </Grid>
+
 </Window>
