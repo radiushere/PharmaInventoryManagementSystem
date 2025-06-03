@@ -11,8 +11,10 @@
         Background="#F8FAFC"
         FontFamily="Segoe UI"
         ResizeMode="NoResize"
+        AllowsTransparency="True"
         ShowInTaskbar="False"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -173,48 +175,79 @@
         </Style>
     </Window.Resources>
 
+    <Border CornerRadius="12"  Background="White"  Margin="1"
+           BorderThickness="1"
+BorderBrush="{StaticResource PrimaryRedBrush}">
 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
+                <DockPanel LastChildFill="True">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Inventory.png" Width="24" Height="24" Margin="0,0,12,0"/>
+                        <TextBlock Text="Edit Product" FontSize="20" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
 
-        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
-            <DockPanel LastChildFill="True">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Assets/Inventory.png" Width="24" Height="24" Margin="0,0,12,0"/>
-                    <TextBlock Text="Edit Product" FontSize="20" FontWeight="SemiBold" Foreground="White" VerticalAlignment="Center"/>
-                </StackPanel>
-            </DockPanel>
-        </Border>
-
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10">
-            <StackPanel>
-                <TextBlock Text="Basic Information" Style="{StaticResource FormHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <StackPanel Grid.Column="0" Width="150" Margin="0,0,20,0">
-                            <Border Width="120" Height="120" Margin="0,0,0,10"
-                            VerticalAlignment="Top" CornerRadius="8" BorderBrush="#DDDDDD" BorderThickness="1">
-                                <Border.Effect>
-                                    <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
-                                </Border.Effect>
-                                <Image x:Name="ProductImageEdit" Source="/Assets/MedicineSample.png" Stretch="Uniform"/>
-                            </Border>
-                            <Button Content="Change" Style="{StaticResource SecondaryButton}" Width="120" Height="38" Margin="0,5,0,0" Click="Button_Click"/>
-                        </StackPanel>
-
-                        <Grid Grid.Column="1">
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10">
+                <StackPanel>
+                    <TextBlock Text="Basic Information" Style="{StaticResource FormHeaderStyle}"/>
+                    <Border Style="{StaticResource ContentCardStyle}">
+                        <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="120"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0" Width="150" Margin="0,0,20,0">
+                                <Border Width="120" Height="120" Margin="0,0,0,10"
+                            VerticalAlignment="Top" CornerRadius="8" BorderBrush="#DDDDDD" BorderThickness="1">
+                                    <Border.Effect>
+                                        <DropShadowEffect BlurRadius="8" Opacity="0.1" ShadowDepth="2"/>
+                                    </Border.Effect>
+                                    <Image x:Name="ProductImageEdit" Source="/Assets/MedicineSample.png" Stretch="Uniform"/>
+                                </Border>
+                                <Button Content="Change" Style="{StaticResource SecondaryButton}" Width="120" Height="38" Margin="0,5,0,0" Click="Button_Click"/>
+                            </StackPanel>
+
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBlock Text="Product Name:" Grid.Row="0" Grid.Column="0" Style="{StaticResource FormFieldLabel}"/>
+                                <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource FormTextBox}"/>
+
+                                <TextBlock Text="Product ID (NDC):" Grid.Row="1" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
+                                <TextBox x:Name="ProductIdTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0" IsReadOnly="True"/>
+
+                                <TextBlock Text="Category:" Grid.Row="2" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
+                                <ComboBox x:Name="CategoryComboBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource FormComboBox}" Margin="0,10,0,0"/>
+
+                                <TextBlock Text="Batch Number:" Grid.Row="3" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
+                                <TextBox x:Name="BatchNumberTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0"/>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Text="Product Details" Style="{StaticResource FormHeaderStyle}"/>
+                    <Border Style="{StaticResource ContentCardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
@@ -222,76 +255,49 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <TextBlock Text="Product Name:" Grid.Row="0" Grid.Column="0" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="ProductNameTextBox" Grid.Row="0" Grid.Column="1" Style="{StaticResource FormTextBox}"/>
+                            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
+                                <TextBlock Text="Quantity (in stock):" Style="{StaticResource FormFieldLabel}"/>
+                                <TextBox x:Name="QuantityTextBox" Style="{StaticResource FormTextBox}"/>
+                            </StackPanel>
 
-                            <TextBlock Text="Product ID (NDC):" Grid.Row="1" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
-                            <TextBox x:Name="ProductIdTextBox" Grid.Row="1" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0" IsReadOnly="True"/>
+                            <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,10,10,0">
+                                <TextBlock Text="Unit Price:" Style="{StaticResource FormFieldLabel}"/>
+                                <TextBox x:Name="UnitPriceTextBox" Style="{StaticResource FormTextBox}"/>
+                            </StackPanel>
 
-                            <TextBlock Text="Category:" Grid.Row="2" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
-                            <ComboBox x:Name="CategoryComboBox" Grid.Row="2" Grid.Column="1" Style="{StaticResource FormComboBox}" Margin="0,10,0,0"/>
+                            <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,10,10,0">
+                                <TextBlock Text="Expiry Date:" Style="{StaticResource FormFieldLabel}"/>
+                                <DatePicker x:Name="ExpiryDatePicker" FontSize="13" Height="34"/>
+                            </StackPanel>
 
-                            <TextBlock Text="Batch Number:" Grid.Row="3" Grid.Column="0" Style="{StaticResource FormFieldLabel}" Margin="0,10,0,3"/>
-                            <TextBox x:Name="BatchNumberTextBox" Grid.Row="3" Grid.Column="1" Style="{StaticResource FormTextBox}" Margin="0,10,0,0"/>
-                        </Grid>
-                    </Grid>
-                </Border>
-
-                <TextBlock Text="Product Details" Style="{StaticResource FormHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
-                            <TextBlock Text="Quantity (in stock):" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="QuantityTextBox" Style="{StaticResource FormTextBox}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,10,10,0">
-                            <TextBlock Text="Unit Price:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="UnitPriceTextBox" Style="{StaticResource FormTextBox}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0" Grid.Row="2" Margin="0,10,10,0">
-                            <TextBlock Text="Expiry Date:" Style="{StaticResource FormFieldLabel}"/>
-                            <DatePicker x:Name="ExpiryDatePicker" FontSize="13" Height="34"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0" Grid.Row="3" Margin="0,10,10,0">
-                            <TextBlock Text="Supplier:" Style="{StaticResource FormFieldLabel}"/>
-                            <ComboBox x:Name="SupplierComboBox"
+                            <StackPanel Grid.Column="0" Grid.Row="3" Margin="0,10,10,0">
+                                <TextBlock Text="Supplier:" Style="{StaticResource FormFieldLabel}"/>
+                                <ComboBox x:Name="SupplierComboBox"
                                   Style="{StaticResource FormComboBox}"
                                   DisplayMemberPath="Name"    SelectedValuePath="Id"      SelectedValue="{Binding SelectedSupplierId, Mode=TwoWay}"
                                   ToolTip="Select the supplier for this product."/>
-                        </StackPanel>
+                            </StackPanel>
 
-                        <StackPanel Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
-                            <TextBlock Text="Description:" Style="{StaticResource FormFieldLabel}"/>
-                            <TextBox x:Name="IndicationsTextBox" FontSize="11" Style="{StaticResource FormTextBox}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
-        </ScrollViewer>
+                            <StackPanel Grid.Column="1" Grid.Row="0" Margin="10,0,0,0">
+                                <TextBlock Text="Description:" Style="{StaticResource FormFieldLabel}"/>
+                                <TextBox x:Name="IndicationsTextBox" FontSize="11" Style="{StaticResource FormTextBox}" Height="80" TextWrapping="Wrap" AcceptsReturn="True"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
 
-        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,12">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
-                <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
-            </StackPanel>
-        </Border>
-    </Grid>
+            <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,12">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
+                    <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </Border>
 
 </Window>

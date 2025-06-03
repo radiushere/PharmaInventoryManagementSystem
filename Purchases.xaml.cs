@@ -337,5 +337,10 @@ namespace SimpleLoginWPF
             adminDashboard.Show();
             this.Close();
         }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadPurchasesData();
+        }
     }
 }

@@ -1,15 +1,12 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
 using System.Configuration;
-using System.Net.NetworkInformation;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
 using System.IO;
 using Microsoft.Win32;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace SimpleLoginWPF
 {
@@ -22,6 +19,7 @@ namespace SimpleLoginWPF
         {
             InitializeComponent();
             this.purchaseId = purchaseId;
+            QuestPDF.Settings.License = LicenseType.Community;
             LoadPurchaseData();
         }
 
@@ -190,98 +188,168 @@ namespace SimpleLoginWPF
         {
             try
             {
-                // Use SaveFileDialog to let the user choose the save location
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
-                    FileName = $"Purchase_Details_{PurchaseId.Text}_{DateTime.Now:yyyyMMdd_HHmmss}.txt",
-                    DefaultExt = ".txt",
-                    Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+                    FileName = $"Purchase_Details_{PurchaseId.Text}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
+                    DefaultExt = ".pdf",
+                    Filter = "PDF files (*.pdf)|*.pdf|All files (*.*)|*.*"
                 };
 
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     string filePath = saveFileDialog.FileName;
-                    GenerateTextPurchaseDetails(filePath); // Call the new text generation method
-                    MessageBox.Show($"Purchase details exported successfully to:\n{filePath}", "Export Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+                    GeneratePdfPurchaseDetails(filePath);
+                    MessageBox.Show($"Purchase details PDF exported successfully to:\n{filePath}", "Export Successful", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error exporting purchase details: {ex.Message}", "Export Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            // If you have a popup to close after printing, call that method here.
-            // Example: ClosePurchaseDetailsPopup();
         }
 
-        // --- New Simplified Text Purchase Details Generation Logic ---
-        private void GenerateTextPurchaseDetails(string filePath)
+        private static class InvoiceColors
         {
-            try
-            {
-                StringBuilder content = new StringBuilder();
-
-                content.AppendLine("------------------------------------");
-                content.AppendLine("         PURCHASE DETAILS         ");
-                content.AppendLine("------------------------------------");
-                content.AppendLine($"Generated On: {DateTime.Now}");
-                content.AppendLine();
-
-                // Purchase Overview
-                content.AppendLine("PURCHASE OVERVIEW:");
-                content.AppendLine("--------------------");
-                content.AppendLine($"Purchase ID:    {PurchaseId.Text}");
-                content.AppendLine($"Purchase Date:  {PurchaseDate.Text}");
-                content.AppendLine($"Total Amount:   {TotalAmount.Text}");
-                content.AppendLine($"Status:         {PurchaseStatus.Text}");
-                content.AppendLine();
-
-                // Supplier Information
-                content.AppendLine("SUPPLIER INFORMATION:");
-                content.AppendLine("-----------------------");
-                content.AppendLine($"Supplier Name:    {SupplierName.Text}");
-                content.AppendLine($"Contact Person:   {SupplierContactName.Text}");
-                content.AppendLine($"Company Name:     {SupplierCompanyName.Text}");
-                content.AppendLine($"Email:            {SupplierEmail.Text}");
-                content.AppendLine($"Phone:            {SupplierPhone.Text}");
-                content.AppendLine();
-
-                // Product Information
-                content.AppendLine("PRODUCT INFORMATION:");
-                content.AppendLine("----------------------");
-                content.AppendLine($"Product Name:       {ProductNameText.Text}");
-                content.AppendLine($"Category:           {ProductCategoryText.Text}");
-                content.AppendLine($"Unit Price:         {ProductUnitPriceText.Text}");
-                content.AppendLine($"Purchased Quantity: {ProductPurchasedQuantityText.Text}");
-                content.AppendLine($"Stock Quantity:     {ProductStockQuantityText.Text}");
-                content.AppendLine($"Batch No.:          {ProductBatchNumText.Text}");
-                content.AppendLine($"Expiry Date:        {ProductExpiryDateText.Text}");
-                content.AppendLine($"Description:        {ProductDescriptionText.Text}");
-                content.AppendLine();
-                content.AppendLine("------------------------------------");
-
-                // Write the content to the specified file
-                File.WriteAllText(filePath, content.ToString());
-            }
-            catch (Exception ex)
-            {
-                // Rethrow the exception to be caught by the PrintDetails_Click handler
-                throw new Exception($"Failed to generate purchase details content: {ex.Message}", ex);
-            }
+            public static string PrimaryRed => "#B30000";
+            public static string SecondaryGray => "#F0F0F0";
+            public static string TextColor => "#333333";
         }
+
+
+        private void GeneratePdfPurchaseDetails(string filePath)
+        {
+            var document = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(30);
+                    page.DefaultTextStyle(x => x.FontSize(11).FontColor(QuestPDF.Helpers.Colors.Black));
+
+                    // Header
+                    page.Header().Row(row =>
+                    {
+                        try
+                        {
+                            row.ConstantColumn(100).Image("C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Assets\\aliflogo-removebg-preview.png");
+                        }
+                        catch
+                        {
+                            row.ConstantColumn(100).Text("");
+                        }
+
+                        row.RelativeColumn().Column(header =>
+                        {
+                            header.Item().Text("ALF PHARMACEUTICAL")
+                                .FontSize(24)
+                                .Bold()
+                                .FontColor(InvoiceColors.PrimaryRed);
+
+                            header.Item().Text("PURCHASE DETAILS")
+                                .FontSize(18)
+                                .SemiBold()
+                                .FontColor(InvoiceColors.PrimaryRed);
+
+                            header.Item().PaddingBottom(10)
+                                .LineHorizontal(1)
+                                .LineColor(InvoiceColors.PrimaryRed);
+                        });
+                    });
+
+                    // Content
+                    page.Content().Column(column =>
+                    {
+                        column.Item().PaddingVertical(10).Column(subColumn =>
+                        {
+                            subColumn.Item().Text("PURCHASE OVERVIEW")
+                                .FontSize(13)
+                                .Bold()
+                                .FontColor(InvoiceColors.PrimaryRed);
+
+                            subColumn.Item().PaddingBottom(5)
+                                .LineHorizontal(0.5f)
+                                .LineColor(InvoiceColors.PrimaryRed);
+
+                            subColumn.Item().Text($"Purchase ID:    {PurchaseId.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Purchase Date:  {PurchaseDate.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Total Amount:   {TotalAmount.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Status:         {PurchaseStatus.Text ?? "N/A"}");
+                        });
+
+                        column.Item().PaddingVertical(10).Column(subColumn =>
+                        {
+                            subColumn.Item().Text("SUPPLIER INFORMATION")
+                                .FontSize(13)
+                                .Bold()
+                                .FontColor(InvoiceColors.PrimaryRed);
+
+                            subColumn.Item().PaddingBottom(5)
+                                .LineHorizontal(0.5f)
+                                .LineColor(InvoiceColors.PrimaryRed);
+
+                            subColumn.Item().Text($"Supplier Name:    {SupplierName.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Contact Person:   {SupplierContactName.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Company Name:     {SupplierCompanyName.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Email:            {SupplierEmail.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Phone:            {SupplierPhone.Text ?? "N/A"}");
+                        });
+
+                        column.Item().PaddingVertical(10).Column(subColumn =>
+                        {
+                            subColumn.Item().Text("PRODUCT INFORMATION")
+                                .FontSize(13)
+                                .Bold()
+                                .FontColor(InvoiceColors.PrimaryRed);
+
+                            subColumn.Item().PaddingBottom(5)
+                                .LineHorizontal(0.5f)
+                                .LineColor(InvoiceColors.PrimaryRed);
+
+                            subColumn.Item().Text($"Product Name:       {ProductNameText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Category:           {ProductCategoryText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Unit Price:         {ProductUnitPriceText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Purchased Quantity: {ProductPurchasedQuantityText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Stock Quantity:     {ProductStockQuantityText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Batch No.:          {ProductBatchNumText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Expiry Date:        {ProductExpiryDateText.Text ?? "N/A"}");
+                            subColumn.Item().Text($"Description:        {ProductDescriptionText.Text ?? "N/A"}");
+                        });
+
+                        // Signature space
+                        column.Item().PaddingTop(30).Row(row =>
+                        {
+                            row.RelativeColumn().Text("Authorized Signature: ______________________");
+                            row.RelativeColumn().Text($"Date: {DateTime.Now:yyyy-MM-dd}").AlignRight();
+                        });
+                    });
+
+                    // Footer with page numbers
+                    page.Footer()
+                        .AlignRight()
+                        .Text(x =>
+                        {
+                            x.Span("Page ").FontSize(8);
+                            x.CurrentPageNumber().FontSize(8);
+                            x.Span(" of ").FontSize(8);
+                            x.TotalPages().FontSize(8);
+                        });
+                });
+            });
+
+            document.GeneratePdf(filePath);
+        }
+
 
 
         private void EditProduct_Click(object sender, RoutedEventArgs e)
         {
-            // Create an instance of the EditPurchaseDialog and pass the current window as the parent
             EditPurchaseDialog editPurchaseDialog = new EditPurchaseDialog(this);
 
-            // Show the dialog
             bool? dialogResult = editPurchaseDialog.ShowDialog();
 
-            // If the dialog was closed with a "Save" result, refresh the purchase data
             if (dialogResult == true)
             {
-                LoadPurchaseData(); // Refresh the purchase data
+                LoadPurchaseData();
             }
         }
 

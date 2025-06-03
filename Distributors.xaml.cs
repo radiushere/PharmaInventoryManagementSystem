@@ -1,6 +1,4 @@
 ﻿using MySql.Data.MySqlClient;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Windows;
@@ -293,6 +291,11 @@ namespace SimpleLoginWPF
         {
             new AdminDashboard().Show();
             this.Close();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadDistributorsData();
         }
     }
 }

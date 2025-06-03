@@ -360,5 +360,10 @@ namespace SimpleLoginWPF
             new AdminDashboard().Show();
             this.Close();
         }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadOrdersData();
+        }
     }
 }

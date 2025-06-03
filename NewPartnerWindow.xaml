@@ -251,7 +251,7 @@
     <Border CornerRadius="15" 
         Background="White"
         BorderThickness="1"
-        BorderBrush="#E0E0E0">
+        BorderBrush="{StaticResource PrimaryRedBrush}">
 
         <Grid>
             <!-- Window Header -->

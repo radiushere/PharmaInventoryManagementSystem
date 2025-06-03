@@ -108,7 +108,7 @@ namespace SimpleLoginWPF
                     }
                 }
 
-                _parentWindow.LoadPartnersData();
+                _ = _parentWindow.LoadPartnersDataAsync();
                 _parentWindow.SetupStats();
                 this.Close();
             }

@@ -8,10 +8,11 @@
         Title="Edit Distributor" 
         Height="620" 
         Width="800"
-        Background="#F8FAFC"
-        FontFamily="Segoe UI"
+        Background="Transparent"           FontFamily="Segoe UI"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        AllowsTransparency="True">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -44,11 +45,11 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                            CornerRadius="4"
-                            Padding="{TemplateBinding Padding}">
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -70,13 +71,13 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            CornerRadius="4"
-                            Padding="{TemplateBinding Padding}">
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
                             <Grid>
                                 <ContentPresenter HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
+                                                  VerticalAlignment="Center"/>
                             </Grid>
                         </Border>
                         <ControlTemplate.Triggers>
@@ -142,6 +143,93 @@
             <Setter Property="BorderBrush" Value="#D1D1D1"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <ToggleButton x:Name="ToggleButton" 
+                                  Grid.Column="1"  Focusable="false" 
+                                  IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                            <Border x:Name="Border" 
+                            Grid.ColumnSpan="2" BorderBrush="{TemplateBinding BorderBrush}" 
+                            BorderThickness="{TemplateBinding BorderThickness}" 
+                            Background="{TemplateBinding Background}" 
+                            CornerRadius="4">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <ContentPresenter x:Name="ContentSite" 
+                                              Grid.Column="0" IsHitTestVisible="False" 
+                                              Content="{TemplateBinding SelectionBoxItem}" 
+                                              ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                              ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                              Margin="{TemplateBinding Padding}" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" />
+                                    <Path x:Name="Arrow" 
+                                  Grid.Column="1" 
+                                  Fill="{TemplateBinding Foreground}" 
+                                  HorizontalAlignment="Right" 
+                                  Margin="0,0,11,0" 
+                                  VerticalAlignment="Center" 
+                                  Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                </Grid>
+                            </Border>
+                            <Popup x:Name="PART_Popup" 
+                           Placement="Bottom" 
+                           IsOpen="{TemplateBinding IsDropDownOpen}" 
+                           AllowsTransparency="True" 
+                           Focusable="False" 
+                           PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
+                                <Border x:Name="DropDownBorder" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="4">
+                                    <ScrollViewer x:Name="ScrollViewer" MaxHeight="200" CanContentScroll="True">
+                                        <ItemsPresenter />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource PrimaryRedBrush}"/>
+                            </Trigger>
+                            <Trigger Property="HasItems" Value="false">
+                                <Setter TargetName="DropDownBorder" Property="Height" Value="95"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+                                <Setter TargetName="Border" Property="Background" Value="#F0F0F0"/>
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="Arrow" Property="Data" Value="M 0 4 L 4 0 L 8 4 Z"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="ComboBoxToggleButtonStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border Background="Transparent" Padding="{TemplateBinding Padding}" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="ContentCardStyle" TargetType="Border">
@@ -157,112 +245,105 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Border CornerRadius="12"  Background="White"  Margin="1" BorderThickness="1"
+BorderBrush="{StaticResource PrimaryRedBrush}">
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
-            <TextBlock Text="Edit Distributor" FontSize="20" FontWeight="SemiBold" Foreground="White"/>
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,15">
-            <StackPanel>
-                <!-- Basic Information Section -->
-                <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+            <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12" CornerRadius="12,12,0,0">
+                <TextBlock Text="Edit Distributor" FontSize="20" FontWeight="SemiBold" Foreground="White"/>
+            </Border>
 
-                        <!-- Left Column -->
-                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
-                            <TextBlock Text="Distributor Name:" Style="{StaticResource InputLabelStyle}"/>
-                            <TextBox x:Name="txtDistributorName" Style="{StaticResource InputBoxStyle}"/>
-                        </StackPanel>
-
-                        <!-- Right Column -->
-                        <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,10">
-                            <TextBlock Text="Distributor Type:" Style="{StaticResource InputLabelStyle}"/>
-                            <ComboBox x:Name="cmbDistributorType" Style="{StaticResource InputComboBoxStyle}"
-                                  SelectedIndex="0">
-                                <ComboBoxItem Content="Institutional"/>
-                                <ComboBoxItem Content="Commercial"/>
-                            </ComboBox>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-
-                <!-- Contact Information Section -->
-                <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}"/>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,15">
                 <StackPanel>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
+                    <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}"/>
+                    <Border Style="{StaticResource ContentCardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-                        <!-- Phone Numbers Section -->
-                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,0,10" Grid.ColumnSpan="2">
-                            <TextBlock Text="Phone Numbers" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
-                            <StackPanel x:Name="PhoneNumbersPanel" Margin="0,5,0,10">
-                                <!-- Phone number entries will be added here dynamically -->
+                            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
+                                <TextBlock Text="Distributor Name:" Style="{StaticResource InputLabelStyle}"/>
+                                <TextBox x:Name="txtDistributorName" Style="{StaticResource InputBoxStyle}"/>
                             </StackPanel>
-                            <Button Content="Add Phone Number" Style="{StaticResource ActionButton}" Click="AddPhoneNumber_Click" Margin="0,5,0,10"/>
-                            <TextBlock Text="Email:" Style="{StaticResource InputLabelStyle}"/>
-                            <TextBox x:Name="txtContactEmail" Style="{StaticResource InputBoxStyle}"/>
-                        </StackPanel>
-                    </Grid>
+
+                            <StackPanel Grid.Column="1" Grid.Row="0" Margin="0,0,0,10">
+                                <TextBlock Text="Distributor Type:" Style="{StaticResource InputLabelStyle}"/>
+                                <ComboBox x:Name="cmbDistributorType" Padding="10"
+                                          SelectedIndex="0" SelectionChanged="cmbDistributorType_SelectionChanged">
+                                    <ComboBoxItem Content="Institutional"/>
+                                    <ComboBoxItem Content="Commercial"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}"/>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,0,10" Grid.ColumnSpan="2">
+                                <TextBlock Text="Phone Numbers" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+                                <StackPanel x:Name="PhoneNumbersPanel" Margin="0,5,0,10">
+                                </StackPanel>
+                                <Button Content="Add Phone Number" Style="{StaticResource ActionButton}" Click="AddPhoneNumber_Click" Margin="0,5,0,10"/>
+                                <TextBlock Text="Email:" Style="{StaticResource InputLabelStyle}"/>
+                                <TextBox x:Name="txtContactEmail" Style="{StaticResource InputBoxStyle}"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+
+                    <TextBlock Text="Geographical Information" Style="{StaticResource SectionHeaderStyle}"/>
+                    <Border Style="{StaticResource ContentCardStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
+                                <TextBlock Text="Primary Region:" Style="{StaticResource InputLabelStyle}"/>
+                                <TextBox x:Name="txtPrimaryRegion" Style="{StaticResource InputBoxStyle}"/>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,10">
+                                <TextBlock Text="Service Areas:" Style="{StaticResource InputLabelStyle}"/>
+                                <TextBox x:Name="txtServiceAreas" Style="{StaticResource InputBoxStyle}"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
                 </StackPanel>
+            </ScrollViewer>
 
-                <!-- Geographical Information Section -->
-                <TextBlock Text="Geographical Information" Style="{StaticResource SectionHeaderStyle}"/>
-                <Border Style="{StaticResource ContentCardStyle}">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-
-                        <!-- Left Column -->
-                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,10">
-                            <TextBlock Text="Primary Region:" Style="{StaticResource InputLabelStyle}"/>
-                            <TextBox x:Name="txtPrimaryRegion" Style="{StaticResource InputBoxStyle}"/>
-                        </StackPanel>
-
-                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,10">
-                            <TextBlock Text="Service Areas:" Style="{StaticResource InputLabelStyle}"/>
-                            <TextBox x:Name="txtServiceAreas" Style="{StaticResource InputBoxStyle}"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Footer with Action Buttons -->
-        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,12">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
-                <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
-            </StackPanel>
-        </Border>
-    </Grid>
+            <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,12" CornerRadius="0,0,12,12">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
+                    <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
 </Window>

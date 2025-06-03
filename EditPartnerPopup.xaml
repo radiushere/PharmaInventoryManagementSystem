@@ -12,7 +12,8 @@
         FontFamily="Segoe UI"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        ShowInTaskbar="False">
+        ShowInTaskbar="False"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -157,136 +158,141 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Border Background="White"  Margin="1"
+           BorderThickness="1"
+BorderBrush="{StaticResource PrimaryRedBrush}">
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
-            <TextBlock Text="Edit Partner Information" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
-        </Border>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10">
-            <StackPanel>
-                <!-- Basic Information -->
-                <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+            <!-- Header -->
+            <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
+                <TextBlock Text="Edit Partner Information" FontSize="18" FontWeight="SemiBold" Foreground="White"/>
+            </Border>
 
-                <Grid Margin="0,5,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="20,10">
+                <StackPanel>
+                    <!-- Basic Information -->
+                    <TextBlock Text="Basic Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
-                    <!-- Left Column -->
-                    <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
-                        <TextBlock Text="Partner Name" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="PartnerNameInput" Text="Allied Hospital" Style="{StaticResource InputField}" Height="30"/>
-                    </StackPanel>
+                    <Grid Margin="0,5,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
-                        <TextBlock Text="Partner Type" Style="{StaticResource InputLabel}"/>
-                        <ComboBox x:Name="PartnerTypeInput" Style="{StaticResource InputComboBox}" SelectedIndex="0" Height="30">
-                            <ComboBoxItem Content="Hospital"/>
-                            <ComboBoxItem Content="Clinic"/>
-                            <ComboBoxItem Content="Pharmacy"/>
-                            <ComboBoxItem Content="Research Center"/>
-                        </ComboBox>
-                    </StackPanel>
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
+                            <TextBlock Text="Partner Name" Style="{StaticResource InputLabel}"/>
+                            <TextBox x:Name="PartnerNameInput" Text="Allied Hospital" Style="{StaticResource InputField}" Height="30"/>
+                        </StackPanel>
 
-                    <!-- Right Column -->
-                    <StackPanel Grid.Column="1" Grid.Row="0">
-                        <TextBlock Text="Partner ID" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="PartnerIdInput" Text="P1001" Style="{StaticResource InputField}" IsEnabled="False" Background="#F0F0F0" Height="30"/>
-                    </StackPanel>
-                </Grid>
+                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
+                            <TextBlock Text="Partner Type" Style="{StaticResource InputLabel}"/>
+                            <ComboBox x:Name="PartnerTypeInput" Style="{StaticResource InputComboBox}" SelectedIndex="0" Height="30">
+                                <ComboBoxItem Content="Hospital"/>
+                                <ComboBoxItem Content="Clinic"/>
+                                <ComboBoxItem Content="Pharmacy"/>
+                                <ComboBoxItem Content="Research Center"/>
+                            </ComboBox>
+                        </StackPanel>
 
-                <!-- Contact Information -->
-                <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0">
+                            <TextBlock Text="Partner ID" Style="{StaticResource InputLabel}"/>
+                            <TextBox x:Name="PartnerIdInput" Text="P1001" Style="{StaticResource InputField}" IsEnabled="False" Background="#F0F0F0" Height="30"/>
+                        </StackPanel>
+                    </Grid>
 
-                <Grid Margin="0,5,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                    <!-- Contact Information -->
+                    <TextBlock Text="Contact Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
 
-                    <!-- Left Column -->
-                    <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
-                        <TextBlock Text="Contact Person" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="ContactPersonInput" Text="Dr. Sarah Johnson" Style="{StaticResource InputField}" Height="30"/>
-                    </StackPanel>
+                    <Grid Margin="0,5,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Right Column -->
-                    <StackPanel Grid.Column="1" Grid.Row="0">
-                        <TextBlock Text="Address" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="AddressInput"
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
+                            <TextBlock Text="Contact Person" Style="{StaticResource InputLabel}"/>
+                            <TextBox x:Name="ContactPersonInput" Text="Dr. Sarah Johnson" Style="{StaticResource InputField}" Height="30"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0">
+                            <TextBlock Text="Address" Style="{StaticResource InputLabel}"/>
+                            <TextBox x:Name="AddressInput"
                             Text="1234 Medical Center Blvd, New York, NY 10001"
                             Style="{StaticResource MultilineInputField}"
                             Height="70"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Phone Numbers -->
+                    <TextBlock Text="Phone Numbers" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+
+                    <StackPanel x:Name="PhoneNumbersPanel" Margin="0,5,0,10">
+                        <!-- Phone number entries will be added here dynamically -->
                     </StackPanel>
-                </Grid>
 
-                <!-- Phone Numbers -->
-                <TextBlock Text="Phone Numbers" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+                    <Button Content="Add Phone Number" Style="{StaticResource ActionButton}" Click="AddPhoneNumber_Click" Margin="0,5,0,10"/>
 
-                <StackPanel x:Name="PhoneNumbersPanel" Margin="0,5,0,10">
-                    <!-- Phone number entries will be added here dynamically -->
+                    <!-- Contract Information -->
+                    <TextBlock Text="Contract Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
+
+                    <Grid Margin="0,5,0,10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Left Column -->
+                        <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
+                            <TextBlock Text="Contract Start" Style="{StaticResource InputLabel}"/>
+                            <DatePicker x:Name="ContractStartInput" Height="30" Margin="0,0,0,8"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
+                            <TextBlock Text="Credit Limit" Style="{StaticResource InputLabel}"/>
+                            <TextBox x:Name="CreditLimitInput" Text="250000.00" Style="{StaticResource InputField}" Height="30"/>
+                        </StackPanel>
+
+                        <!-- Right Column -->
+                        <StackPanel Grid.Column="1" Grid.Row="0">
+                            <TextBlock Text="Contract End" Style="{StaticResource InputLabel}"/>
+                            <DatePicker x:Name="ContractEndInput" Height="30" Margin="0,0,0,8"/>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
+            </ScrollViewer>
 
-                <Button Content="Add Phone Number" Style="{StaticResource ActionButton}" Click="AddPhoneNumber_Click" Margin="0,5,0,10"/>
-
-                <!-- Contract Information -->
-                <TextBlock Text="Contract Information" Style="{StaticResource SectionHeaderStyle}" Margin="0,0,0,10"/>
-
-                <Grid Margin="0,5,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <!-- Left Column -->
-                    <StackPanel Grid.Column="0" Grid.Row="0" Margin="0,0,10,0">
-                        <TextBlock Text="Contract Start" Style="{StaticResource InputLabel}"/>
-                        <DatePicker x:Name="ContractStartInput" Height="30" Margin="0,0,0,8"/>
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="0" Grid.Row="1" Margin="0,0,10,0">
-                        <TextBlock Text="Credit Limit" Style="{StaticResource InputLabel}"/>
-                        <TextBox x:Name="CreditLimitInput" Text="250000.00" Style="{StaticResource InputField}" Height="30"/>
-                    </StackPanel>
-
-                    <!-- Right Column -->
-                    <StackPanel Grid.Column="1" Grid.Row="0">
-                        <TextBlock Text="Contract End" Style="{StaticResource InputLabel}"/>
-                        <DatePicker x:Name="ContractEndInput" Height="30" Margin="0,0,0,8"/>
-                    </StackPanel>
-                </Grid>
-            </StackPanel>
-        </ScrollViewer>
-
-        <!-- Footer with Action Buttons -->
-        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,10">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
-                <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveChanges_Click"/>
-            </StackPanel>
-        </Border>
-    </Grid>
+            <!-- Footer with Action Buttons -->
+            <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="20,10">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
+                    <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveChanges_Click"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Border>
 
 </Window>

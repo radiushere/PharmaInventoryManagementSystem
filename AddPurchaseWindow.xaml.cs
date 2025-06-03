@@ -3,25 +3,25 @@ using System;
 using System.Configuration;
 using System.Data;
 using System.Globalization;
-using System.Text.RegularExpressions; // Required for PreviewTextInput
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input; // Required for PreviewTextInputEventArgs
+using System.Windows.Input;
 
 namespace SimpleLoginWPF
 {
     public partial class AddPurchaseWindow : Window
     {
         private static readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
-        private decimal currentProductPrice = 0; // To store the price of the selected product
+        private decimal currentProductPrice = 0; 
 
         public AddPurchaseWindow()
         {
             InitializeComponent();
             LoadSuppliers();
-            LoadProducts(); // Load products into the new ComboBox
+            LoadProducts(); 
             dpPurchaseDate.SelectedDate = DateTime.Now;
-            UpdateTotalAmount(); // Initial update
+            UpdateTotalAmount(); 
         }
 
         private void LoadSuppliers()
@@ -39,7 +39,6 @@ namespace SimpleLoginWPF
                             DataTable suppliersTable = new DataTable();
                             suppliersTable.Load(reader);
                             cmbSuppliers.ItemsSource = suppliersTable.DefaultView;
-                            // DisplayMemberPath and SelectedValuePath are set in XAML
                         }
                     }
                 }
@@ -57,8 +56,7 @@ namespace SimpleLoginWPF
                 using (var conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    // Assuming 'products' table has 'product_id', 'product_name', and 'price'
-                    var query = "SELECT product_id, product_name, price FROM products WHERE quantity > 0 ORDER BY product_name"; // Or any other criteria
+                    var query = "SELECT product_id, product_name, price FROM products WHERE quantity > 0 ORDER BY product_name"; 
                     using (var cmd = new MySqlCommand(query, conn))
                     {
                         using (var reader = cmd.ExecuteReader())
@@ -66,7 +64,6 @@ namespace SimpleLoginWPF
                             DataTable productsTable = new DataTable();
                             productsTable.Load(reader);
                             cmbProducts.ItemsSource = productsTable.DefaultView;
-                            // DisplayMemberPath and SelectedValuePath are set in XAML
                         }
                     }
                 }
@@ -83,7 +80,6 @@ namespace SimpleLoginWPF
             {
                 try
                 {
-                    // Ensure the 'price' column exists and is of a numeric type
                     currentProductPrice = Convert.ToDecimal(selectedProduct["price"]);
                     txtUnitPriceDisplay.Text = $"Rs {currentProductPrice:F2}";
                 }
@@ -120,10 +116,9 @@ namespace SimpleLoginWPF
             }
         }
 
-        // Optional: Validate TextBox to accept only numbers
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            Regex regex = new Regex("[^0-9]+"); // Regular expression to allow only numbers
+            Regex regex = new Regex("[^0-9]+"); 
             e.Handled = regex.IsMatch(e.Text);
         }
 
@@ -159,7 +154,7 @@ namespace SimpleLoginWPF
                     {
                         try
                         {
-                            // Insert into product_purchases
+
                             var purchaseQuery = @"INSERT INTO product_purchases 
                                                   (supplier_id, product_id, date, status, total_amount)
                                                   VALUES 
@@ -170,12 +165,12 @@ namespace SimpleLoginWPF
                                 purchaseCmd.Parameters.AddWithValue("@productId", productId);
                                 purchaseCmd.Parameters.AddWithValue("@date", dpPurchaseDate.SelectedDate);
                                 purchaseCmd.Parameters.AddWithValue("@status", status);
-                                purchaseCmd.Parameters.AddWithValue("@totalAmount", totalMonetaryAmount); // Monetary total
+                                purchaseCmd.Parameters.AddWithValue("@totalAmount", totalMonetaryAmount); 
 
                                 purchaseCmd.ExecuteNonQuery();
                             }
 
-                            // If status is "Completed", update product quantity
+                            
                             if (status == "Completed")
                             {
                                 UpdateProductQuantityInProductsTable(conn, transaction, productId, quantity);
@@ -201,7 +196,6 @@ namespace SimpleLoginWPF
 
         private void UpdateProductQuantityInProductsTable(MySqlConnection conn, MySqlTransaction transaction, int productId, int purchasedQuantity)
         {
-            // This method assumes you want to ADD the purchased quantity to the existing quantity
             var updateQuery = "UPDATE products SET quantity = quantity + @purchasedQuantity WHERE product_id = @productId";
             using (var updateCmd = new MySqlCommand(updateQuery, conn, transaction))
             {

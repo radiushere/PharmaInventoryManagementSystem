@@ -10,7 +10,8 @@
         Width="1000"
         Background="#F8FAFC"
         FontFamily="Segoe UI"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>

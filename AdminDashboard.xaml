@@ -10,7 +10,8 @@
         Width="1280"
         Background="#F8FAFC"
         FontFamily="Segoe UI"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -21,47 +22,9 @@
             <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
             <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
             <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
-            <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
 
-            <Storyboard x:Key="ButtonHoverEnter">
-                <DoubleAnimation Duration="0:0:0.15"
-                     Storyboard.TargetProperty="RenderTransform.ScaleX"
-                     To="1.03"/>
-                <DoubleAnimation Duration="0:0:0.15"
-                     Storyboard.TargetProperty="RenderTransform.ScaleY"
-                     To="1.03"/>
-                <ColorAnimation Duration="0:0:0.15"
-                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                    To="{StaticResource PrimaryRedLight}"/>
-            </Storyboard>
-
-            <Storyboard x:Key="ButtonHoverExit">
-                <DoubleAnimation Duration="0:0:0.15"
-                     Storyboard.TargetProperty="RenderTransform.ScaleX"
-                     To="1"/>
-                <DoubleAnimation Duration="0:0:0.15"
-                     Storyboard.TargetProperty="RenderTransform.ScaleY"
-                     To="1"/>
-                <!-- Return background to Transparent -->
-                <ColorAnimation Duration="0:0:0.15"
-                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                    To="Transparent"/>
-            </Storyboard>
-
-            <Storyboard x:Key="RippleClick">
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Opacity">
-                    <EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.4"/>
-                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0"/>
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
-                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="150"/>
-                </DoubleAnimationUsingKeyFrames>
-                <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="Height">
-                    <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="150"/>
-                </DoubleAnimationUsingKeyFrames>
-            </Storyboard>
-
-            <Style x:Key="SidebarButtonStyle" TargetType="Button">
+        <Style x:Key="SidebarButtonStyle" TargetType="Button">
                 <Setter Property="Background" Value="White"/>
                 <Setter Property="Foreground" Value="#2D3436"/>
                 <Setter Property="FontSize" Value="16"/>
@@ -78,24 +41,23 @@
                 CornerRadius="0,8,8,0"
                 Padding="8,0"
                 SnapsToDevicePixels="True">
-                                <DockPanel VerticalAlignment="Center">
-                                    <!-- Fix: Properly display image -->
-                                    <Image Source="{TemplateBinding Tag}"
+                            <DockPanel VerticalAlignment="Center">
+                                <Image Source="{TemplateBinding Tag}"
                        Width="24" Height="24"
                        Margin="10,0,5,0"
                        VerticalAlignment="Center"
                        Visibility="Visible"/>
-                                    <!-- Fix: Use ContentPresenter to ensure text shows up -->
+                                  
                                     <ContentPresenter VerticalAlignment="Center"
                                   Margin="5,0,0,0"/>
                                 </DockPanel>
                             </Border>
                             <ControlTemplate.Triggers>
-                                <!-- Hover state -->
+                                
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="CardBorder" Property="Background" Value="#F0F0F0"/>
                                 </Trigger>
-                                <!-- Pressed state -->
+                                
                                 <Trigger Property="IsPressed" Value="True">
                                     <Setter TargetName="CardBorder" Property="Background" Value="#E0E0E0"/>
                                 </Trigger>
@@ -103,7 +65,7 @@
                         </ControlTemplate>
                     </Setter.Value>
                 </Setter>
-                <!-- Subtle drop shadow -->
+ 
                 <Setter Property="Effect">
                     <Setter.Value>
                         <DropShadowEffect BlurRadius="4" ShadowDepth="1" Color="#000000" Opacity="0.1"/>
@@ -364,42 +326,42 @@
                Width="140" Height="100" Margin="20,30"/>
 
                 <!-- Navigation Buttons -->
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Dashboard_Click">
+                <Button x:Name="DashboardButton" Style="{StaticResource SidebarButtonStyle}" Click="Dashboard_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Home.png" Width="22" Height="22" Margin="5,0,15,0"/>
                         <TextBlock Text="Dashboard"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Inventory_Click">
+                <Button x:Name="InventoryButton" Style="{StaticResource SidebarButtonStyle}" Click="Inventory_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Inventory.png" Width="22" Height="22" Margin="5,0,15,0"/>
                         <TextBlock Text="Inventory"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Reports_Click">
+                <Button x:Name="ReportsButton" Style="{StaticResource SidebarButtonStyle}" Click="Reports_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Report.png" Width="22" Height="22" Margin="5,0,15,0"/>
                         <TextBlock Text="Reports"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Partners_Click">
+                <Button x:Name="PartnersButton" Style="{StaticResource SidebarButtonStyle}" Click="Partners_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Suppliers.png" Width="22" Height="22" Margin="5,0,15,0"/>
                         <TextBlock Text="Partners"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}" Click="Orders_Click">
+                <Button x:Name="OrdersButton" Style="{StaticResource SidebarButtonStyle}" Click="Orders_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Order.png" Width="22" Height="22" Margin="5,0,15,0"/>
                         <TextBlock Text="Orders"/>
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}"
+                <Button x:Name="DistributorsButton" Style="{StaticResource SidebarButtonStyle}"
 Click="ManageStore_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Manage Store.png"
@@ -411,7 +373,7 @@ Click="ManageStore_Click">
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SidebarButtonStyle}"
+                <Button x:Name="PurchasesButton" Style="{StaticResource SidebarButtonStyle}"
                     Click="Purchases_Click">
                     <StackPanel Orientation="Horizontal">
                     <Image Source="/Assets/Inventory.png"
@@ -423,7 +385,7 @@ Click="ManageStore_Click">
                     </StackPanel>
                 </Button>
 
-                <Button Style="{StaticResource SelectedSidebarButtonStyle}"
+                <Button x:Name="AdminButton" Style="{StaticResource SelectedSidebarButtonStyle}"
 Click="Admin_Click">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="/Assets/Suppliers.png"
@@ -448,7 +410,7 @@ Click="Admin_Click">
                     </StackPanel>
                 </Button>
 
-                <!-- Other buttons and logout -->
+
             </StackPanel>
         </Border>
 
@@ -460,7 +422,7 @@ Click="Admin_Click">
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Admin Actions -->
+            
             <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,20">
                 <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
                     <Grid>
@@ -502,6 +464,11 @@ Click="Admin_Click">
                         <ComboBoxItem Content="Product Specialist"/>
                         <ComboBoxItem Content="Warehouse Manager"/>
                     </ComboBox>
+                    
+                    <Button Style="{StaticResource AddMoreButton}"
+    Content="↻"
+    Margin="10,0"
+    Click="Refresh_Click" Background="#FFB30000"/>
 
                     <Button Style="{StaticResource AddMoreButton}" Content="+" 
                 Margin="10,0" Click="AddOrder_Click" ToolTip="Create New Order"/>

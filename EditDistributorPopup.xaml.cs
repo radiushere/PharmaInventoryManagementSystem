@@ -189,5 +189,10 @@ namespace SimpleLoginWPF
         {
             this.Close();
         }
+
+        private void cmbDistributorType_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

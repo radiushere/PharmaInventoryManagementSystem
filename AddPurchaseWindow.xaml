@@ -29,25 +29,9 @@
     <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
     <SolidColorBrush x:Key="LightBackgroundBrush" Color="{StaticResource LightBackground}"/>
     <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
-    <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
+        <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
 
-    <Storyboard x:Key="ButtonHoverEnter">
-        <DoubleAnimation Duration="0:0:0.15" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1.03"/>
-        <DoubleAnimation Duration="0:0:0.15" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1.03"/>
-        <ColorAnimation Duration="0:0:0.15"
-           Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-           To="{StaticResource PrimaryRedLight}"/>
-    </Storyboard>
-
-    <Storyboard x:Key="ButtonHoverExit">
-        <DoubleAnimation Duration="0:0:0.15" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1"/>
-        <DoubleAnimation Duration="0:0:0.15" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1"/>
-        <ColorAnimation Duration="0:0:0.15"
-           Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-           To="Transparent"/>
-    </Storyboard>
-
-    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Style x:Key="PrimaryButton" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="FontWeight" Value="SemiBold"/>

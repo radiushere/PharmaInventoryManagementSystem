@@ -1,15 +1,16 @@
-﻿using System;
+﻿using LiveCharts;
+using LiveCharts.Wpf;
+using Microsoft.Win32;
+using MySql.Data.MySqlClient;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using MySql.Data.MySqlClient;
-using LiveCharts;
-using LiveCharts.Wpf;
-using System.IO; // Required for file operations
-using Microsoft.Win32; // Required for SaveFileDialog
 
 namespace SimpleLoginWPF
 {
@@ -17,7 +18,6 @@ namespace SimpleLoginWPF
     {
         private const string DB_CONNECTION_STRING = "server=localhost;database=learndb;user=root;password=doll9876;SslMode=None;";
 
-        // Data Models (Keep these as they are clean and describe your data)
         public class SalesByPeriod
         {
             public string Period { get; set; }
@@ -39,7 +39,87 @@ namespace SimpleLoginWPF
             public string Status { get; set; }
         }
 
-        // LiveCharts Properties
+        private ReportData LoadReportData()
+        {
+            var reportData = new ReportData();
+
+            string connectionString = "server=localhost;database=learndb;user=root;password=doll9876;SslMode=None;";
+
+            using (var connection = new MySqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (var cmd = new MySqlCommand(@"SELECT IFNULL(SUM(total_amount), 0) as total_revenue, IFNULL(SUM(quantity), 0) as total_items_sold FROM sales;", connection))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        reportData.TotalSalesRevenue = reader.GetDecimal("total_revenue");
+                        reportData.TotalItemsSold = reader.GetInt32("total_items_sold");
+                    }
+                }
+
+                using (var cmd = new MySqlCommand(@"SELECT IFNULL(SUM(total_amount),0) as total_purchase_cost FROM product_purchases;", connection))
+                {
+                    var totalPurchaseCost = Convert.ToDecimal(cmd.ExecuteScalar());
+                    reportData.TotalProfit = reportData.TotalSalesRevenue - totalPurchaseCost;
+                }
+
+                using (var cmd = new MySqlCommand(@"SELECT IFNULL(SUM(price * quantity),0) as total_inventory_value FROM products;", connection))
+                {
+                    reportData.TotalInventoryValue = Convert.ToDecimal(cmd.ExecuteScalar());
+                }
+
+                using (var cmd = new MySqlCommand(@"SELECT s.sale_date, p.product_name, s.quantity, s.total_amount FROM sales s LEFT JOIN products p ON s.product_id = p.product_id ORDER BY s.sale_date DESC LIMIT 10;", connection))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reportData.RecentSales.Add(new Sale
+                        {
+                            SaleDate = reader.IsDBNull(0) ? DateTime.MinValue : reader.GetDateTime(0),
+                            ProductName = reader.IsDBNull(1) ? "N/A" : reader.GetString(1),
+                            Quantity = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
+                            TotalAmount = reader.IsDBNull(3) ? 0m : reader.GetDecimal(3),
+                        });
+                    }
+                }
+
+                using (var cmd = new MySqlCommand(@"SELECT n.date, p.product_name, n.message, n.status FROM notifications n LEFT JOIN products p ON n.product_id = p.product_id ORDER BY n.date DESC LIMIT 10;", connection))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reportData.InventoryAlerts.Add(new NotificationAlert
+                        {
+                            Date = reader.IsDBNull(0) ? DateTime.MinValue : reader.GetDateTime(0),
+                            ProductName = reader.IsDBNull(1) ? "N/A" : reader.GetString(1),
+                            Message = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                            Status = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                        });
+                    }
+                }
+
+                using (var cmd = new MySqlCommand(@"SELECT name, region, service_area, distributor_type, email FROM distributors ORDER BY dist_id DESC LIMIT 10;", connection))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        reportData.Distributors.Add(new Distributor
+                        {
+                            Name = reader.IsDBNull(0) ? "N/A" : reader.GetString(0),
+                            Region = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                            ServiceArea = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                            DistributorType = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                            Email = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                        });
+                    }
+                }
+            }
+
+            return reportData;
+        }
+
         public SeriesCollection SalesSeries { get; set; }
 
         private string[] _chartLabels;
@@ -55,7 +135,6 @@ namespace SimpleLoginWPF
 
         public Func<double, string> Formatter { get; set; }
 
-        // DataGrid ObservableCollections
         public ObservableCollection<ProductSale> RecentSalesData { get; set; }
         public ObservableCollection<InventoryStatus> InventoryAlertsData { get; set; }
 
@@ -63,6 +142,7 @@ namespace SimpleLoginWPF
         {
             SalesSeries = new SeriesCollection();
             InitializeComponent();
+            QuestPDF.Settings.License = LicenseType.Community;
             AccessLevelControl();
             DataContext = this;
             Formatter = value => value.ToString("N0");
@@ -136,7 +216,6 @@ namespace SimpleLoginWPF
                     break;
             }
         }
-
 
         private void Reports_Loaded(object sender, RoutedEventArgs e)
         {
@@ -361,91 +440,248 @@ namespace SimpleLoginWPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        // --- NEW LOGIC FOR DOWNLOAD REPORT BUTTON ---
         private void DownloadReport_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                // Create a SaveFileDialog to allow the user to choose the save location and filename
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
-                    FileName = $"Sales_Report_{DateTime.Now:yyyyMMdd_HHmmss}.txt", // Default filename
-                    DefaultExt = ".txt", // Default file extension
-                    Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*" // Filter for file types
+                    FileName = $"Full_Sales_Report_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
+                    DefaultExt = ".pdf",
+                    Filter = "PDF files (*.pdf)|*.pdf|All files (*.*)|*.*"
                 };
 
-                if (saveFileDialog.ShowDialog() == true) // If the user clicks Save
+                if (saveFileDialog.ShowDialog() != true) return;
+
+                string filePath = saveFileDialog.FileName;
+                var reportData = LoadReportData();
+
+                var document = Document.Create(container =>
                 {
-                    string filePath = saveFileDialog.FileName;
-
-                    // Build the report content
-                    System.Text.StringBuilder reportContent = new System.Text.StringBuilder();
-
-                    reportContent.AppendLine("--- Sales Report ---");
-                    reportContent.AppendLine($"Generated On: {DateTime.Now}");
-                    reportContent.AppendLine("--------------------");
-                    reportContent.AppendLine();
-
-                    // Add Metric Card Data
-                    reportContent.AppendLine("METRIC OVERVIEW:");
-                    reportContent.AppendLine($"Gross Revenue: {GrossProfitValue.Text}");
-                    reportContent.AppendLine($"Total Profit: {NetProfitValue.Text}");
-                    reportContent.AppendLine($"Total Items Sold: {TotalSalesValue.Text}");
-                    reportContent.AppendLine($"Current Inventory Value: {InventoryValue.Text}");
-                    reportContent.AppendLine();
-
-                    // Add Recent Sales Data
-                    if (RecentSalesData.Any())
+                    container.Page(page =>
                     {
-                        reportContent.AppendLine("RECENT SALES:");
-                        reportContent.AppendLine("Sale Date    | Product Name           | Qty | Total Amount");
-                        reportContent.AppendLine("---------------------------------------------------------");
-                        foreach (var sale in RecentSalesData)
+                        page.Margin(30);
+                        page.Size(PageSizes.A4);
+                        page.PageColor(Colors.White);
+                        page.DefaultTextStyle(x => x.FontSize(12).FontColor(Colors.Black));
+
+                        // Define colors for the red theme
+                        Color darkRed = Color.FromRGB(139, 0, 0);
+                        Color mediumRed = Color.FromRGB(205, 38, 38);
+                        Color lightRed = Color.FromRGB(255, 165, 165);
+
+                        // Header
+                        page.Header().Height(100).Row(row =>
                         {
-                            reportContent.AppendLine($"{sale.SaleDate:yyyy-MM-dd} | {sale.ProductName,-22} | {sale.Quantity,-3} | {sale.TotalAmount,12:N2}");
-                        }
-                        reportContent.AppendLine();
-                    }
-                    else
-                    {
-                        reportContent.AppendLine("RECENT SALES: No recent sales data available.");
-                        reportContent.AppendLine();
-                    }
+                            row.RelativeColumn().AlignLeft().Height(80).Image("C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Assets\\aliflogo-removebg-preview.png", ImageScaling.FitArea);
+                            row.RelativeColumn().AlignCenter().Text("Full Sales & Inventory Report").FontSize(22).Bold().FontColor(darkRed);
+                            row.RelativeColumn().AlignRight().Text(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")).FontSize(10);
+                        });
 
-
-                    // Add Inventory Alerts Data
-                    if (InventoryAlertsData.Any())
-                    {
-                        reportContent.AppendLine("INVENTORY ALERTS:");
-                        reportContent.AppendLine("Product Name           | Current Stock | Status");
-                        reportContent.AppendLine("-------------------------------------------------");
-                        foreach (var alert in InventoryAlertsData)
+                        // Content
+                        page.Content().PaddingVertical(10).Column(col =>
                         {
-                            reportContent.AppendLine($"{alert.ProductName,-22} | {alert.Quantity,-13} | {alert.Status}");
-                        }
-                        reportContent.AppendLine();
-                    }
-                    else
-                    {
-                        reportContent.AppendLine("INVENTORY ALERTS: No inventory alerts.");
-                        reportContent.AppendLine();
-                    }
+                            col.Spacing(10);
 
-                    // Write the content to the chosen file
-                    File.WriteAllText(filePath, reportContent.ToString());
+                            // Summary Metrics Section
+                            col.Item().Text("SUMMARY METRICS").SemiBold().FontSize(16).FontColor(darkRed);
+                            col.Item().Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.ConstantColumn(150);
+                                    columns.RelativeColumn();
+                                });
 
-                    MessageBox.Show($"Report successfully saved to:\n{filePath}", "Report Downloaded",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
-                }
+                                table.Header(header =>
+                                {
+                                    header.Cell().Text("Metric").FontColor(darkRed);
+                                    header.Cell().Text("Value").FontColor(darkRed);
+                                });
+
+                                table.Cell().Text("Total Sales Revenue:").FontColor(darkRed);
+                                table.Cell().Text($"{reportData.TotalSalesRevenue:C}");
+
+                                table.Cell().Text("Total Profit:").FontColor(darkRed);
+                                table.Cell().Text($"{reportData.TotalProfit:C}");
+
+                                table.Cell().Text("Total Items Sold:").FontColor(darkRed);
+                                table.Cell().Text(reportData.TotalItemsSold.ToString());
+
+                                table.Cell().Text("Total Inventory Value:").FontColor(darkRed);
+                                table.Cell().Text($"{reportData.TotalInventoryValue:C}");
+                            });
+
+                            // Recent Sales Section
+                            col.Item().Text("RECENT SALES").SemiBold().FontSize(16).FontColor(darkRed);
+                            if (reportData.RecentSales.Count == 0)
+                            {
+                                col.Item().Text("No recent sales data available.");
+                            }
+                            else
+                            {
+                                col.Item().Table(table =>
+                                {
+                                    table.ColumnsDefinition(columns =>
+                                    {
+                                        columns.RelativeColumn(2);
+                                        columns.RelativeColumn(4);
+                                        columns.RelativeColumn(1);
+                                        columns.RelativeColumn(2);
+                                    });
+
+                                    table.Header(header =>
+                                    {
+                                        header.Cell().Text("Sale Date").FontColor(darkRed);
+                                        header.Cell().Text("Product Name").FontColor(darkRed);
+                                        header.Cell().AlignRight().Text("Qty").FontColor(darkRed);
+                                        header.Cell().AlignRight().Text("Total Amount").FontColor(darkRed);
+                                    });
+
+                                    foreach (var sale in reportData.RecentSales)
+                                    {
+                                        table.Cell().Text(sale.SaleDate.ToString("yyyy-MM-dd"));
+                                        table.Cell().Text(sale.ProductName ?? "N/A");
+                                        table.Cell().AlignRight().Text(sale.Quantity.ToString());
+                                        table.Cell().AlignRight().Text($"{sale.TotalAmount:C}");
+                                    }
+                                });
+                            }
+
+                            // Inventory Alerts Section
+                            col.Item().Text("INVENTORY ALERTS").SemiBold().FontSize(16).FontColor(darkRed);
+                            if (reportData.InventoryAlerts.Count == 0)
+                            {
+                                col.Item().Text("No inventory alerts.");
+                            }
+                            else
+                            {
+                                col.Item().Table(table =>
+                                {
+                                    table.ColumnsDefinition(columns =>
+                                    {
+                                        columns.RelativeColumn(4);
+                                        columns.RelativeColumn(3);
+                                        columns.RelativeColumn(6);
+                                        columns.RelativeColumn(2);
+                                    });
+
+                                    table.Header(header =>
+                                    {
+                                        header.Cell().Text("Product Name").FontColor(darkRed);
+                                        header.Cell().Text("Date").FontColor(darkRed);
+                                        header.Cell().Text("Message").FontColor(darkRed);
+                                        header.Cell().Text("Status").FontColor(darkRed);
+                                    });
+
+                                    foreach (var alert in reportData.InventoryAlerts)
+                                    {
+                                        table.Cell().Text(alert.ProductName ?? "N/A");
+                                        table.Cell().Text(alert.Date.ToString("yyyy-MM-dd"));
+                                        table.Cell().Text(alert.Message ?? "");
+                                        table.Cell().Text(alert.Status ?? "");
+                                    }
+                                });
+                            }
+
+                            // Distributors Section
+                            col.Item().Text("DISTRIBUTORS").SemiBold().FontSize(16).FontColor(darkRed);
+                            if (reportData.Distributors.Count == 0)
+                            {
+                                col.Item().Text("No distributor data.");
+                            }
+                            else
+                            {
+                                col.Item().Table(table =>
+                                {
+                                    table.ColumnsDefinition(columns =>
+                                    {
+                                        columns.RelativeColumn(4);
+                                        columns.RelativeColumn(3);
+                                        columns.RelativeColumn(4);
+                                        columns.RelativeColumn(3);
+                                        columns.RelativeColumn(5);
+                                    });
+
+                                    table.Header(header =>
+                                    {
+                                        header.Cell().Text("Name").FontColor(darkRed);
+                                        header.Cell().Text("Region").FontColor(darkRed);
+                                        header.Cell().Text("Service Area").FontColor(darkRed);
+                                        header.Cell().Text("Type").FontColor(darkRed);
+                                        header.Cell().Text("Email").FontColor(darkRed);
+                                    });
+
+                                    foreach (var dist in reportData.Distributors)
+                                    {
+                                        table.Cell().Text(dist.Name ?? "N/A");
+                                        table.Cell().Text(dist.Region ?? "");
+                                        table.Cell().Text(dist.ServiceArea ?? "");
+                                        table.Cell().Text(dist.DistributorType ?? "");
+                                        table.Cell().Text(dist.Email ?? "");
+                                    }
+                                });
+                            }
+
+                            // Signature Placeholder
+                            col.Item().PaddingTop(40).Column(column =>
+                            {
+                                column.Item().LineHorizontal(1).LineColor(darkRed);
+                                column.Item().PaddingTop(10).Text("Authorized Signature").FontColor(darkRed).FontSize(12).Bold();
+                            });
+                        });
+
+                    });
+                });
+
+                document.GeneratePdf(filePath);
+                MessageBox.Show($"PDF report generated successfully:\n{filePath}", "Report Generated", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error generating or saving report: {ex.Message}", "Report Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Failed to generate report: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        // --- Navigation Handlers (No changes needed here) ---
+
+
+        class ReportData
+        {
+            public decimal TotalSalesRevenue { get; set; }
+            public decimal TotalProfit { get; set; }
+            public int TotalItemsSold { get; set; }
+            public decimal TotalInventoryValue { get; set; }
+
+            public List<Sale> RecentSales { get; set; } = new List<Sale>();
+            public List<NotificationAlert> InventoryAlerts { get; set; } = new List<NotificationAlert>();
+            public List<Distributor> Distributors { get; set; } = new List<Distributor>();
+        }
+
+        class Sale
+        {
+            public DateTime SaleDate { get; set; }
+            public string ProductName { get; set; } = "";
+            public int Quantity { get; set; }
+            public decimal TotalAmount { get; set; }
+        }
+
+        class NotificationAlert
+        {
+            public string ProductName { get; set; } = "";
+            public DateTime Date { get; set; }
+            public string Message { get; set; } = "";
+            public string Status { get; set; } = "";
+        }
+
+        class Distributor
+        {
+            public string Name { get; set; } = "";
+            public string Region { get; set; } = "";
+            public string ServiceArea { get; set; } = "";
+            public string DistributorType { get; set; } = "";
+            public string Email { get; set; } = "";
+        }
+
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
             var page = new Dashboard();
@@ -511,6 +747,11 @@ namespace SimpleLoginWPF
             var adminPage = new AdminDashboard();
             adminPage.Show();
             this.Close();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadReportData();
         }
     }
 }

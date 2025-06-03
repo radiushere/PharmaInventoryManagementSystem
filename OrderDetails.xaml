@@ -9,7 +9,8 @@
         Width="1000"
         Background="#F8FAFC"
         FontFamily="Segoe UI"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
 
     <Window.Resources>
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="#B30000"/>
@@ -173,192 +174,199 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Border Background="White" BorderThickness="1"
+BorderBrush="{StaticResource PrimaryRedBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
-            <DockPanel>
-                <Button DockPanel.Dock="Right"
+            <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="25,15">
+                <DockPanel>
+                    <Button DockPanel.Dock="Right"
                     Content="← Back to Orders"
                     Style="{StaticResource SecondaryButton}"
                     Background="White"
                     Click="BackButton_Click"/>
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="/Assets/Order.png" Width="32" Height="32" Margin="0,0,15,0"/>
-                    <TextBlock Text="Order Details"
+                    <StackPanel Orientation="Horizontal">
+                        <Image Source="/Assets/Order.png" Width="32" Height="32" Margin="0,0,15,0"/>
+                        <TextBlock Text="Order Details"
                            FontSize="24"
                            FontWeight="SemiBold"
                            Foreground="White"/>
-                </StackPanel>
-            </DockPanel>
-        </Border>
+                    </StackPanel>
+                </DockPanel>
+            </Border>
 
-        <ScrollViewer Grid.Row="1" Padding="25">
-            <StackPanel>
-                <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,15">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+            <ScrollViewer Grid.Row="1" Padding="25">
+                <StackPanel>
+                    <Border Background="White" CornerRadius="8" Padding="20" Margin="0,0,0,15">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="ORDER ID" FontWeight="Bold" Foreground="#666"/>
-                            <TextBlock x:Name="OrderIdText" FontSize="16"/>
-                        </StackPanel>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="ORDER ID" FontWeight="Bold" Foreground="#666"/>
+                                <TextBlock x:Name="OrderIdText" FontSize="16"/>
+                            </StackPanel>
 
-                        <StackPanel Grid.Column="1">
-                            <TextBlock Text="TOTAL" FontWeight="Bold" Foreground="#666"/>
-                            <TextBlock x:Name="TotalAmountText" FontSize="16" Foreground="{StaticResource PrimaryRedBrush}"/>
-                        </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="TOTAL" FontWeight="Bold" Foreground="#666"/>
+                                <TextBlock x:Name="TotalAmountText" FontSize="16" Foreground="{StaticResource PrimaryRedBrush}"/>
+                            </StackPanel>
 
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="STATUS" FontWeight="Bold" Foreground="#666"/>
-                            <TextBlock x:Name="StatusText" FontSize="16" Foreground="#4CAF50" FontWeight="SemiBold"/>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="STATUS" FontWeight="Bold" Foreground="#666"/>
+                                <TextBlock x:Name="StatusText" FontSize="16" Foreground="#4CAF50" FontWeight="SemiBold"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
 
-                <DataGrid x:Name="OrderItemsGrid"
+                    <DataGrid x:Name="OrderItemsGrid"
                       AutoGenerateColumns="False"
                       IsReadOnly="True"
                       HeadersVisibility="Column"
                       Margin="0,0,0,15" Style="{StaticResource DataGridMain}">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Product" Binding="{Binding ProductName}" Width="*"/>
-                        <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="150"/>
-                        <DataGridTextColumn Header="Total Price" Binding="{Binding Price}" Width="150"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </StackPanel>
-        </ScrollViewer>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Product" Binding="{Binding ProductName}" Width="*"/>
+                            <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="150"/>
+                            <DataGridTextColumn Header="Total Price" Binding="{Binding Price,StringFormat='Rs. {0:#,##0.00}'}" Width="150"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </ScrollViewer>
 
-        <Border Grid.Row="2" Background="White" Padding="25">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Generate Invoice"
+            <Border Grid.Row="2" Background="White" Padding="25">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Generate Invoice"
                     Style="{StaticResource PrimaryButton}"
                     Click="GenerateInvoice_Click"/>
-                <Button Content="Edit Order"
+                    <Button Content="Edit Order"
                     Style="{StaticResource PrimaryButton}"
                     Click="EditOrder_Click" Margin="10,0,0,0"/>
-                <Button Content="Close"
+                    <Button Content="Close"
                     Style="{StaticResource SecondaryButton}"
                     Margin="15,0,0,0"
                     Click="CloseButton_Click"/>
-            </StackPanel>
-        </Border>
-
-        
-        <Border x:Name="InvoicePopup" Visibility="Collapsed"
-            Background="#80000000" Panel.ZIndex="999" Grid.RowSpan="3">
-            <Border Background="White" CornerRadius="8" Padding="20"
-                Width="400" Height="300">
-                <StackPanel>
-                    <TextBlock Text="Download Invoice" FontSize="18" FontWeight="Bold"
-                           Foreground="{StaticResource PrimaryRedBrush}"/>
-                    <Button Content="Download Invoice"
-                        Style="{StaticResource PrimaryButton}"
-                        Margin="0,20" Click="DownloadInvoice_Click"/>
-                    <Button Content="Cancel"
-                        Style="{StaticResource SecondaryButton}"
-                        Click="CloseInvoicePopup_Click"/>
                 </StackPanel>
             </Border>
-        </Border>
 
-        <!-- Edit Order Popup -->
-        <Border x:Name="EditOrderPopup" Visibility="Collapsed"
+
+            <Border x:Name="InvoicePopup" Visibility="Collapsed"
+            Background="#80000000" Panel.ZIndex="999" Grid.RowSpan="3">
+                <Border Background="White" CornerRadius="8" Padding="20"
+                Width="400" Height="300">
+                    <StackPanel>
+                        
+                        <TextBlock Text="Download Invoice" FontSize="18" FontWeight="Bold"
+                           Foreground="{StaticResource PrimaryRedBrush}"/>
+                        
+                        <Button Content="Download Invoice"
+                        Style="{StaticResource PrimaryButton}"
+                        Margin="0,20" Click="DownloadInvoice_Click"/>
+                        
+                        <Button Content="Cancel"
+                        Style="{StaticResource SecondaryButton}"
+                        Click="CloseInvoicePopup_Click"/>
+                        
+                    </StackPanel>
+                </Border>
+            </Border>
+
+            <!-- Edit Order Popup -->
+            <Border x:Name="EditOrderPopup" Visibility="Collapsed"
         Background="#80000000" Panel.ZIndex="999" Grid.RowSpan="3">
-            <Border Background="White" CornerRadius="8" Padding="25"
+                <Border Background="White" CornerRadius="8" Padding="25"
             Width="500" MaxHeight="600" VerticalAlignment="Center">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <!-- Header -->
-                    <TextBlock Grid.Row="0" Text="Edit Order" FontSize="20" FontWeight="Bold"
+                        <!-- Header -->
+                        <TextBlock Grid.Row="0" Text="Edit Order" FontSize="20" FontWeight="Bold"
                        Foreground="{StaticResource PrimaryRedBrush}" Margin="0,0,0,15"/>
 
-                    <!-- Content -->
-                    <ScrollViewer Grid.Row="1" MaxHeight="400" VerticalScrollBarVisibility="Auto">
-                        <Grid Margin="0,0,0,10">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
+                        <!-- Content -->
+                        <ScrollViewer Grid.Row="1" MaxHeight="400" VerticalScrollBarVisibility="Auto">
+                            <Grid Margin="0,0,0,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
 
-                            <!-- Product -->
-                            <StackPanel Grid.Row="0" Margin="0,0,0,10">
-                                <TextBlock Text="Product" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="cmbEditProducts" Padding="8"/>
-                            </StackPanel>
+                                <!-- Product -->
+                                <StackPanel Grid.Row="0" Margin="0,0,0,10">
+                                    <TextBlock Text="Product" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <ComboBox x:Name="cmbEditProducts" Padding="8"/>
+                                </StackPanel>
 
-                            <!-- Quantity -->
-                            <StackPanel Grid.Row="1" Margin="0,0,0,10">
-                                <TextBlock Text="Quantity" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <TextBox x:Name="QuantityTextBox" Style="{StaticResource EditTextBox}" Padding="6"/>
-                            </StackPanel>
+                                <!-- Quantity -->
+                                <StackPanel Grid.Row="1" Margin="0,0,0,10">
+                                    <TextBlock Text="Quantity" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="QuantityTextBox" Style="{StaticResource EditTextBox}" Padding="6"/>
+                                </StackPanel>
 
-                            <!-- Price -->
-                            <StackPanel Grid.Row="2" Margin="0,0,0,10">
-                                <TextBlock Text="Price ($)" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <TextBox x:Name="PriceTextBox" Style="{StaticResource EditTextBox}" IsReadOnly="True" Padding="6"/>
-                            </StackPanel>
+                                <!-- Price -->
+                                <StackPanel Grid.Row="2" Margin="0,0,0,10">
+                                    <TextBlock Text="Price ($)" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="PriceTextBox" Style="{StaticResource EditTextBox}" IsReadOnly="True" Padding="6"/>
+                                </StackPanel>
 
-                            <!-- Order Date -->
-                            <StackPanel Grid.Row="3" Margin="0,0,0,10">
-                                <TextBlock Text="Order Date" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="dpEditOrderDate" Padding="4"/>
-                            </StackPanel>
+                                <!-- Order Date -->
+                                <StackPanel Grid.Row="3" Margin="0,0,0,10">
+                                    <TextBlock Text="Order Date" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <DatePicker x:Name="dpEditOrderDate" Padding="4"/>
+                                </StackPanel>
 
-                            <!-- Delivery Date -->
-                            <StackPanel Grid.Row="4" Margin="0,0,0,10">
-                                <TextBlock Text="Delivery Date" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <DatePicker x:Name="dpEditDeliveryDate" Padding="4"/>
-                            </StackPanel>
+                                <!-- Delivery Date -->
+                                <StackPanel Grid.Row="4" Margin="0,0,0,10">
+                                    <TextBlock Text="Delivery Date" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <DatePicker x:Name="dpEditDeliveryDate" Padding="4"/>
+                                </StackPanel>
 
-                            <!-- Status -->
-                            <StackPanel Grid.Row="5" Margin="0,0,0,10">
-                                <TextBlock Text="Status" FontWeight="SemiBold" Margin="0,0,0,5"/>
-                                <ComboBox x:Name="cmbEditStatus" Padding="8">
-                                    <ComboBoxItem Content="Pending"/>
-                                    <ComboBoxItem Content="Processing"/>
-                                    <ComboBoxItem Content="Completed"/>
-                                    <ComboBoxItem Content="Cancelled"/>
-                                </ComboBox>
-                            </StackPanel>
-                        </Grid>
-                    </ScrollViewer>
+                                <!-- Status -->
+                                <StackPanel Grid.Row="5" Margin="0,0,0,10">
+                                    <TextBlock Text="Status" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <ComboBox x:Name="cmbEditStatus" Padding="8">
+                                        <ComboBoxItem Content="Pending"/>
+                                        <ComboBoxItem Content="Processing"/>
+                                        <ComboBoxItem Content="Completed"/>
+                                        <ComboBoxItem Content="Cancelled"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
 
-                    <!-- Footer Buttons -->
-                    <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
-                        <Button Content="Save Changes"
+                        <!-- Footer Buttons -->
+                        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,15,0,0">
+                            <Button Content="Save Changes"
                         Style="{StaticResource PrimaryButton}"
                         Click="SaveOrderChanges_Click"/>
-                        <Button Content="Cancel"
+                            <Button Content="Cancel"
                         Style="{StaticResource SecondaryButton}"
                         Margin="10,0,0,0"
                         Click="CloseEditPopup_Click"/>
-                    </StackPanel>
-                </Grid>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </Border>
-        </Border>
-        
-    </Grid>
+
+        </Grid>
+    </Border>
 
 </Window>

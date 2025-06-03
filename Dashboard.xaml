@@ -10,7 +10,8 @@
         Height="800" Width="1200"
         Background="#f5f5f7"
         FontFamily="Segoe UI"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -136,7 +137,7 @@
             </Setter>
         </Style>
 
-        <!-- Stats Box Style (unchanged) -->
+        <!-- Stats Box Style -->
         <Style x:Key="StatsBoxStyle" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="8"/>
@@ -201,23 +202,22 @@
         Padding="8,0"
         SnapsToDevicePixels="True">
                             <DockPanel VerticalAlignment="Center">
-                                <!-- Fix: Properly display image -->
                                 <Image Source="{TemplateBinding Tag}"
                Width="24" Height="24"
                Margin="10,0,5,0"
                VerticalAlignment="Center"
                Visibility="Visible"/>
-                                <!-- Fix: Use ContentPresenter to ensure text shows up -->
+                                
                                 <ContentPresenter VerticalAlignment="Center"
                           Margin="5,0,0,0"/>
                             </DockPanel>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <!-- Hover state -->
+                            
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter TargetName="CardBorder" Property="Background" Value="#F0F0F0"/>
                             </Trigger>
-                            <!-- Pressed state -->
+                          
                             <Trigger Property="IsPressed" Value="True">
                                 <Setter TargetName="CardBorder" Property="Background" Value="#E0E0E0"/>
                             </Trigger>
@@ -225,7 +225,7 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <!-- Subtle drop shadow -->
+           
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect BlurRadius="4" ShadowDepth="1" Color="#000000" Opacity="0.1"/>
@@ -462,7 +462,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <!-- Top Search and Profile Section -->
+           
             <Grid Grid.Row="0" Height="60" VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -470,6 +470,10 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button Style="{StaticResource AddMoreButton}"
+                        Content="↻"
+                        Margin="10,0"
+                        Click="Refresh_Click" Background="#FFB30000"/>
                     <Button Style="{StaticResource AddMoreButton}"
                         Content="👤"
                         Margin="10,0"
@@ -485,9 +489,6 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Header -->
-
-                    <!-- Main Content -->
                     <ScrollViewer Grid.Row="1" Margin="0,10,0,0" VerticalScrollBarVisibility="Auto">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -497,14 +498,12 @@
                                 <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
 
-                            <!-- First Row: Stats -->
                             <Grid Grid.Row="0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="1.2*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Sales Overview Section -->
                                 <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -514,7 +513,6 @@
 
                                         <TextBlock Text="Sales Overview" Style="{StaticResource TitleStyle}"/>
 
-                                        <!-- Sales Overview Content -->
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -523,7 +521,6 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Sales -->
                                             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Report.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -532,7 +529,6 @@
                                                 <TextBlock Text="Sales" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- Revenue -->
                                             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Order.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -541,7 +537,6 @@
                                                 <TextBlock Text="Revenue" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- Profit -->
                                             <StackPanel Grid.Column="2" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Manage Store.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -550,7 +545,6 @@
                                                 <TextBlock Text="Profit" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- Cost -->
                                             <StackPanel Grid.Column="3" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Order.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -571,15 +565,12 @@
                                         </Grid.RowDefinitions>
 
                                         <TextBlock Text="Inventory Summary" Style="{StaticResource TitleStyle}"/>
-
-                                        <!-- Inventory Metrics -->
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Quantity in Hand -->
                                             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Manage Store.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -588,7 +579,6 @@
                                                 <TextBlock Text="Quantity in Hand" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- To be received -->
                                             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Report.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -600,15 +590,13 @@
                                     </Grid>
                                 </Border>
                             </Grid>
-
-                            <!-- Second Row: Purchase Overview and Product Summary -->
+                            
                             <Grid Grid.Row="1" Margin="0,10,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="1.2*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Purchase Overview Card -->
                                 <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -618,7 +606,6 @@
 
                                         <TextBlock Text="Purchase Overview" Style="{StaticResource TitleStyle}"/>
 
-                                        <!-- Purchase Overview Content -->
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -627,7 +614,6 @@
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Purchase -->
                                             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Manage Store.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -635,8 +621,7 @@
                                                 <TextBlock Text="{Binding Purchase}" Style="{StaticResource StatValueStyle}"/>
                                                 <TextBlock Text="Purchase" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
-
-                                            <!-- Cost -->
+                                            
                                             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Report.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -645,7 +630,6 @@
                                                 <TextBlock Text="Cost" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- Cancel -->
                                             <StackPanel Grid.Column="2" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Order.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -654,7 +638,6 @@
                                                 <TextBlock Text="Cancel" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- Return -->
                                             <StackPanel Grid.Column="3" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Logout.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -676,14 +659,13 @@
 
                                         <TextBlock Text="Product Summary" Style="{StaticResource TitleStyle}"/>
 
-                                        <!-- Product Metrics -->
+                                        
                                         <Grid Grid.Row="1">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
 
-                                            <!-- Number of Suppliers -->
                                             <StackPanel Grid.Column="0" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Suppliers.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -692,7 +674,6 @@
                                                 <TextBlock Text="Number of Distributors" Style="{StaticResource StatLabelStyle}"/>
                                             </StackPanel>
 
-                                            <!-- Number of Categories -->
                                             <StackPanel Grid.Column="1" HorizontalAlignment="Center">
                                                 <Border Style="{StaticResource IconContainer}">
                                                     <Image Source="/Assets/Order.png" Width="24" Height="24" RenderOptions.BitmapScalingMode="HighQuality"/>
@@ -705,14 +686,12 @@
                                 </Border>
                             </Grid>
 
-                            <!-- Third Row: Sales & Purchase Chart and Order Summary -->
                             <Grid Grid.Row="2" Margin="0,10,0,0">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="2*"/>
                                     <ColumnDefinition Width="1.2*"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Sales & Purchase Chart -->
                                 <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,10,0">
                                     <Grid>
                                         <Grid.RowDefinitions>
@@ -721,7 +700,6 @@
                                             <RowDefinition Height="Auto"/>
                                         </Grid.RowDefinitions>
 
-                                        <!-- Header -->
                                         <Grid Grid.Row="0">
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="*"/>
@@ -749,14 +727,13 @@
                                                 Height="300" Margin="10"></lvc:CartesianChart>
                                         </Grid>
 
-                                        <!-- X-axis and Legend -->
                                         <Grid Grid.Row="2">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <!-- Legend -->
+                                            
                                             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,15,0,0">
                                                 <StackPanel Orientation="Horizontal" Margin="0,0,20,0">
                                                     <Border Width="12" Height="12" CornerRadius="6" Background="#64B5F6" Margin="0,0,5,0" VerticalAlignment="Center"/>
@@ -781,7 +758,6 @@
 
                                         <TextBlock Text="Order Chart" Style="{StaticResource TitleStyle}"/>
 
-                                        <!-- Chart Area -->
                                         <Grid Grid.Row="1" Margin="15,5,15,15">
                                             <lvc:CartesianChart 
                                                 x:Name="OrderChart"
@@ -795,7 +771,6 @@
                                 </Border>
                             </Grid>
 
-                            <!-- Fourth Row: Inventory Data Grid -->
                             <Border Grid.Row="3" Style="{StaticResource CardStyle}" Margin="0,10,0,0">
                                 <Grid>
                                     <Grid.RowDefinitions>
@@ -803,7 +778,6 @@
                                         <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
 
-                                    <!-- Header and Action Buttons -->
                                     <Grid Grid.Row="0" Margin="0,0,0,15">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -813,7 +787,6 @@
                                         <TextBlock Text="Recent Inventory" Style="{StaticResource TitleStyle}"/>
                                     </Grid>
 
-                                    <!-- Data Grid -->
                                     <DataGrid Grid.Row="1"
                                   Style="{StaticResource DataGridMain}"
                                   x:Name="InventoryDataGrid"
@@ -822,7 +795,7 @@
                                             <DataGridTextColumn Header="Product ID" Binding="{Binding ProductId}" Width="1*"/>
                                             <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="2*"/>
                                             <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity}" Width="0.8*"/>
-                                            <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat={}{0:C}}" Width="1*"/>
+                                            <DataGridTextColumn Header="Price" Binding="{Binding Price, StringFormat='Rs. {0:#,##0.00}'}" Width="1*"/>
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Grid>

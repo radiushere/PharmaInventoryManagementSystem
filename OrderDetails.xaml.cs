@@ -1,7 +1,4 @@
-﻿using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -11,6 +8,11 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using System.Net;
+using System.Net.Mail;
+using QuestPDF.Infrastructure;
 
 namespace SimpleLoginWPF
 {
@@ -19,10 +21,13 @@ namespace SimpleLoginWPF
         private static readonly string connectionString = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
         private int orderId;
 
+        private InvoiceData _currentInvoiceData;
+
         public OrderDetails(int orderId)
         {
             InitializeComponent();
             this.orderId = orderId;
+            QuestPDF.Settings.License = LicenseType.Community;
             LoadProducts();
             LoadOrderData();
         }
@@ -34,16 +39,252 @@ namespace SimpleLoginWPF
             public decimal Price { get; set; }
         }
 
+        private class InvoiceProductItem
+        {
+            public string ProductName { get; set; }
+            public string Description { get; set; }
+            public int Quantity { get; set; }
+            public decimal UnitPrice { get; set; }
+            public decimal TotalPrice => Quantity * UnitPrice;
+            public string BatchNumber { get; set; }
+            public DateTime ExpiryDate { get; set; }
+            public string Category { get; set; }
+            public string SupplierName { get; set; }
+        }
+
+        private class InvoiceDistributor
+        {
+            public string Name { get; set; }
+            public string Region { get; set; }
+            public string ServiceArea { get; set; }
+            public string Type { get; set; }
+            public string Email { get; set; }
+            public List<string> PhoneNumbers { get; set; } = new List<string>();
+        }
+
+        private class InvoiceData
+        {
+            public int OrderId { get; set; }
+            public DateTime OrderDate { get; set; }
+            public DateTime DeliveryDate { get; set; }
+            public string Status { get; set; }
+            public decimal OverallTotalAmount { get; set; }
+
+            public InvoiceProductItem Product { get; set; }
+            public InvoiceDistributor Distributor { get; set; }
+        }
+
+        private static class InvoiceColors
+        {
+            public static string PrimaryRed => "#B30000";
+            public static string SecondaryGray => "#F0F0F0";
+            public static string TextColor => "#333333";
+        }
+
+        //C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Assets\\aliflogo-removebg-preview.png
+
+        private class OrderInvoiceDocument : IDocument
+        {
+            public InvoiceData Model { get; }
+
+            public OrderInvoiceDocument(InvoiceData model)
+            {
+                Model = model;
+            }
+
+            public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
+
+            public void Compose(IDocumentContainer container)
+            {
+                container
+                    .Page(page =>
+                    {
+                        page.Size(PageSizes.A4);
+                        page.Margin(30);
+                        page.DefaultTextStyle(x => x.FontSize(10).FontColor(Colors.Black));
+
+                        page.Header().Row(row =>
+                        {
+                            // Logo, adjust path or handle if missing
+                            try
+                            {
+                                row.ConstantColumn(100).Image("C:\\Users\\DELL\\source\\repos\\SimpleLoginWPF\\Assets\\aliflogo-removebg-preview.png");
+                            }
+                            catch
+                            {
+                                // Logo missing? Just skip it
+                                row.ConstantColumn(100).Text("");
+                            }
+
+                            row.RelativeColumn().Column(header =>
+                            {
+                                header.Item().Text("ALF PHARMACEUTICAL")
+                                    .FontSize(24)
+                                    .Bold()
+                                    .FontColor(InvoiceColors.PrimaryRed);
+
+                                header.Item().Text("INVOICE")
+                                    .FontSize(18)
+                                    .SemiBold()
+                                    .FontColor(InvoiceColors.PrimaryRed);
+
+                                header.Item().PaddingBottom(10)
+                                    .LineHorizontal(1)
+                                    .LineColor(InvoiceColors.PrimaryRed);
+                            });
+                        });
+
+                        page.Content().Column(column =>
+                        {
+                            column.Item().PaddingVertical(10).Column(subColumn =>
+                            {
+                                subColumn.Item().Row(row =>
+                                {
+                                    row.ConstantColumn(200).Column(infoColumn =>
+                                    {
+                                        infoColumn.Item().Text($"Invoice Date: {DateTime.Now:yyyy-MM-dd}").FontSize(11);
+                                        infoColumn.Item().Text($"Order ID: {Model.OrderId}").FontSize(11);
+                                        infoColumn.Item().Text($"Order Date: {(Model.OrderDate != default ? Model.OrderDate.ToString("yyyy-MM-dd") : "N/A")}").FontSize(11);
+                                        infoColumn.Item().Text($"Delivery Date: {(Model.DeliveryDate != default ? Model.DeliveryDate.ToString("yyyy-MM-dd") : "N/A")}").FontSize(11);
+                                        infoColumn.Item().PaddingBottom(5).Text($"Status: {Model.Status ?? "N/A"}").FontSize(11);
+                                    });
+                                    row.RelativeColumn().ExtendHorizontal();
+                                });
+                            });
+
+                            column.Item().PaddingVertical(10).Column(subColumn =>
+                            {
+                                subColumn.Item().Text("DISTRIBUTOR DETAILS")
+                                    .FontSize(12)
+                                    .Bold()
+                                    .FontColor(InvoiceColors.PrimaryRed);
+
+                                subColumn.Item().PaddingBottom(5)
+                                    .LineHorizontal(0.5f)
+                                    .LineColor(InvoiceColors.PrimaryRed);
+
+                                subColumn.Item().Text(Model.Distributor?.Name ?? "N/A").SemiBold();
+
+                                if (!string.IsNullOrEmpty(Model.Distributor?.Type))
+                                    subColumn.Item().Text($"Type: {Model.Distributor.Type}");
+
+                                if (!string.IsNullOrEmpty(Model.Distributor?.Email))
+                                    subColumn.Item().Text($"Email: {Model.Distributor.Email}");
+
+                                if (Model.Distributor?.PhoneNumbers != null && Model.Distributor.PhoneNumbers.Any())
+                                    subColumn.Item().Text($"Phone: {string.Join(", ", Model.Distributor.PhoneNumbers)}");
+
+                                if (!string.IsNullOrEmpty(Model.Distributor?.Region) || !string.IsNullOrEmpty(Model.Distributor?.ServiceArea))
+                                    subColumn.Item().Text($"Location: {(Model.Distributor?.Region ?? "N/A")}, {(Model.Distributor?.ServiceArea ?? "N/A")}");
+                            });
+
+                            column.Item().PaddingVertical(10).Column(subColumn =>
+                            {
+                                subColumn.Item().Text("PRODUCT DETAILS")
+                                    .FontSize(12)
+                                    .Bold()
+                                    .FontColor(InvoiceColors.PrimaryRed);
+
+                                subColumn.Item().PaddingBottom(5)
+                                    .LineHorizontal(0.5f)
+                                    .LineColor(InvoiceColors.PrimaryRed);
+
+                                subColumn.Item().Table(table =>
+                                {
+                                    table.ColumnsDefinition(columns =>
+                                    {
+                                        columns.RelativeColumn(3);
+                                        columns.RelativeColumn(1);
+                                        columns.RelativeColumn(1);
+                                        columns.RelativeColumn(1);
+                                    });
+
+                                    table.Header(header =>
+                                    {
+                                        header.Cell().BorderBottom(1).BorderColor(InvoiceColors.PrimaryRed).PaddingBottom(5)
+                                            .Text("Product Name").Bold().FontColor(InvoiceColors.PrimaryRed);
+                                        header.Cell().BorderBottom(1).BorderColor(InvoiceColors.PrimaryRed).PaddingBottom(5)
+                                            .AlignRight().Text("Qty").Bold().FontColor(InvoiceColors.PrimaryRed);
+                                        header.Cell().BorderBottom(1).BorderColor(InvoiceColors.PrimaryRed).PaddingBottom(5)
+                                            .AlignRight().Text("Total").Bold().FontColor(InvoiceColors.PrimaryRed);
+                                    });
+
+                                    table.Cell().PaddingVertical(2).Text(Model.Product?.ProductName ?? "N/A");
+                                    table.Cell().PaddingVertical(2).AlignRight().Text(Model.Product?.Quantity.ToString() ?? "0");
+                                    table.Cell().PaddingVertical(2).AlignRight().Text(Model.Product?.TotalPrice.ToString("N2") ?? "0.00");
+
+                                    table.Cell().ColumnSpan(4).PaddingTop(5).Text(text =>
+                                    {
+                                        text.Span("Description: ").SemiBold();
+                                        text.Span(Model.Product?.Description ?? "N/A").FontSize(9);
+                                    });
+                                    table.Cell().ColumnSpan(4).Text(text =>
+                                    {
+                                        text.Span("Category: ").SemiBold();
+                                        text.Span(Model.Product?.Category ?? "N/A").FontSize(9);
+                                    });
+                                    table.Cell().ColumnSpan(4).Text(text =>
+                                    {
+                                        text.Span("Batch No: ").SemiBold();
+                                        text.Span(Model.Product?.BatchNumber ?? "N/A").FontSize(9);
+                                    });
+                                    table.Cell().ColumnSpan(4).Text(text =>
+                                    {
+                                        text.Span("Expiry Date: ").SemiBold();
+                                        text.Span(Model.Product?.ExpiryDate != default ? Model.Product.ExpiryDate.ToString("yyyy-MM-dd") : "N/A").FontSize(9);
+                                    });
+                                    table.Cell().ColumnSpan(4).Text(text =>
+                                    {
+                                        text.Span("Supplier: ").SemiBold();
+                                        text.Span(Model.Product?.SupplierName ?? "N/A").FontSize(9);
+                                    });
+                                });
+                            });
+
+                            // Signature space at the bottom
+                            column.Item().PaddingTop(30).Row(row =>
+                            {
+                                row.RelativeColumn().Text("Authorized Signature: ______________________").FontSize(11);
+                                row.RelativeColumn().Text($"Date: {DateTime.Now:yyyy-MM-dd}").FontSize(11).AlignRight();
+                            });
+                        });
+
+                        page.Footer()
+                            .AlignRight()
+                            .Text(x =>
+                            {
+                                x.Span("Page ").FontSize(8);
+                                x.CurrentPageNumber().FontSize(8);
+                                x.Span(" of ").FontSize(8);
+                                x.TotalPages().FontSize(8);
+                            });
+                    });
+            }
+        }
+
+
+
         private void LoadOrderData()
         {
             try
             {
                 using var conn = new MySqlConnection(connectionString);
                 conn.Open();
-                var query = @"SELECT o.order_id, p.product_id, p.product_name, o.quantity, o.price, o.status, o.order_date, o.delivery_date
-                              FROM orders o
-                              JOIN products p ON o.product_id = p.product_id
-                              WHERE o.order_id = @orderId";
+
+                var query = @"
+            SELECT
+                o.order_id, o.quantity, o.price, o.status, o.order_date, o.delivery_date,
+                p.product_id, p.product_name, p.description, p.category, p.batch_num, p.expiry_date,
+                s.supplier_name,
+                d.name AS distributor_name, d.region, d.service_area, d.distributor_type, d.email,
+                GROUP_CONCAT(dp.phone SEPARATOR ', ') AS phone_numbers
+            FROM orders o
+            JOIN products p ON o.product_id = p.product_id
+            LEFT JOIN suppliers s ON p.supplier_id = s.supplier_id
+            LEFT JOIN distributors d ON o.dist_id = d.dist_id
+            LEFT JOIN distributor_phones dp ON d.dist_id = dp.dist_id
+            WHERE o.order_id = @orderId
+            GROUP BY o.order_id";
 
                 using var cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@orderId", orderId);
@@ -52,27 +293,59 @@ namespace SimpleLoginWPF
                 if (reader.Read())
                 {
                     OrderIdText.Text = reader["order_id"].ToString();
-                    TotalAmountText.Text = $"${reader.GetDecimal("price")}";
+                    decimal price = reader.GetDecimal("price");
+                    int quantity = reader.GetInt32("quantity");
+                    decimal totalAmount = price;
+
+                    TotalAmountText.Text = $"Rs. {totalAmount:F2}";
                     StatusText.Text = reader["status"].ToString();
 
-                    // Display in data grid
-                    var orderItem = new
+                    OrderItemsGrid.ItemsSource = new[]
                     {
-                        ProductName = reader["product_name"].ToString(),
-                        Quantity = reader.GetInt32("quantity"),
-                        Price = reader.GetDecimal("price"),
-                        Total = reader.GetDecimal("price") * reader.GetInt32("quantity")
-                    };
+                new
+                {
+                    ProductName = reader["product_name"].ToString(),
+                    Quantity = quantity,
+                    Price = price,
+                    Total = totalAmount
+                }
+            };
 
-                    OrderItemsGrid.ItemsSource = new[] { orderItem };
-
-                    // Set edit fields
                     cmbEditProducts.SelectedValue = reader.GetInt32("product_id");
-                    QuantityTextBox.Text = reader["quantity"].ToString();
-                    PriceTextBox.Text = reader["price"].ToString();
+                    QuantityTextBox.Text = quantity.ToString();
+                    PriceTextBox.Text = price.ToString();
                     dpEditOrderDate.SelectedDate = reader.GetDateTime("order_date");
                     dpEditDeliveryDate.SelectedDate = reader.GetDateTime("delivery_date");
                     cmbEditStatus.Text = reader["status"].ToString();
+
+                    _currentInvoiceData = new InvoiceData
+                    {
+                        OrderId = reader.GetInt32("order_id"),
+                        OrderDate = reader.GetDateTime("order_date"),
+                        DeliveryDate = reader.GetDateTime("delivery_date"),
+                        Status = reader.GetString("status"),
+                        OverallTotalAmount = totalAmount,
+                        Product = new InvoiceProductItem
+                        {
+                            ProductName = reader.GetString("product_name"),
+                            Description = reader["description"] as string,
+                            Quantity = quantity,
+                            UnitPrice = price,
+                            BatchNumber = reader["batch_num"] as string,
+                            ExpiryDate = reader["expiry_date"] != DBNull.Value ? reader.GetDateTime("expiry_date") : default,
+                            Category = reader["category"] as string,
+                            SupplierName = reader["supplier_name"] as string
+                        },
+                        Distributor = new InvoiceDistributor
+                        {
+                            Name = reader["distributor_name"] as string,
+                            Region = reader["region"] as string,
+                            ServiceArea = reader["service_area"] as string,
+                            Type = reader["distributor_type"] as string,
+                            Email = reader["email"] as string,
+                            PhoneNumbers = (reader["phone_numbers"] as string)?.Split(',').Select(p => p.Trim()).ToList()
+                        }
+                    };
                 }
             }
             catch (Exception ex)
@@ -206,7 +479,7 @@ namespace SimpleLoginWPF
                 if (count > 0) return;
 
                 var insertCmd = new MySqlCommand(@"INSERT INTO sales (order_id, product_id, quantity, payment_method, total_amount, sale_date)
-                                                   VALUES (@orderId, @productId, @quantity, 'unspecified', @totalAmount, @saleDate)", conn);
+                                                 VALUES (@orderId, @productId, @quantity, 'unspecified', @totalAmount, @saleDate)", conn);
                 insertCmd.Parameters.AddWithValue("@orderId", orderId);
                 insertCmd.Parameters.AddWithValue("@productId", productId);
                 insertCmd.Parameters.AddWithValue("@quantity", quantity);
@@ -233,76 +506,35 @@ namespace SimpleLoginWPF
         {
             try
             {
-                // Use SaveFileDialog to let the user choose the save location
                 SaveFileDialog saveFileDialog = new SaveFileDialog
                 {
-                    FileName = $"Invoice_Order_{OrderIdText.Text}_{DateTime.Now:yyyyMMdd_HHmmss}.txt",
-                    DefaultExt = ".txt",
-                    Filter = "Text files (*.txt)|*.txt|All files (*.*)|*.*"
+                    FileName = $"Invoice_Order_{OrderIdText.Text}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf",
+                    DefaultExt = ".pdf",
+                    Filter = "PDF files (*.pdf)|*.pdf|All files (*.*)|*.*"
                 };
 
                 if (saveFileDialog.ShowDialog() == true)
                 {
                     string filePath = saveFileDialog.FileName;
-                    GenerateTextInvoice(filePath); // Call the new text invoice generation method
-                    MessageBox.Show($"Invoice downloaded to:\n{filePath}", "Invoice Downloaded", MessageBoxButton.OK, MessageBoxImage.Information);
+                    if (_currentInvoiceData != null)
+                    {
+                        var document = new OrderInvoiceDocument(_currentInvoiceData);
+                        document.GeneratePdf(filePath);
+                        MessageBox.Show($"Invoice downloaded to:\n{filePath}", "Invoice Downloaded", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invoice data not available. Please load order data first.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error initiating invoice download: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-            CloseInvoicePopup_Click(sender, e); // Assuming this closes your popup
+            CloseInvoicePopup_Click(sender, e);
         }
 
         private void CloseInvoicePopup_Click(object sender, RoutedEventArgs e) => InvoicePopup.Visibility = Visibility.Collapsed;
-
-        private void GenerateTextInvoice(string filePath)
-        {
-            try
-            {
-                StringBuilder invoiceContent = new StringBuilder();
-
-                invoiceContent.AppendLine("------------------------------------");
-                invoiceContent.AppendLine("             INVOICE              ");
-                invoiceContent.AppendLine("------------------------------------");
-                invoiceContent.AppendLine();
-                invoiceContent.AppendLine($"Order ID:     {OrderIdText.Text}");
-                invoiceContent.AppendLine($"Total Amount: {TotalAmountText.Text}");
-                invoiceContent.AppendLine($"Status:       {StatusText.Text}");
-                invoiceContent.AppendLine();
-                invoiceContent.AppendLine("PRODUCT DETAILS:");
-                invoiceContent.AppendLine("------------------------------------");
-                invoiceContent.AppendLine("Product Name           Qty    Price     Total");
-                invoiceContent.AppendLine("------------------------------------");
-
-                // Assuming OrderItemsGrid.Items contains objects with ProductName, Quantity, Price, Total properties
-                // This iterates through ALL items in the DataGrid, not just the first one.
-                foreach (var item in OrderItemsGrid.Items)
-                {
-                    // Using dynamic or casting to a known type is safer if possible
-                    // For simplicity, we'll continue with reflection as in your original code
-                    var productName = item.GetType().GetProperty("ProductName")?.GetValue(item)?.ToString() ?? "N/A";
-                    var quantity = item.GetType().GetProperty("Quantity")?.GetValue(item)?.ToString() ?? "0";
-                    var price = item.GetType().GetProperty("Price")?.GetValue(item)?.ToString() ?? "0.00";
-                    var total = item.GetType().GetProperty("Total")?.GetValue(item)?.ToString() ?? "0.00";
-
-                    // Basic formatting to align columns
-                    invoiceContent.AppendLine($"{productName.PadRight(22)} {quantity.PadLeft(3)}    ${price.PadRight(8)}  ${total.PadLeft(8)}");
-                }
-                invoiceContent.AppendLine("------------------------------------");
-                invoiceContent.AppendLine();
-                invoiceContent.AppendLine("Thank you for your business!");
-                invoiceContent.AppendLine("------------------------------------");
-
-                // Write the content to the specified file
-                File.WriteAllText(filePath, invoiceContent.ToString());
-            }
-            catch (Exception ex)
-            {
-                // Rethrow the exception to be caught by the DownloadInvoice_Click handler
-                throw new Exception($"Failed to generate invoice content: {ex.Message}", ex);
-            }
-        }
     }
 }

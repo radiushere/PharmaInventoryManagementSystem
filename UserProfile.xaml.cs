@@ -18,7 +18,7 @@ namespace SimpleLoginWPF
             LoadUserProfile();
             CheckAndCreateNotifications();
         }
-            
+
         private void LoadUserProfile()
         {
             try
@@ -245,8 +245,7 @@ namespace SimpleLoginWPF
             }
         }
 
-
-        private void Close_Click(object sender, RoutedEventArgs e)
+        private void Exit_Buttton(object sender, RoutedEventArgs e)
         {
             this.Close();
         }

@@ -34,6 +34,24 @@ namespace SimpleLoginWPF
             LoadData();
         }
 
+        public void AccessLevelControl()
+        {
+            string role = UserSession.Role;
+
+            DashboardButton.Visibility = Visibility.Visible;
+            InventoryButton.Visibility = Visibility.Visible;
+            ReportsButton.Visibility = Visibility.Visible;
+            OrdersButton.Visibility = Visibility.Visible;
+            DistributorsButton.Visibility = Visibility.Visible;
+            PurchasesButton.Visibility = Visibility.Visible;
+
+            AdminButton.Visibility = role == "Admin" ? Visibility.Visible : Visibility.Collapsed;
+            PartnersButton.Visibility = (role == "Admin" || role == "Manager") ? Visibility.Visible : Visibility.Collapsed;
+
+            if (string.IsNullOrEmpty(role))
+                MessageBox.Show("Unknown role.");
+        }
+
         private void LoadData()
         {
             try
@@ -116,10 +134,10 @@ namespace SimpleLoginWPF
             var user = button.DataContext as AdminUser;
             if (user != null)
             {
-                // Open Edit User Window with user details
+               
                 EditUserWindow editUserWindow = new EditUserWindow(user.Id);
                 editUserWindow.ShowDialog();
-                LoadData(); // Refresh the data after editing
+                LoadData(); 
             }
         }
 
@@ -130,7 +148,6 @@ namespace SimpleLoginWPF
             var user = button.DataContext as AdminUser;
             if (user != null)
             {
-                // Confirm deletion with the user
                 MessageBoxResult result = MessageBox.Show($"Are you sure you want to delete user: {user.Username}?", "Confirm Delete", MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
@@ -146,7 +163,7 @@ namespace SimpleLoginWPF
                                 cmd.ExecuteNonQuery();
                             }
                         }
-                        LoadData(); // Refresh the data after deletion
+                        LoadData(); 
                     }
                     catch (Exception ex)
                     {
@@ -169,7 +186,7 @@ namespace SimpleLoginWPF
                 SearchBox.Text = "Search Users...";
         }
 
-        // Navigation Handlers
+       
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
             new Dashboard().Show();
@@ -181,13 +198,6 @@ namespace SimpleLoginWPF
             new Login().Show();
             this.Close();
         }
-
-        private void AddUser_Click(object sender, RoutedEventArgs e)
-        {
-            // Implement add user logic
-            MessageBox.Show("Add User functionality");
-        }
-
 
         private void AddOrder_Click(object sender, RoutedEventArgs e)
         {
@@ -248,6 +258,11 @@ namespace SimpleLoginWPF
             var adminPage = new AdminDashboard();
             adminPage.Show();
             this.Close();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadData();
         }
     }
 }

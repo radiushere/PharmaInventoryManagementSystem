@@ -130,7 +130,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Foreground" Value="{StaticResource TextDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Padding" Value="12,10"/>
+            <Setter Property="Padding" Value="4,2"/>
             <Setter Property="Height" Value="42"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -315,7 +315,7 @@
     <Border CornerRadius="15"
         Background="White"
         BorderThickness="1"
-        BorderBrush="#E0E0E0">
+        BorderBrush="{StaticResource PrimaryRedBrush}">
         <Grid>
             <!-- Window Header -->
             <Border Height="50"

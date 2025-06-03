@@ -113,7 +113,7 @@ namespace SimpleLoginWPF
 
                             ProductNameDisplay.Text = reader["product_name"] != DBNull.Value ? reader["product_name"].ToString() : "N/A";
                             BatchNumberDisplay.Text = reader["batch_num"] != DBNull.Value ? reader["batch_num"].ToString() : "N/A";
-                            UnitPriceDisplay.Text = reader["price"] != DBNull.Value ? $"$ {Convert.ToDecimal(reader["price"]):N2}" : "N/A";
+                            UnitPriceDisplay.Text = reader["price"] != DBNull.Value ? $"Rs. {Convert.ToDecimal(reader["price"]):N2}" : "N/A";
                             ExpiryDateDisplay.Text = reader["expiry_date"] != DBNull.Value ? Convert.ToDateTime(reader["expiry_date"]).ToString("MMMM dd, yyyy") : "N/A";
                             StockQuantityDisplay.Text = reader["quantity"] != DBNull.Value ? $"{reader["quantity"]} Units" : "N/A";
                             SuppliersDisplay.Text = reader["supplier_name"] != DBNull.Value ? reader["supplier_name"].ToString() : "N/A";

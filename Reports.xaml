@@ -7,7 +7,8 @@
         xmlns:local="clr-namespace:SimpleLoginWPF"
         mc:Ignorable="d"
         Title="Reports" Height="720" Width="1280"
-        WindowState="Maximized" Loaded="Reports_Loaded">
+        WindowState="Maximized" Loaded="Reports_Loaded"
+        WindowStyle="None">
 
     <Window.Resources>
 
@@ -369,9 +370,10 @@ VerticalAlignment="Center"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="Reports Overview" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
-
                 <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource AddMoreButton}"
+                    Content="↻" Margin="10,0"
+                    Click="Refresh_Click" Background="#FFB30000"/>
                     <Button Style="{StaticResource AddMoreButton}" Content="📥"
                     Click="DownloadReport_Click" ToolTip="Download Report"
                     Margin="10,0" Padding="8"/>
@@ -455,11 +457,16 @@ VerticalAlignment="Center"/>
 
 
                     <Border Grid.Column="0" Style="{StaticResource ChartHeaderStyle}" Margin="0,0,7,0">
-                        <StackPanel>
-                            <TextBlock Text="Recent Sales" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                            <DataGrid x:Name="RecentSalesDataGrid" Style="{StaticResource DataGridMain}"
-                              AutoGenerateColumns="False" IsReadOnly="True"
-                              ItemsSource="{Binding RecentSalesData}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Recent Sales" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <DataGrid Grid.Row="1" x:Name="RecentSalesDataGrid" Style="{StaticResource DataGridMain}"
+          AutoGenerateColumns="False" IsReadOnly="True"
+          ItemsSource="{Binding RecentSalesData}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Sale Date" Binding="{Binding SaleDate, StringFormat='yyyy-MM-dd'}" Width="*"/>
                                     <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="2*"/>
@@ -467,22 +474,27 @@ VerticalAlignment="Center"/>
                                     <DataGridTextColumn Header="Total Amount (Rs.)" Binding="{Binding TotalAmount, StringFormat='N2'}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
-                        </StackPanel>
+                        </Grid>
                     </Border>
 
                     <Border Grid.Column="1" Style="{StaticResource ChartHeaderStyle}" Margin="7,0,0,0">
-                        <StackPanel>
-                            <TextBlock Text="Inventory Alerts" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                            <DataGrid x:Name="InventoryAlertsDataGrid" Style="{StaticResource DataGridMain}"
-                              AutoGenerateColumns="False" IsReadOnly="True"
-                              ItemsSource="{Binding InventoryAlertsData}">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Inventory Alerts" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                            <DataGrid Grid.Row="1" x:Name="InventoryAlertsDataGrid" Style="{StaticResource DataGridMain}"
+          AutoGenerateColumns="False" IsReadOnly="True"
+          ItemsSource="{Binding InventoryAlertsData}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Product Name" Binding="{Binding ProductName}" Width="2*"/>
                                     <DataGridTextColumn Header="Current Stock" Binding="{Binding Quantity}" Width="*"/>
                                     <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="*"/>
                                 </DataGrid.Columns>
                             </DataGrid>
-                        </StackPanel>
+                        </Grid>
                     </Border>
                 </Grid>
             </Grid>

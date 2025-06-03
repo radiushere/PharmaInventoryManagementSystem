@@ -15,9 +15,6 @@
         AllowsTransparency="True">
 
     <Window.Resources>
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ COLOR PALETTE ~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Color x:Key="PrimaryRed">#B30000</Color>
         <Color x:Key="PrimaryRedDark">#8A0000</Color>
         <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
@@ -26,7 +23,6 @@
         <Color x:Key="BorderGray">#E0E0E0</Color>
         <Color x:Key="TextDark">#2D3436</Color>
 
-        <!-- Convert Colors to Brushes -->
         <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
         <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
         <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
@@ -35,9 +31,6 @@
         <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
         <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~~ ANIMATIONS ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Storyboard x:Key="ButtonHoverEnter">
             <DoubleAnimation Duration="0:0:0.15"
         Storyboard.TargetProperty="RenderTransform.ScaleX"
@@ -62,9 +55,6 @@
        To="Transparent"/>
         </Storyboard>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ BUTTONS STYLES ~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="PrimaryButton" TargetType="Button">
             <Setter Property="Background" Value="{StaticResource PrimaryRedBrush}"/>
             <Setter Property="Foreground" Value="White"/>
@@ -143,7 +133,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <Style x:Key="InputFieldStyle" TargetType="TextBox">
             <Setter Property="Background" Value="White"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderGrayBrush}"/>
@@ -286,9 +276,6 @@
             </Setter>
         </Style>
 
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
-        <!-- ~~~~~~~ LABEL STYLES ~~~~~~~~~~ -->
-        <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
         <Style x:Key="FormLabelStyle" TargetType="Label">
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedDarkBrush}"/>
             <Setter Property="FontSize" Value="14"/>
@@ -297,7 +284,6 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
-        <!-- Window Control Buttons -->
         <Style x:Key="WindowButtonStyle" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
@@ -325,10 +311,12 @@
 
     <Border CornerRadius="15" 
             Background="White"
-            BorderThickness="1"
-            BorderBrush="#E0E0E0">
+            BorderThickness="2"
+            BorderBrush="{StaticResource PrimaryRedDarkBrush}">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.3" ShadowDepth="0" BlurRadius="15"/>
+        </Border.Effect>
         <Grid>
-            <!-- Window Header -->
             <Border Height="50" 
                     VerticalAlignment="Top" 
                     Background="{StaticResource PrimaryRedBrush}"
@@ -355,9 +343,7 @@
                 </Grid>
             </Border>
 
-            <!-- Content Area -->
             <Grid Margin="0,50,0,0">
-                <!-- Form Title -->
                 <Border Background="{StaticResource PrimaryRedLightBrush}" 
                         Height="60" 
                         VerticalAlignment="Top">
@@ -369,7 +355,6 @@
                                Margin="30,0,0,0"/>
                 </Border>
 
-                <!-- Main Form Content -->
                 <ScrollViewer Margin="0,60,0,70" 
                               VerticalScrollBarVisibility="Auto" 
                               HorizontalScrollBarVisibility="Disabled">
@@ -379,7 +364,6 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- Left Column -->
                         <StackPanel Grid.Column="0" Margin="0,0,15,0">
                             <Label Content="Username*" 
                                    Style="{StaticResource FormLabelStyle}"/>
@@ -401,7 +385,6 @@
                                      Margin="0,0,0,20"/>
                         </StackPanel>
 
-                        <!-- Right Column -->
                         <StackPanel Grid.Column="1" Margin="15,0,0,0">
                             <Label Content="Role*" 
                                    Style="{StaticResource FormLabelStyle}"/>
@@ -441,7 +424,6 @@
                     </Grid>
                 </ScrollViewer>
 
-                <!-- Bottom Button Panel -->
                 <Border Background="{StaticResource LightBackgroundBrush}" 
                         Height="70" 
                         VerticalAlignment="Bottom">

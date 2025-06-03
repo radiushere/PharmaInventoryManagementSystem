@@ -10,7 +10,8 @@
         Width="1280"
         Background="#F8FAFC"
         FontFamily="Segoe UI"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -485,6 +486,11 @@ Click="AdminDashboard_Click">
                         <ComboBoxItem Content="Pending"/>
                     </ComboBox>
 
+                    <Button Style="{StaticResource AddMoreButton}"
+                    Content="↻"
+                    Margin="10,0"
+                    Click="Refresh_Click" Background="#FFB30000"/>
+
                     <Button Style="{StaticResource AddMoreButton}" Content="+" 
                 Margin="10,0" Click="AddPurchase_Click" ToolTip="Add New Purchase"/>
 
@@ -533,13 +539,13 @@ Click="Profile_Click"/>
                     <DataGridTextColumn Header="Purchase ID" Binding="{Binding PurchaseId}" Width="1*"/>
                     <DataGridTextColumn Header="Supplier" Binding="{Binding Supplier}" Width="2*"/>
                     <DataGridTextColumn Header="Date" Binding="{Binding Date,StringFormat=yyyy-MM-dd}" Width="1*"/>
-                    <DataGridTextColumn Header="Total Amount" Binding="{Binding TotalAmount,StringFormat=C}" Width="1.2*"/>
+                    <DataGridTextColumn Header="Total Amount" Binding="{Binding TotalAmount,StringFormat='Rs. {0:#,##0.00}'}" Width="1.2*"/>
                     <DataGridTextColumn Header="Status" Binding="{Binding Status}" Width="0.8*"/>
                     <DataGridTemplateColumn Header="Actions" Width="1.5*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Edit" 
+                                    <Button Content="View" 
                                             Style="{StaticResource AddMoreButton}" 
                                             Margin="2" Padding="8,4"
                                             Click="EditPurchase_Click"/>

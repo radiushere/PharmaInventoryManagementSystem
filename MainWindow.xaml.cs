@@ -4,7 +4,6 @@ using System.Configuration;
 using System.Data;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace SimpleLoginWPF
@@ -113,7 +112,7 @@ namespace SimpleLoginWPF
                     FROM products";
 
                     MySqlDataAdapter adapter = new MySqlDataAdapter(query, conn);
-                    medicineDataTable.Clear(); // Clear previous data
+                    medicineDataTable.Clear();
                     adapter.Fill(medicineDataTable);
                     MedicinesDataGrid.ItemsSource = medicineDataTable.DefaultView;
                 }
@@ -130,7 +129,7 @@ namespace SimpleLoginWPF
             refreshTimer.Tick += (s, e) =>
             {
                 LoadMedicinesData();
-                SetupStats(); // Also refresh stats when data refreshes
+                SetupStats();
             };
             refreshTimer.Start();
         }
@@ -139,7 +138,6 @@ namespace SimpleLoginWPF
         {
             if (medicineDataTable == null || medicineDataTable.Columns.Count == 0)
             {
-                Console.WriteLine("medicineDataTable is null or has no columns.");
                 return;
             }
 
@@ -149,25 +147,17 @@ namespace SimpleLoginWPF
                 filterText = string.Empty;
             }
 
-            string rowFilterString = string.Empty;
-            if (!string.IsNullOrWhiteSpace(filterText))
-            {
-                rowFilterString = $"Name LIKE '%{filterText}%' OR " +
-                                  $"BatchNumber LIKE '%{filterText}%' OR " +
-                                  $"Category LIKE '%{filterText}%'";
-            }
+            string rowFilterString = string.IsNullOrWhiteSpace(filterText)
+                ? string.Empty
+                : $"Name LIKE '%{filterText}%' OR BatchNumber LIKE '%{filterText}%' OR Category LIKE '%{filterText}%'";
 
             try
             {
                 medicineDataTable.DefaultView.RowFilter = rowFilterString;
             }
-            catch (EvaluateException ex)
-            {
-                Console.WriteLine("Error in RowFilter: " + ex.Message);
-            }
             catch (Exception ex)
             {
-                Console.WriteLine("Unexpected error in SearchBox_TextChanged: " + ex.Message);
+                Console.WriteLine("Error applying search filter: " + ex.Message);
             }
         }
 
@@ -181,9 +171,9 @@ namespace SimpleLoginWPF
             int availableCount = 0;
             int lowstockCount = 0;
 
-            foreach (DataRow row in viewToCount.Rows) // Iterate over the filtered view
+            foreach (DataRow row in viewToCount.Rows)
             {
-                if (row.Table.Columns.Contains("Quantity") && row["Quantity"] != DBNull.Value)
+                if (row["Quantity"] != DBNull.Value)
                 {
                     var quantity = Convert.ToInt32(row["Quantity"]);
                     if (quantity > 0) availableCount++;
@@ -207,7 +197,26 @@ namespace SimpleLoginWPF
                 SearchBox.Text = "Search Medicine...";
         }
 
-        // --- Navigation Methods ---
+        private void FilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (FilterComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string selectedCategory = selectedItem.Content.ToString();
+                string filterExpression = selectedCategory == "All" || string.IsNullOrEmpty(selectedCategory)
+                    ? string.Empty
+                    : $"Category = '{selectedCategory}'";
+
+                try
+                {
+                    medicineDataTable.DefaultView.RowFilter = filterExpression;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error applying filter: {ex.Message}", "Filter Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
         private void Dashboard_Click(object sender, RoutedEventArgs e)
         {
             var page = new Dashboard();
@@ -217,7 +226,7 @@ namespace SimpleLoginWPF
 
         private void Inventory_Click(object sender, RoutedEventArgs e)
         {
-            LoadMedicinesData(); // Refresh current view
+            LoadMedicinesData();
             SetupStats();
         }
 
@@ -242,9 +251,9 @@ namespace SimpleLoginWPF
             this.Close();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e) // "Add New Product" button
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            var newProductWindow = new NewProductWindow(this); // Pass current window if NewProductWindow needs to call back
+            var newProductWindow = new NewProductWindow(this);
             newProductWindow.Owner = this;
             newProductWindow.ShowDialog();
             LoadMedicinesData();
@@ -278,141 +287,108 @@ namespace SimpleLoginWPF
             this.Close();
         }
 
-        // --- DataGrid Action Methods ---
         private void ViewDetail_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null)
+            if (sender is Button button && button.DataContext is DataRowView rowView)
             {
-                DataRowView rowView = button.DataContext as DataRowView;
-                if (rowView != null)
-                {
-                    int inventoryId = Convert.ToInt32(rowView["ID"]);
-                    var productInfoPage = new ProductInfo(inventoryId);
-                    productInfoPage.Owner = this;
-                    productInfoPage.ShowDialog();
-                }
-                else
-                {
-                    MessageBox.Show("Could not retrieve details for the selected item.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+                int inventoryId = Convert.ToInt32(rowView["ID"]);
+                var productInfoPage = new ProductInfo(inventoryId);
+                productInfoPage.Owner = this;
+                productInfoPage.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Could not retrieve details for the selected item.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            Button button = sender as Button;
-            if (button != null)
+            if (sender is Button button && button.DataContext is DataRowView rowView)
             {
-                DataRowView rowView = button.DataContext as DataRowView;
-                if (rowView != null)
+                int productIdToDelete = Convert.ToInt32(rowView["ID"]);
+                string productName = rowView["Name"] != DBNull.Value ? rowView["Name"].ToString() : "this item";
+
+                MessageBoxResult confirmResult = MessageBox.Show(
+                    $"Are you sure you want to delete the ENTIRE product '{productName}' (Product ID: {productIdToDelete}) and ALL its related data? This action is irreversible.",
+                    "Confirm Product Deletion",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning);
+
+                if (confirmResult == MessageBoxResult.Yes)
                 {
-                    int productIdToDelete = Convert.ToInt32(rowView["ID"]);
-
-                    string productName = rowView["Name"] != DBNull.Value ? rowView["Name"].ToString() : "this item";
-
-                    // Updated confirmation message to reflect deleting the entire product
-                    MessageBoxResult confirmResult = MessageBox.Show(
-                        $"Are you sure you want to delete the ENTIRE product '{productName}' (Product ID: {productIdToDelete}) " +
-                        $"and ALL its related data (all inventory batches, categories, suppliers, shipments, notifications, orders, purchases, sales, etc.)? " +
-                        $"This action is irreversible.",
-                        "Confirm Product Deletion",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Warning);
-
-                    if (confirmResult == MessageBoxResult.Yes)
+                    try
                     {
-                        try
+                        using (MySqlConnection conn = new MySqlConnection(connectionString))
                         {
-                            using (MySqlConnection conn = new MySqlConnection(connectionString))
+                            conn.Open();
+                            using (MySqlTransaction transaction = conn.BeginTransaction())
                             {
-                                conn.Open();
-                                using (MySqlTransaction transaction = conn.BeginTransaction())
+                                try
                                 {
-                                    try
+                                    ExecuteDeleteQuery(conn, transaction, "DELETE FROM notifications WHERE product_id = @ProductID", productIdToDelete);
+                                    ExecuteDeleteQuery(conn, transaction, "DELETE FROM orders WHERE product_id = @ProductID", productIdToDelete);
+                                    ExecuteDeleteQuery(conn, transaction, "DELETE FROM product_purchases WHERE product_id = @ProductID", productIdToDelete);
+                                    ExecuteDeleteQuery(conn, transaction, "DELETE FROM sales WHERE product_id = @ProductID", productIdToDelete);
+
+                                    int rowsAffected = ExecuteDeleteQuery(conn, transaction, "DELETE FROM products WHERE product_id = @ProductID", productIdToDelete);
+
+                                    if (rowsAffected > 0)
                                     {
-
-                                        string deleteNotificationsQuery = "DELETE FROM notifications WHERE product_id = @ProductID";
-                                        MySqlCommand cmdDeleteNotifications = new MySqlCommand(deleteNotificationsQuery, conn, transaction);
-                                        cmdDeleteNotifications.Parameters.AddWithValue("@ProductID", productIdToDelete);
-                                        cmdDeleteNotifications.ExecuteNonQuery();
-
-                                        string deleteOrderItemsQuery = "DELETE FROM orders WHERE product_id = @ProductID";
-                                        MySqlCommand cmdDeleteOrderItems = new MySqlCommand(deleteOrderItemsQuery, conn, transaction);
-                                        cmdDeleteOrderItems.Parameters.AddWithValue("@ProductID", productIdToDelete);
-                                        cmdDeleteOrderItems.ExecuteNonQuery();
-
-                                        string deleteProductPurchasesQuery = "DELETE FROM product_purchases WHERE product_id = @ProductID";
-                                        MySqlCommand cmdDeleteProductPurchases = new MySqlCommand(deleteProductPurchasesQuery, conn, transaction);
-                                        cmdDeleteProductPurchases.Parameters.AddWithValue("@ProductID", productIdToDelete);
-                                        cmdDeleteProductPurchases.ExecuteNonQuery();
-
-                                        string deleteSalesQuery = "DELETE FROM sales WHERE product_id = @ProductID";
-                                        MySqlCommand cmdDeleteSales = new MySqlCommand(deleteSalesQuery, conn, transaction);
-                                        cmdDeleteSales.Parameters.AddWithValue("@ProductID", productIdToDelete);
-                                        cmdDeleteSales.ExecuteNonQuery();
-
-                                        string deleteProductQuery = "DELETE FROM products WHERE product_id = @ProductID";
-                                        MySqlCommand cmdDeleteProduct = new MySqlCommand(deleteProductQuery, conn, transaction);
-                                        cmdDeleteProduct.Parameters.AddWithValue("@ProductID", productIdToDelete);
-                                        int rowsAffectedOnProduct = cmdDeleteProduct.ExecuteNonQuery();
-
-                                        if (rowsAffectedOnProduct > 0)
-                                        {
-                                            transaction.Commit();
-                                            MessageBox.Show($"Product '{productName}' (Product ID: {productIdToDelete}) and all its related records deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                                        }
-                                        else
-                                        {
-                                            transaction.Rollback();
-                                            MessageBox.Show($"Product '{productName}' (Product ID: {productIdToDelete}) not found or could not be deleted. It might have been removed by another user or had no entry in the 'products' table.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
-                                        }
+                                        transaction.Commit();
+                                        MessageBox.Show($"Product '{productName}' (Product ID: {productIdToDelete}) and all its related records deleted successfully.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                                     }
-                                    catch (MySqlException ex)
+                                    else
                                     {
                                         transaction.Rollback();
-                                        if (ex.Number == 1451)
-                                        {
-                                            MessageBox.Show($"Cannot delete product ID {productIdToDelete}. It is still referenced by other records not covered by the manual cascade delete. Details: {ex.Message}", "Deletion Blocked by Constraint", MessageBoxButton.OK, MessageBoxImage.Error);
-                                        }
-                                        else
-                                        {
-                                            MessageBox.Show("Database error during deletion: " + ex.Message, "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                        }
+                                        MessageBox.Show($"Product '{productName}' (Product ID: {productIdToDelete}) not found or could not be deleted.", "Deletion Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                                     }
-                                    catch (Exception ex)
-                                    {
-                                        transaction.Rollback();
-                                        MessageBox.Show("An unexpected error occurred during the deletion process: " + ex.Message, "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                                    }
-                                    finally
-                                    {
-                                        LoadMedicinesData();
-                                        SetupStats();
-                                    }
+                                }
+                                catch (MySqlException ex)
+                                {
+                                    transaction.Rollback();
+                                    MessageBox.Show($"Database error during deletion: {ex.Message}", "Database Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                catch (Exception ex)
+                                {
+                                    transaction.Rollback();
+                                    MessageBox.Show($"An unexpected error occurred during the deletion process: {ex.Message}", "Application Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                                }
+                                finally
+                                {
+                                    LoadMedicinesData();
+                                    SetupStats();
                                 }
                             }
                         }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show("An error occurred (e.g., connecting to the database): " + ex.Message, "Operation Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"An error occurred: {ex.Message}", "Operation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                else
-                {
-                    MessageBox.Show("Could not identify the item to delete.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                }
+            }
+            else
+            {
+                MessageBox.Show("Could not identify the item to delete.", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
-        private void Minimize_Click(object sender, RoutedEventArgs e) =>
-            WindowState = WindowState.Minimized;
+        private int ExecuteDeleteQuery(MySqlConnection conn, MySqlTransaction transaction, string query, int productId)
+        {
+            using (var cmd = new MySqlCommand(query, conn, transaction))
+            {
+                cmd.Parameters.AddWithValue("@ProductID", productId);
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        private void Minimize_Click(object sender, RoutedEventArgs e) => WindowState = WindowState.Minimized;
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            var Login = new Login();
-            Login.Show();
+            var login = new Login();
+            login.Show();
             this.Close();
         }
 
@@ -422,5 +398,7 @@ namespace SimpleLoginWPF
             adminDashboard.Show();
             this.Close();
         }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e) => LoadMedicinesData();
     }
 }

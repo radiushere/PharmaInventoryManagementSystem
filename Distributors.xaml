@@ -11,7 +11,8 @@
         Background="#F8FAFC"
         FontFamily="Segoe UI"
         Closing="Window_Closing"
-        WindowState="Maximized">
+        WindowState="Maximized"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -501,6 +502,11 @@ VerticalAlignment="Center"/>
                         <ComboBoxItem Content="Institutional"/>
                         <ComboBoxItem Content="Commercial"/>
                     </ComboBox>
+
+                    <Button Style="{StaticResource AddMoreButton}"
+                    Content="↻"
+                    Margin="10,0"
+                    Click="Refresh_Click" Background="#FFB30000"/>
 
                     <Button Style="{StaticResource AddMoreButton}" Content="+"
                             Margin="10,0" Click="AddDistributor_Click" ToolTip="Add New Distributor"/>

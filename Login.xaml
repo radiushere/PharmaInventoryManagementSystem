@@ -5,69 +5,138 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SimpleLoginWPF"
         mc:Ignorable="d"
-        Title="Login" Height="720" Width="1280"
+        Title="Login" Height="672" Width="1080"
         FontFamily="Georgia" 
-        WindowState="Maximized">
-    
-    <Grid>
-        <!-- Define column and row definitions for responsive layout -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        AllowsTransparency="True">
 
-        <!-- Logo on the left side -->
-        <Image Grid.Column="1" Grid.Row="1" Grid.RowSpan="5"
+    <Window.Resources>
+        <Color x:Key="PrimaryRed">#B30000</Color>
+        <Color x:Key="PrimaryRedDark">#8A0000</Color>
+        <Color x:Key="PrimaryRedLight">#FFD9D9</Color>
+        <Color x:Key="AccentGold">#FFD700</Color>
+        <Color x:Key="LightBackground">#F8F9FA</Color>
+        <Color x:Key="BorderGray">#E0E0E0</Color>
+        <Color x:Key="TextDark">#2D3436</Color>
+
+        <SolidColorBrush x:Key="PrimaryRedBrush" Color="{StaticResource PrimaryRed}"/>
+        <SolidColorBrush x:Key="PrimaryRedDarkBrush" Color="{StaticResource PrimaryRedDark}"/>
+        <SolidColorBrush x:Key="PrimaryRedLightBrush" Color="{StaticResource PrimaryRedLight}"/>
+        <SolidColorBrush x:Key="AccentGoldBrush" Color="{StaticResource AccentGold}"/>
+        <SolidColorBrush x:Key="LightBackgroundBrush" Color="{StaticResource LightBackground}"/>
+        <SolidColorBrush x:Key="BorderGrayBrush" Color="{StaticResource BorderGray}"/>
+        <SolidColorBrush x:Key="TextDarkBrush" Color="{StaticResource TextDark}"/>
+
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryRedBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                CornerRadius="15">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource PrimaryRedLightBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Border Background="White" BorderThickness="1"
+BorderBrush="{StaticResource PrimaryRedBrush}">
+
+
+        <Grid>
+            <!-- Define column and row definitions for responsive layout -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="17*" />
+                <ColumnDefinition Width="38*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="17*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Height="59" 
+VerticalAlignment="Top" 
+Background="White"
+CornerRadius="15,15,0,0" Grid.ColumnSpan="4" Margin="0,-11,0,0">
+                <Grid>
+                    <StackPanel Orientation="Horizontal" 
+            HorizontalAlignment="Right">
+                        <Button Style="{StaticResource WindowButtonStyle}" 
+            Click="Minimize_Click" 
+            Content="─"
+            Foreground="Red"/>
+                        <Button Style="{StaticResource WindowButtonStyle}" 
+            Click="Close_Click" 
+            Content="✕"
+            Foreground="Red"
+            Margin="0,0,10,0"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Logo on the left side -->
+            <Image Grid.Column="1" Grid.Row="1" Grid.RowSpan="5"
            Source="pack://application:,,,/SimpleLoginWPF;component/Assets/MAINLogo.png" 
            Width="280" Height="280"
            HorizontalAlignment="Center" 
            VerticalAlignment="Center" 
            Margin="20,0,80,0" />
 
-        <!-- Right side content -->
-        <StackPanel Grid.Column="2" Grid.Row="3" 
+            <!-- Right side content -->
+            <StackPanel Grid.Column="2" Grid.Row="3" 
                 VerticalAlignment="Center"
                 Margin="0,0,10,0">
 
-            <!-- Company logo on the right side -->
-            <Image Source="pack://application:,,,/SimpleLoginWPF;component/Assets/aliflogo-removebg-preview.png" 
+                <!-- Company logo on the right side -->
+                <Image Source="pack://application:,,,/SimpleLoginWPF;component/Assets/aliflogo-removebg-preview.png" 
                Width="120" Height="100"
                HorizontalAlignment="Center" 
                Margin="0,0,0,20" />
 
-            <!-- Header text -->
-            <TextBlock Text="Login to your account" 
+                <!-- Header text -->
+                <TextBlock Text="Login to your account" 
                    FontSize="22" 
                    FontWeight="Bold" 
                    HorizontalAlignment="Center"
                    Margin="0,0,0,0" />
 
-            <TextBlock Text="Welcome back! Please enter your details."
+                <TextBlock Text="Welcome back! Please enter your details."
                        FontSize="15"
                        FontWeight="UltraLight"
                        Opacity="0.5"
                        HorizontalAlignment="Center"
                        Margin="0,0,0,30" />
 
-            <!-- Name field -->
-            <TextBlock Text="Name*"
+                <!-- Name field -->
+                <TextBlock Text="Name*"
                    FontSize="16" 
                    FontStyle="Italic"
                    Opacity="0.5"
                    Margin="0,0,0,5" />
 
-            <TextBox x:Name="UsernameTextBox" 
+                <TextBox x:Name="UsernameTextBox" 
                      Text="Username" 
                      GotFocus="UsernameTextBox_GotFocus" 
                      LostFocus="UsernameTextBox_LostFocus" 
@@ -79,32 +148,32 @@
                      Padding="5"
                      Background="White"
                      Margin="0,0,0,20">
-                <TextBox.Style>
-                    <Style TargetType="TextBox">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="TextBox">
-                                    <Border Background="{TemplateBinding Background}" 
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="TextBox">
+                                        <Border Background="{TemplateBinding Background}" 
                                             BorderBrush="{TemplateBinding BorderBrush}" 
                                             BorderThickness="{TemplateBinding BorderThickness}" 
                                             CornerRadius="5">
-                                        <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </TextBox.Style>
-            </TextBox>
+                                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
 
-            <!-- Password field -->
-            <TextBlock Text="Password*" 
+                <!-- Password field -->
+                <TextBlock Text="Password*" 
                    FontSize="16" 
                    FontStyle="Italic" 
                    Opacity="0.5"
                    Margin="0,0,0,5" />
 
-            <PasswordBox x:Name="PasswordBox"  
+                <PasswordBox x:Name="PasswordBox"  
                         Height="30"  
                         GotFocus="PasswordBox_GotFocus"  
                         LostFocus="PasswordBox_LostFocus"  
@@ -113,27 +182,27 @@
                         BorderThickness="1"  
                         BorderBrush="LightGray"  
                         Padding="5"  
-                        Background="White">  
-               <PasswordBox.Style>  
-                   <Style TargetType="PasswordBox">  
-                       <Setter Property="Template">  
-                           <Setter.Value>  
-                               <ControlTemplate TargetType="PasswordBox">  
-                                   <Border Background="{TemplateBinding Background}"  
+                        Background="White">
+                    <PasswordBox.Style>
+                        <Style TargetType="PasswordBox">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="PasswordBox">
+                                        <Border Background="{TemplateBinding Background}"  
                                            BorderBrush="{TemplateBinding BorderBrush}"  
                                            BorderThickness="{TemplateBinding BorderThickness}"  
-                                           CornerRadius="5">  
-                                       <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>  
-                                   </Border>  
-                               </ControlTemplate>  
-                           </Setter.Value>  
-                       </Setter>  
-                   </Style>  
-               </PasswordBox.Style>  
-            </PasswordBox>
+                                           CornerRadius="5">
+                                            <ScrollViewer Margin="0" x:Name="PART_ContentHost"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </PasswordBox.Style>
+                </PasswordBox>
 
-            <!-- Register button -->
-            <Button x:Name="LoginButton" 
+                <!-- Register button -->
+                <Button x:Name="LoginButton" 
                 Background="DarkRed" 
                 Foreground="White" 
                 Content="Login" 
@@ -143,30 +212,32 @@
                 FontWeight="Bold"
                 VerticalAlignment="Center"
                 Margin="0,0,0,20">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Template">
-                            <Setter.Value>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" 
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" 
                                             BorderBrush="{TemplateBinding BorderBrush}" 
                                             BorderThickness="{TemplateBinding BorderThickness}" 
                                             CornerRadius="5">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Background" Value="DarkRed"/>
-                        <Setter Property="Foreground" Value="White"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#B22222"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-        </StackPanel>
-    </Grid>
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Setter Property="Background" Value="DarkRed"/>
+                            <Setter Property="Foreground" Value="White"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#B22222"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+    </Border>
 </Window>

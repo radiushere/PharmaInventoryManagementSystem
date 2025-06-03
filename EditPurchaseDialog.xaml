@@ -12,7 +12,9 @@
         FontFamily="Segoe UI"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        ShowInTaskbar="False">
+        AllowsTransparency="True"
+        ShowInTaskbar="False"
+        WindowStyle="None">
 
     <Window.Resources>
         <Color x:Key="PrimaryRed">#B30000</Color>
@@ -128,71 +130,73 @@
         </Style>
     </Window.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+    <Border Background="White" BorderThickness="1"
+BorderBrush="{StaticResource PrimaryRedBrush}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
-            <DockPanel>
-                <TextBlock Text="Edit Purchase Details" FontSize="20" FontWeight="SemiBold" Foreground="White"/>
-            </DockPanel>
-        </Border>
+            <!-- Header -->
+            <Border Grid.Row="0" Background="{StaticResource PrimaryRedBrush}" Padding="20,12">
+                <DockPanel>
+                    <TextBlock Text="Edit Purchase Details" FontSize="20" FontWeight="SemiBold" Foreground="White"/>
+                </DockPanel>
+            </Border>
 
-        <!-- Content -->
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,20">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <!-- Content -->
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Padding="25,20">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <!-- Left Column -->
-                <StackPanel Grid.Column="0" Margin="0,0,10,0">
-                    <TextBlock Text="Purchase Information" Style="{StaticResource DialogHeaderStyle}"/>
+                    <!-- Left Column -->
+                    <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                        <TextBlock Text="Purchase Information" Style="{StaticResource DialogHeaderStyle}"/>
 
-                    <TextBlock Text="Purchase ID" Style="{StaticResource FormLabel}"/>
-                    <TextBox x:Name="PurchaseIdTextBox" Style="{StaticResource FormTextBox}" IsReadOnly="True"/>
+                        <TextBlock Text="Purchase ID" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="PurchaseIdTextBox" Style="{StaticResource FormTextBox}" IsReadOnly="True"/>
 
-                    <TextBlock Text="Purchase Date" Style="{StaticResource FormLabel}"/>
-                    <DatePicker x:Name="PurchaseDatePicker" Style="{StaticResource FormDatePicker}"/>
+                        <TextBlock Text="Purchase Date" Style="{StaticResource FormLabel}"/>
+                        <DatePicker x:Name="PurchaseDatePicker" Style="{StaticResource FormDatePicker}"/>
 
-                    <TextBlock Text="Supplier" Style="{StaticResource FormLabel}"/>
-                    <ComboBox x:Name="SupplierComboBox" Style="{StaticResource FormComboBox}"/>
+                        <TextBlock Text="Supplier" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="SupplierComboBox" Style="{StaticResource FormComboBox}"/>
 
-                    
+
+                    </StackPanel>
+
+                    <!-- Right Column -->
+                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                        <TextBlock Text="Delivery Information" Style="{StaticResource DialogHeaderStyle}"/>
+
+                        <TextBlock Text="Total Amount" Style="{StaticResource FormLabel}"/>
+                        <TextBox x:Name="TotalAmountTextBox" Style="{StaticResource FormTextBox}"/>
+
+                        <TextBlock Text="Status" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="StatusComboBox" Style="{StaticResource FormComboBox}">
+                            <ComboBoxItem Content="Completed"/>
+                            <ComboBoxItem Content="Pending"/>
+                            <ComboBoxItem Content="Cancelled"/>
+                        </ComboBox>
+
+                        <TextBlock Text="Product" Style="{StaticResource FormLabel}"/>
+                        <ComboBox x:Name="ProductComboBox" Style="{StaticResource FormComboBox}"/>
+                    </StackPanel>
+                </Grid>
+            </ScrollViewer>
+
+            <!-- Footer with buttons -->
+            <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
+                    <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
                 </StackPanel>
-
-                <!-- Right Column -->
-                <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                    <TextBlock Text="Delivery Information" Style="{StaticResource DialogHeaderStyle}"/>
-
-                    <TextBlock Text="Total Amount" Style="{StaticResource FormLabel}"/>
-                    <TextBox x:Name="TotalAmountTextBox" Style="{StaticResource FormTextBox}"/>
-
-                    <TextBlock Text="Status" Style="{StaticResource FormLabel}"/>
-                    <ComboBox x:Name="StatusComboBox" Style="{StaticResource FormComboBox}">
-                        <ComboBoxItem Content="Completed"/>
-                        <ComboBoxItem Content="Pending"/>
-                        <ComboBoxItem Content="Cancelled"/>
-                    </ComboBox>
-
-                    <TextBlock Text="Product" Style="{StaticResource FormLabel}"/>
-                    <ComboBox x:Name="ProductComboBox" Style="{StaticResource FormComboBox}"/>
-                </StackPanel>
-            </Grid>
-        </ScrollViewer>
-
-        <!-- Footer with buttons -->
-        <Border Grid.Row="2" Background="White" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="25,15">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Cancel" Style="{StaticResource SecondaryButton}" Click="CancelButton_Click"/>
-                <Button Content="Save Changes" Style="{StaticResource ActionButton}" Click="SaveButton_Click"/>
-            </StackPanel>
-        </Border>
-    </Grid>
-
+            </Border>
+        </Grid>
+    </Border>
 </Window>

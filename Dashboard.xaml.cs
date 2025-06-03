@@ -17,16 +17,33 @@ namespace SimpleLoginWPF
         public SeriesCollection OrderChartSeries { get; set; }
         public string[] Labels { get; set; }
         public string[] OrderLabels { get; set; }
-        public Func<double, string> YFormatter { get; set; }
-        public Func<double, string> OrderYFormatter { get; set; }
 
         public Dashboard()
         {
             InitializeComponent();
+            AccessLevelControl();
             DataContext = this;
             LoadDashboardData();
             InitializeCharts();
             LoadInventoryData();
+        }
+
+        public void AccessLevelControl()
+        {
+            string role = UserSession.Role;
+
+            DashboardButton.Visibility = Visibility.Visible;
+            InventoryButton.Visibility = Visibility.Visible;
+            ReportsButton.Visibility = Visibility.Visible;
+            OrdersButton.Visibility = Visibility.Visible;
+            DistributorsButton.Visibility = Visibility.Visible;
+            PurchasesButton.Visibility = Visibility.Visible;
+
+            AdminButton.Visibility = role == "Admin" ? Visibility.Visible : Visibility.Collapsed;
+            PartnersButton.Visibility = (role == "Admin" || role == "Manager") ? Visibility.Visible : Visibility.Collapsed;
+
+            if (string.IsNullOrEmpty(role))
+                MessageBox.Show("Unknown role.");
         }
 
         private void LoadDashboardData()
@@ -35,7 +52,6 @@ namespace SimpleLoginWPF
             {
                 connection.Open();
 
-                // Load Sales Overview
                 var salesOverviewCommand = new MySqlCommand("SELECT SUM(total_amount) FROM sales", connection);
                 var sales = salesOverviewCommand.ExecuteScalar()?.ToString() ?? "0";
                 Sales = $"Rs {sales}";
@@ -51,21 +67,20 @@ namespace SimpleLoginWPF
                 var costCommand = new MySqlCommand("SELECT SUM(total_amount) FROM product_purchases", connection);
                 var cost = costCommand.ExecuteScalar()?.ToString() ?? "0";
                 Cost = $"Rs {cost}";
-
-                // Load Inventory Summary
+                
                 var quantityInHandCommand = new MySqlCommand("SELECT SUM(quantity) FROM products", connection);
                 var quantityInHand = quantityInHandCommand.ExecuteScalar()?.ToString() ?? "0";
                 QuantityInHand = quantityInHand;
 
-                // Placeholder for "To be received" as it requires specific business logic
+                
                 ToBeReceived = "200";
 
-                // Load Purchase Overview
+                
                 var purchaseCommand = new MySqlCommand("SELECT COUNT(*) FROM product_purchases", connection);
                 var purchase = purchaseCommand.ExecuteScalar()?.ToString() ?? "0";
                 Purchase = purchase;
 
-                PurchaseCost = Cost; // Reuse cost from above
+                PurchaseCost = Cost; 
 
                 var cancelCommand = new MySqlCommand("SELECT COUNT(*) FROM orders WHERE status = 'Cancelled'", connection);
                 var cancel = cancelCommand.ExecuteScalar()?.ToString() ?? "0";
@@ -75,7 +90,6 @@ namespace SimpleLoginWPF
                 var returnAmount = returnCommand.ExecuteScalar()?.ToString() ?? "0";
                 Return = $"Rs {returnAmount}";
 
-                // Load Product Summary
                 var distributorsCommand = new MySqlCommand("SELECT COUNT(*) FROM distributors", connection);
                 var distributors = distributorsCommand.ExecuteScalar()?.ToString() ?? "0";
                 NumberOfDistributors = distributors;
@@ -104,7 +118,7 @@ namespace SimpleLoginWPF
                             ProductName = reader["product_name"].ToString(),
                             Quantity = Convert.ToInt32(reader["quantity"]),
                             Price = Convert.ToDecimal(reader["price"]),
-                            LastUpdated = DateTime.Now // Placeholder, replace with actual field if available
+                            
                         });
                     }
                 }
@@ -130,7 +144,6 @@ namespace SimpleLoginWPF
                 {
                     conn.Open();
 
-                    // Sales
                     var salesCmd = new MySqlCommand(@"
                 SELECT MONTH(sale_date) AS month, SUM(total_amount) AS total
                 FROM sales
@@ -147,7 +160,6 @@ namespace SimpleLoginWPF
                     }
                     salesReader.Close();
 
-                    // Purchases
                     var purchaseCmd = new MySqlCommand(@"
                 SELECT MONTH(date) AS month, SUM(total_amount) AS total
                 FROM product_purchases
@@ -210,67 +222,62 @@ namespace SimpleLoginWPF
                 MessageBox.Show("Error loading chart data: " + ex.Message);
             }
 
-            // Bind to Sales Chart
             ChartSeries = new SeriesCollection
-    {
-        new ColumnSeries
-        {
-            Title = "Sales",
-            Values = salesValues,
-            Fill = System.Windows.Media.Brushes.ForestGreen
-        },
-        new ColumnSeries
-        {
-            Title = "Purchase",
-            Values = purchaseValues,
-            Fill = System.Windows.Media.Brushes.SkyBlue
-        }
-    };
+            {
+                new ColumnSeries
+                {
+                    Title = "Sales",
+                    Values = salesValues,
+                    Fill = System.Windows.Media.Brushes.ForestGreen
+                },
+                new ColumnSeries
+                {
+                    Title = "Purchase",
+                    Values = purchaseValues,
+                    Fill = System.Windows.Media.Brushes.SkyBlue
+                }
+            };
 
             XAxes = new AxesCollection
-    {
-        new Axis { Labels = monthLabels }
-    };
+            {
+                new Axis { Labels = monthLabels }
+            };
 
-            YAxes = new AxesCollection
-    {
-        new Axis { LabelFormatter = value => value.ToString("C") }
-    };
+                    YAxes = new AxesCollection
+            {
+                new Axis { LabelFormatter = value => value.ToString("C") }
+            };
 
-            // Bind to Order Chart
             OrderChartSeries = new SeriesCollection
-    {
-        new LineSeries
-        {
-            Title = "Ordered",
-            Values = orderedValues,
-            Stroke = System.Windows.Media.Brushes.Orange,
-            Fill = System.Windows.Media.Brushes.Transparent,
-            PointGeometry = DefaultGeometries.Circle
-        },
-        new LineSeries
-        {
-            Title = "Delivered",
-            Values = deliveredValues,
-            Stroke = System.Windows.Media.Brushes.MediumPurple,
-            Fill = System.Windows.Media.Brushes.Transparent,
-            PointGeometry = DefaultGeometries.Square
-        }
-    };
+            {
+                new LineSeries
+                {
+                    Title = "Ordered",
+                    Values = orderedValues,
+                    Stroke = System.Windows.Media.Brushes.Orange,
+                    Fill = System.Windows.Media.Brushes.Transparent,
+                    PointGeometry = DefaultGeometries.Circle
+                },
+                new LineSeries
+                {
+                    Title = "Delivered",
+                    Values = deliveredValues,
+                    Stroke = System.Windows.Media.Brushes.MediumPurple,
+                    Fill = System.Windows.Media.Brushes.Transparent,
+                    PointGeometry = DefaultGeometries.Square
+                }
+            };
 
             OrderXAxes = new AxesCollection
-    {
-        new Axis { Labels = monthLabels }
-    };
+            {
+                new Axis { Labels = monthLabels }
+            };
 
-            OrderYAxes = new AxesCollection
-    {
-        new Axis { LabelFormatter = value => value.ToString("N0") }
-    };
+                    OrderYAxes = new AxesCollection
+            {
+                new Axis { LabelFormatter = value => value.ToString("N0") }
+            };
         }
-
-
-        // Add these properties to your class
         public AxesCollection XAxes { get; set; }
         public AxesCollection YAxes { get; set; }
         public AxesCollection OrderXAxes { get; set; }
@@ -341,13 +348,17 @@ namespace SimpleLoginWPF
         private void Profile_Click(object sender, RoutedEventArgs e)
         {
             new UserProfile().Show();
-            this.Close();
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)
         {
             new Login().Show();
             this.Close();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            LoadDashboardData();
         }
     }
 
